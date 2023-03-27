@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+    ],
+    "settings": {
+        "psi-header.variables": [
+
+            ["projectCreationYear", "2023"],
+            ["url", "https://github.com/john-james-ai/aimobile"],
+            ["projectname", "AI-Enabled Voice of the Mobile Technology Customer"],
+            ["version", "0.1.0"],
+            ["pythonversion","3.10.10"]
+        ],
+    }
+}
