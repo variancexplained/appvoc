@@ -1,10 +1,9 @@
-# AI-Based Mobile Technology Opportunity Discovery
+# AI-Enabled Voice of the Mobile Technology Customer
 
 [![PyPI](https://img.shields.io/pypi/v/aimobile?style=flat-square)](https://pypi.python.org/pypi/aimobile/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/aimobile?style=flat-square)](https://pypi.python.org/pypi/aimobile/)
 [![PyPI - License](https://img.shields.io/pypi/l/aimobile?style=flat-square)](https://pypi.python.org/pypi/aimobile/)
 [![Coookiecutter - Wolt](https://img.shields.io/badge/cookiecutter-Wolt-00c2e8?style=flat-square&logo=cookiecutter&logoColor=D4AA00&link=https://github.com/woltapp/wolt-python-package-cookiecutter)](https://github.com/woltapp/wolt-python-package-cookiecutter)
-
 
 ---
 

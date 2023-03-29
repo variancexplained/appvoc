@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/woltapp/wolt-python-package-cookiecutter",
+  "commit": "d7244522b73693523a377d8afcc272cb2753cb1e",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "author_name": "John James",
+      "author_email": "john.james.ai.studio@gmail.com",
+      "github_username": "john-james-ai",
+      "project_name": "AI-Based Mobile Technology Opportunity Discovery",
+      "project_slug": "aimobile",
+      "package_name": "aimobile",
+      "project_short_description": "Voice of the Customer",
+      "_template": "https://github.com/woltapp/wolt-python-package-cookiecutter"
+    }
+  },
+  "directory": null
+}
