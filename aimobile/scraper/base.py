@@ -4,69 +4,88 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/base.py                                                              #
+# Filename   : /aimobile/scraper/base.py                                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday March 29th 2023 05:57:04 pm                                               #
-# Modified   : Wednesday March 29th 2023 06:34:09 pm                                               #
+# Created    : Wednesday March 29th 2023 07:24:48 pm                                               #
+# Modified   : Wednesday March 29th 2023 08:40:01 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from abc import ABC, abstractmethod
 
-URLFORMAT = "https://itunes.apple.com/search?media=software&term=Health&country=us&lang=en-us&explicit=yes&limit=200&offset=0"
+import pandas as pd
 
 
 # ------------------------------------------------------------------------------------------------ #
-class Scraper(ABC):
-    """Abstract base class for all scrapers"""
-
-    @property
-    @abstractmethod
-    def data(self) -> dict:
-        """Returns the current data dictionary"""
+class AppData(ABC):
+    """Abstract base class for app data"""
 
     @abstractmethod
-    def scrape(self, category: str, page: int = None, directory: str = None) -> None:
-        """Scrapes data for the category and optionally, a page, and saves it in the designated directory.
+    def scrape(self, category: str) -> None:
+        """Scrapes data for the category and saves it as a pandas dataframe in the designated directory.
 
-        The filename is of the format <category_page_num>.py.
+        The filename is of the format <category>_data.json.
 
         Args:
             category (str): Single word search term for the category of interest.
-            page (int): The page to scrape. Optional. Default [0:max_pages].
-            directory (str): Optional. Defaults to the directory designated in the constructor.
 
         """
 
     @abstractmethod
-    def load(self, category: str, page: int = 0, directory: str = None) -> None:
-        """Loads app data for the designated category and page into the data attribute.
+    def read(self, category: str) -> pd.DataFrame:
+        """Returns the app data for the designated category
 
         Args:
             category (str): Single word search term for the category of interest.
-            page (int): The page number for the category results
-            directory (str): The directory into which the file shall be saved. Optional.
-                Defaults to the directory established in the constructor.
         """
 
     @abstractmethod
-    def save(self, data: dict, category: str, page: int, directory: str = None) -> None:
+    def write(self, data: pd.DataFrame, category: str) -> None:
         """Saves the app data to file.
 
         Args:
-            data (dict): Dictionary containing the app data.
+            data (pd.DataFrame): Dataframe containing the app data.
             category (str): The category of the data
-            page (int): The page number of the results
-            directory (str): The directory into which the file shall be saved. Optional.
-                Defaults to the directory established at object construction.
 
         """
 
     @abstractmethod
     def summary(self) -> None:
         """Prints a summary of app scrapes."""
+
+
+# ------------------------------------------------------------------------------------------------ #
+class AppReviews(ABC):
+    """Abstract base class for app reviews."""
+
+    @abstractmethod
+    def scrape(self, id: int) -> None:
+        """Scrapes reviews for the app designated by the its id.
+
+        Args:
+            id (int): The id for the app of interest.
+
+        """
+
+    @abstractmethod
+    def read(self, id: int) -> pd.DataFrame:
+        """Returns the reviews for the app designated by its id.
+
+        Args:
+            id (int): The id for the app of interest.
+        """
+
+    @abstractmethod
+    def write(self, data: pd.DataFrame, id: int) -> None:
+        """Saves the app reviews for the designated app to file.
+
+        Args:
+            data (pd.DataFrame): Dataframe containing the app data.
+            id (int): The id for the app of interest.
+
+        """

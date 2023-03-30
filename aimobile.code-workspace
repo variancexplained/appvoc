@@ -2,6 +2,12 @@
 	"folders": [
         {
             "path": "."
+        },
+        {
+            "path": "../itunes-app-scraper"
+        },
+        {
+            "path": "../app_store_scraper"
         }
     ],
     "settings": {

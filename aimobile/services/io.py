@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 02:05:09 pm                                                  #
-# Modified   : Monday March 27th 2023 02:05:35 pm                                                  #
+# Modified   : Wednesday March 29th 2023 04:31:25 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,6 +23,7 @@ import yaml
 import pickle
 import pandas as pd
 import pyarrow as pa
+import json
 import pyarrow.parquet as pq
 from typing import Any, Union, List
 
@@ -230,6 +231,25 @@ class ParquetIO(IO):  # pragma: no cover
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                                          JSON                                                    #
+# ------------------------------------------------------------------------------------------------ #
+
+
+class JsonIO(IO):  # pragma: no cover
+    @classmethod
+    def _read(cls, filepath: str, **kwargs) -> Any:
+        """Read the parsed dictionary from a json file."""
+        with open(filepath) as json_file:
+            return json.load(json_file)
+
+    @classmethod
+    def _write(cls, filepath: str, data: dict, **kwargs) -> None:
+        """Writes a dictionary to a json file."""
+        with open(filepath, "w") as json_file:
+            json.dump(data, json_file)
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                       IO SERVICE                                                 #
 # ------------------------------------------------------------------------------------------------ #
 class IOService:  # pragma: no cover
@@ -239,6 +259,7 @@ class IOService:  # pragma: no cover
         "csv": CSVIO,
         "yaml": YamlIO,
         "yml": YamlIO,
+        "json": JsonIO,
         "pkl": PickleIO,
         "pickle": PickleIO,
         "xlsx": ExcelIO,
