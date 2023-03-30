@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Monday March 27th 2023 07:04:04 pm                                                  #
+# Modified   : Thursday March 30th 2023 07:05:12 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,6 +19,8 @@
 import logging.config  # pragma: no cover
 
 from dependency_injector import containers, providers
+
+from aimobile.services.database import SqliteDatabase
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -33,8 +35,18 @@ class ServicesContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
+class DatabaseContainer(containers.DeclarativeContainer):
+
+    config = providers.Configuration()
+
+    app_store = providers.Singleton(SqliteDatabase, config.database.appstore)
+
+    google_play = providers.Singleton(SqliteDatabase, config.database.google_play)
+
+
+# ------------------------------------------------------------------------------------------------ #
 class AIMobile(containers.DeclarativeContainer):
 
     config = providers.Configuration(yaml_files=["config.yml"])
 
-    services = providers.Container(ServicesContainer, config=config)
+    database = providers.Container(DatabaseContainer, config=config)

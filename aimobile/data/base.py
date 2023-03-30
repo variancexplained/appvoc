@@ -10,63 +10,104 @@
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday March 29th 2023 05:57:04 pm                                               #
-# Modified   : Wednesday March 29th 2023 06:34:09 pm                                               #
+# Created    : Thursday March 30th 2023 07:09:09 pm                                                #
+# Modified   : Thursday March 30th 2023 07:38:14 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+"""Defines the abstract base classes for scrapers and repositories."""
 from abc import ABC, abstractmethod
+import requests
+import pandas as pd
 
-URLFORMAT = "https://itunes.apple.com/search?media=software&term=Health&country=us&lang=en-us&explicit=yes&limit=200&offset=0"
+
+# ------------------------------------------------------------------------------------------------ #
+class Registry(ABC):
+    """Abstract base class for app data and review registry objects."""
 
 
 # ------------------------------------------------------------------------------------------------ #
 class Scraper(ABC):
-    """Abstract base class for all scrapers"""
-
-    @property
-    @abstractmethod
-    def data(self) -> dict:
-        """Returns the current data dictionary"""
+    """Abstract base class for scrapers."""
 
     @abstractmethod
-    def scrape(self, category: str, page: int = None, directory: str = None) -> None:
-        """Scrapes data for the category and optionally, a page, and saves it in the designated directory.
+    def scrape(self, *args, **kwargs) -> None:
+        """Controls the scrape process."""
 
-        The filename is of the format <category_page_num>.py.
+    @abstractmethod
+    def request(self, url: str, headers: dict, params: dict, timeout=int) -> requests.Response:
+        """Executes the HTTP request and returns a response object.
 
         Args:
-            category (str): Single word search term for the category of interest.
-            page (int): The page to scrape. Optional. Default [0:max_pages].
-            directory (str): Optional. Defaults to the directory designated in the constructor.
+            url (str): The base url
+            headers (dict): The HTTP request headers.
+            params (dict): Parameters to be passed to the requests method.
+            timeout (int): The time in seconds to receive a response.
+        """
+
+    @abstractmethod
+    def parse_response(self, response: requests.Response) -> pd.DataFrame:
+        """Parses the response object and returns a DataFrame
+        Args:
+            response (requests.Response) Response object
+        """
+
+    @abstractmethod
+    def add_response(self, response: pd.DataFrame) -> None:
+        """Adds an HTTP response to the database.
+
+        Args:
+            response (pd.DataFrame): Response data in DataFrame format.
+        """
+
+    @abstractmethod
+    def register(self, registry: Registry) -> None:
+        """Registers the project
+
+        registry (Registry): Dataclass containing metadata about the current project.
+        """
+
+    @abstractmethod
+    def project_exists(self, *args, **kwargs) -> bool:
+        """Checks existence of a scraping project"""
+
+    @abstractmethod
+    def request_exists(self, *args, **kwargs) -> bool:
+        """Checks existence of a scraping request"""
+
+    @abstractmethod
+    def summary(self) -> dict:
+        """Summarizes the results of the current scrape project."""
+
+
+# ------------------------------------------------------------------------------------------------ #
+class Repo(ABC):
+    """Abstract base class for app data, review repositories."""
+
+    @abstractmethod
+    def get(self, tablename: str, *args, **kwargs) -> pd.DataFrame:
+        """Queries the database and returns a result in DataFrame format."""
+
+    @abstractmethod
+    def add(self, data: pd.DataFrame, tablename: str) -> None:
+        """Adds a DataFrame to the Database
+
+        Args:
+            data (pd.DataFrame): The data
+            tablename (str): Name of table into which the data will be added.
+        """
+
+    @abstractmethod
+    def update(self, data: pd.DataFrame, tablename: str) -> None:
+        """Updates the table with the existing data.  This is essentially a replace operation
+
+        Args:
+            data (pd.DataFrame): The data to replace existing data
+            tablename (str): The table name.
 
         """
 
     @abstractmethod
-    def load(self, category: str, page: int = 0, directory: str = None) -> None:
-        """Loads app data for the designated category and page into the data attribute.
-
-        Args:
-            category (str): Single word search term for the category of interest.
-            page (int): The page number for the category results
-            directory (str): The directory into which the file shall be saved. Optional.
-                Defaults to the directory established in the constructor.
-        """
-
-    @abstractmethod
-    def save(self, data: dict, category: str, page: int, directory: str = None) -> None:
-        """Saves the app data to file.
-
-        Args:
-            data (dict): Dictionary containing the app data.
-            category (str): The category of the data
-            page (int): The page number of the results
-            directory (str): The directory into which the file shall be saved. Optional.
-                Defaults to the directory established at object construction.
-
-        """
-
-    @abstractmethod
-    def summary(self) -> None:
-        """Prints a summary of app scrapes."""
+    def remove(self, *args, **kwargs) -> None:
+        """Removes rows from the database"""
