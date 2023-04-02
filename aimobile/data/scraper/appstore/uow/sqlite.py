@@ -4,46 +4,48 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /config.yml                                                                         #
+# Filename   : /aimobile/data/scraper/appstore/uow/sqlite.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday March 27th 2023 07:00:33 pm                                                  #
-# Modified   : Friday March 31st 2023 09:10:30 am                                                  #
+# Created    : Friday March 31st 2023 07:38:30 pm                                                  #
+# Modified   : Saturday April 1st 2023 12:14:06 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-logging:
-  version: 1
-  formatters:
-    console:
-      format: "[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s] : %(message)s"
-      datefmt: "%m/%d/%Y %I:%M:%S %p"
-    file:
-      format: "[%(asctime)s] [%(levelname)s] [%(name)s] [%(module)s] [%(funcName)s] : %(message)s"
-      datefmt: "%m/%d/%Y %I:%M:%S %p"
-  handlers:
-    console:
-      class: "logging.StreamHandler"
-      level: "DEBUG"
-      formatter: "console"
-      stream: "ext://sys.stderr"
-    file:
-      class: logging.handlers.TimedRotatingFileHandler
-      formatter: file
-      when: midnight
-      interval: 1
-      backupCount: 0
-      level: "DEBUG"
-      filename: logs/aimobile.log
-  root:
-    level: "DEBUG"
-    handlers: ["console", "file"]
-  disable_existing_loggers: False
+from aimobile.data.scraper.appstore.uow.base import UnitOfWork
 
-database:
-  appstore: sqlite:///tests/data/appstore.db
-  google_play: sqlite:///tests/data/google_play.db
+
+class SQLiteUnitOfWork(UnitOfWork):
+    """An implementation of a UnitOfWork for a SQLite storage database.
+    Methods: __enter__, __exit__, commit, rollback, books
+    """
+
+    def __init__(self, location):
+        """SQLiteUnitOfWork's constructor."""
+        self.location = location
+
+    def __enter__(self):
+        """View @app.domain.ports.UnitOfWork."""
+        self.conn = sqlite3.connect(self.location)
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """View @app.domain.ports.UnitOfWork."""
+        self.conn.close()
+
+    def commit(self):
+        """View @app.domain.ports.UnitOfWork."""
+        self.conn.commit()
+
+    def rollback(self):
+        """View @app.domain.ports.UnitOfWork."""
+        self.conn.rollback()
+
+    @property
+    def books(self) -> SQLiteBookRepository:
+        """View @app.domain.ports.UnitOfWork."""
+        return SQLiteBookRepository(self.conn.cursor())

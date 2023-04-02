@@ -4,19 +4,34 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/appstore/repo/app_data.py                                            #
+# Filename   : /tests/utils/mock.py                                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Thursday March 30th 2023 05:25:27 pm                                                #
-# Modified   : Thursday March 30th 2023 07:31:15 pm                                                #
+# Created    : Friday March 31st 2023 03:09:07 am                                                  #
+# Modified   : Saturday April 1st 2023 12:25:31 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from dependency_injector.wiring import Provide, inject
+"""Module contains functions used to mock HTTP requests and related computationally intensive resources."""
+import requests
+import requests_mock
+
+from aimobile.service.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
-class AppDataRepo
+JSON_FILEPATH = "tests/data/test_appdata.json"
+
+
+# ------------------------------------------------------------------------------------------------ #
+def mock_request() -> dict:
+    session = requests.Session()
+    adapter = requests_mock.Adapter()
+    session.mount("mock://", adapter)
+    data = IOService.read(JSON_FILEPATH)
+    adapter.register_uri("GET", "mock://test.com/", json=data, status_code=200)
+    resp = session.get("mock://test.com/")
+    return resp

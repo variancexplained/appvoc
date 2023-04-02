@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 06:03:50 pm                                                  #
-# Modified   : Thursday March 30th 2023 07:40:12 pm                                                #
+# Modified   : Saturday April 1st 2023 05:17:39 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,7 +26,8 @@ import shutil
 
 import pandas as pd
 
-from aimobile.data.appstore.scraper.app_data import AppStoreScrapeParams, AppStoreData
+from aimobile.data.scraper.appstore.service.appdata import AppStoreDataScraper, AppStoreScrapeParams
+
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -39,7 +40,7 @@ DIRECTORY = "data/appstore/app_data"
 
 @pytest.mark.appstore
 @pytest.mark.appdata
-class TestAppStoreData:  # pragma: no cover
+class TestAppStoreDataScraper:  # pragma: no cover
     # ============================================================================================ #
     def test_setup(self, caplog):
         start = datetime.now()
@@ -82,7 +83,7 @@ class TestAppStoreData:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        appdata = AppStoreData(directory=DIRECTORY)
+        appdata = AppStoreDataScraper(directory=DIRECTORY)
         with pytest.raises(ValueError):
             appdata.read(category="health")
         appdata.summary()
@@ -116,7 +117,7 @@ class TestAppStoreData:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         params = AppStoreScrapeParams(category="weather", max_pages=1, page_size=10)
-        appdata = AppStoreData(directory=DIRECTORY)
+        appdata = AppStoreDataScraper(directory=DIRECTORY)
         appdata.scrape(params=params)
 
         params = AppStoreScrapeParams(category="books", max_pages=2, page_size=10)
@@ -158,7 +159,7 @@ class TestAppStoreData:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        appdata = AppStoreData(directory=DIRECTORY)
+        appdata = AppStoreDataScraper(directory=DIRECTORY)
         appdata.summary()
 
         # ---------------------------------------------------------------------------------------- #
@@ -190,7 +191,7 @@ class TestAppStoreData:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         params = AppStoreScrapeParams(category="weather", max_pages=sys.maxsize)
-        appdata = AppStoreData(directory=DIRECTORY)
+        appdata = AppStoreDataScraper(directory=DIRECTORY)
         appdata.scrape(params=params)
         df = appdata.read(category="weather")
         assert isinstance(df, pd.DataFrame)
