@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
-# Modified   : Sunday April 2nd 2023 12:29:53 pm                                                   #
+# Modified   : Sunday April 2nd 2023 01:21:26 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -75,7 +75,45 @@ class TestDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_insert(self, dataframe, caplog):
+    def test_insert_without_commit(self, dataframe, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        db = SQLiteDatabase(filepath=DBFILEPATH)
+        db.connect()
+        _ = db.insert(data=dataframe, tablename="iris")
+        db.rollback()  # Rollback has no effect when not in transaction.
+
+        query = "SELECT * FROM iris;"
+        df = db.query(query=query)
+        db.close()
+        assert df.shape[0] != 0
+        self.test_setup(caplog=caplog)
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\nCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_insert_in_context(self, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(

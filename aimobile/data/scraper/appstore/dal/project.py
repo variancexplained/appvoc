@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
+# Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/scraper/appstore/repo/project.py                                     #
+# Filename   : /aimobile/data/scraper/appstore/dal/project.py                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Saturday April 1st 2023 12:14:06 am                                                 #
+# Modified   : Sunday April 2nd 2023 10:56:16 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,8 +20,8 @@ import logging
 
 import pandas as pd
 
-from aimobile.data.scraper.appstore.repo.base import Repo
-from aimobile.data.database.database import SQLiteDatabase
+from aimobile.data.scraper.appstore.dal.base import Repo
+from aimobile.data.scraper.appstore.database.sqlite import SQLiteDatabase
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -36,29 +36,34 @@ class ProjectRepo(Repo):
         self._database = database
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
-    def get(self, category_name: str) -> pd.DataFrame:
-        """Retrieves AppData by category
+    def get(self, id: str = None) -> pd.DataFrame:
+        """Retrieves a project by id or all projects if id is None
 
         Args:
-            category_name (str): A category_name from AppStoreCategories
+            id (str): Project id. Optional. If None, all projects are returned.
         """
-        query = "SELECT * FROM projects WHERE category_name = ?;"
-        params = (category_name,)
-        return self._database.read(query=query, params=params)
+        if id is not None:
+            query = "SELECT * FROM project WHERE project.id = :id;"
+            params = {"id": id}
+        else:
+            query = "SELECT * FROM project;"
+            params = {}
+
+        return self._database.query(query=query, params=params)
 
     def add(self, data: pd.DataFrame) -> None:
-        """Adds a DataFrame to the Database
+        """Adds a project to the database
 
         Args:
-            data (pd.DataFrame): The data
+            data (pd.DataFrame): Project data in pandas DataFrame format.
         """
-        self._database.create(data=data, tablename="projects")
+        self._database.insert(data=data, tablename="project")
 
-    def update(self, data: pd.DataFrame) -> None:
-        """Updates the table with the existing data.
+    def update(self, data: dict) -> None:
+        """Updates a project in the database.
 
         Args:
-            data (pd.DataFrame): The data to replace existing data
+            data (dict): The data to replace existing data
 
         """
         project_data = data.to_dict(orient="records")

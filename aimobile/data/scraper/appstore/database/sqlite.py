@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday March 30th 2023 03:03:56 pm                                                #
-# Modified   : Sunday April 2nd 2023 12:32:22 pm                                                   #
+# Modified   : Sunday April 2nd 2023 01:23:39 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -72,7 +72,11 @@ class SQLiteDatabase(Database):
         self.close()
 
     def connect(self, autocommit: bool = False):
-        """Connect to an underlying database."""
+        """Connect to an underlying database.
+
+        Args:
+            autocommit (bool): Sets autocommit mode. Default is False.
+        """
         try:
             self._engine = sqlalchemy.create_engine(self._filepath, echo=True, pool_pre_ping=True)
             self._connection = self._engine.connect()
@@ -155,6 +159,10 @@ class SQLiteDatabase(Database):
 
     def insert(self, data: pd.DataFrame, tablename: str) -> int:
         """Inserts data in pandas DataFrame format into the designated table.
+
+        Note: This method uses pandas to_sql method. If not in transaction, inserts are
+        autocommitted and rollback has no effect. Transaction behavior is extant
+        after a begin() or through the use of the context manager.
 
         Args:
             data (pd.DataFrame): DataFrame containing the data to add to the designated table.
