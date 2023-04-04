@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.8                                                                              #
 # Filename   : /aimobile/data/scraper/appstore/service/appdata.py                                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,350 +11,282 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday March 30th 2023 07:45:46 pm                                                #
-# Modified   : Monday April 3rd 2023 06:26:28 am                                                   #
+# Modified   : Tuesday April 4th 2023 08:10:43 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from __future__ import annotations
-import sys
-from typing import ClassVar
-from types import SimpleNamespace
+"""App Store app data scraper module."""
 import requests
+import json
 import time
-from datetime import datetime
-from dataclasses import dataclass
+import re
+import os
 import logging
-import random
-import itertools
+from datetime import datetime
 
-import pandas as pd
-
-from aimobile.data.scraper.appstore.service.genera import Scraper, ScrapeParams
-from aimobile.data.scraper.base import AbstractAppDataScraper, AbstractScraperProject
-from tests.utils.mock import mock_request
-
-# ------------------------------------------------------------------------------------------------ #
-@dataclass
-class AppStoreDataScraperProject(AbstractScraperProject):
-    collection_id: int
-    collection: str
-    category_id: int
-    category: str
-    project_id: str = None
-    base_url: str = "https://itunes.apple.com/search?"
-    media: str = "software"
-    country: str = "us"
-    lang: str = "en-us"
-    explicit: str = "yes"
-    offset: int = 0
-    limit: int = 200
-    max_pages: int = sys.maxsize
-    timeout: int = 600
-    delay: tuple = (5, 20)
-    retries: int = 5
-    backoff_base: int = 2
-
-    __id = ClassVar[int] = itertools.count()
-
-    def __post_init__(self) -> None:
-        self.project_id = next(AppStoreDataScraperProject.__id)
-
-    @property
-    def request_params(self) -> dict:
-        """Returns the parameters to be passed to the request method."""
-        d = {
-            "media": self.media,
-            "country": self.country,
-            "lang": self.lang,
-            "explicit": self.explicit,
-            "offset": self.offset,
-            "limit": self.limit,
-        }
-        return d
-
-    @property
-    def retries(self) -> SimpleNamespace:
-        d = {}
+from urllib.parse import quote_plus
+from aimobile.data.scraper.appstore.service.genera import (
+    AppStoreException,
+    AppStoreMarkets,
+    COUNTRIES,
+)
 
 
-# ------------------------------------------------------------------------------------------------ #
-class AppStoreDataScraper(AbstractAppDataScraper):
-    """Encapsulates data scraped from the appstore.
+class Regex:
+    STARS = re.compile(r"<span class=\"total\">[\s\S]*?</span>")
+
+
+class AppStoreScraper:
+    """iTunes App Store scraper
+
+    This class implements methods to retrieve information about iTunes App
+    Store apps in various ways. Much has been adapted from the itunes-app-scraper,
+    which can be found at  https://github.com/digitalmethodsinitiative/itunes-app-scraper
 
     Args:
-        repo (AppStoreDataRepo): Repository of App Store data.
+        country (str): Two letter country code. Default is 'us'
+        lang (str): Two character language code. Default is 'en'
+        num_results_per_page (int): The number of results to return per page.
+        pages (int): The max number of page requests.
+        retries (int): The number of retry attempts if an exception is encountered.
+        backoff_factor (int): Specifies the base factor for exponential backoff on retries
+        sleep (tuple): Lower and upper bound of randomly set sleep times.
     """
-
-    __source = "appstore"
-    __datatype = "appdata"
 
     def __init__(
         self,
-        project: AbstractScraperProject,
-        mock: bool = False,
+        country: str = "us",
+        lang: str = "en-us",
+        num_results_per_page: int = 200,
+        pages: int = 20000,
+        retries: int = 5,
+        backoff_factor: int = 2,
+        sleep: tuple = (1, 5),
     ) -> None:
-        self._params = params
-
-        self._mock = mock
-        self._project_data = {}  # Project log data
-        self._request_data = {}  # Request log data
-        self._headers = {}  # HTTP request headers
-        self._request_params = {}  # HTTP request params
+        self._country = country
+        self._lang = lang
+        self._num_results_per_page = num_results_per_page
+        self._pages = pages
+        self._retries = retries
+        self._backoff_factor = backoff_factor
+        self._sleep = sleep
 
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(params={self._params})"
-
-    def __str__(self) -> str:
-        width = 12
-        return (
-            f"{'Source'.rjust(width, ' ')} | {AppStoreDataScraper.__source}\n"
-            f"{'Data'.rjust(width, ' ')} | {AppStoreDataScraper.__datatype}\n"
-            f"{'Term'.rjust(width, ' ')} | {self._params.term}\n"
-            f"{'URL'.rjust(width, ' ')} | {self._params.url}\n"
-            f"{'Start Page'.rjust(width, ' ')} | {self._params.offset}\n"
-        )
-
-    def scrape(self) -> None:
-        """Scrapes the data according to the parameters in the AppStoreScrapeParams object.
+    def search(self, term) -> list:
+        """Retrieve suggested app IDs for search query
 
         Args:
-            params (AppStoreScrapeParams): Scrape parameter object
+            term (str): Search term.
 
+        Returns (list): List of dictionaries containing app data
         """
-        self._setup()
-        page = 0
+        url = "https://search.itunes.apple.com/WebObjects/MZStore.woa/wa/search?clientApplication=Software&media=software&term="
+        url += quote_plus(term)
 
-        while page < self._params.max_pages:
+        amount = int(self._num_results_per_page) * int(self._pages)
 
-            # Execute the HTTP request
-            response = self.request(
-                url=self._params.base_url,
-                headers=self._headers,
-                params=self._request_params,
-                timeout=self._params.timeout,
-                retries=self._params.retries,
-            )
-            if response.status_code == 200:
+        country = self.get_store_id_for_country(self._country)
+        headers = {"X-Apple-Store-Front": "%s,24 t:native" % country, "Accept-Language": self._lang}
 
-                # Extract the results from the response object.
-                results = response.json()
-                # Parse the results and return data of interest as a dataframe.
-                appdata = self.parse_results(results=results)
-                # Persist the app data to the database
-                self._add(data=appdata)
-                # Save the project and request log to the database
-                self._register(results)
-                # Update the request parameters, request log and project for the next request.
-                self._set_next_request()
-                page += 1
-            else:
-                break
+        try:
+            result = requests.get(url, headers=headers).json()
+        except ConnectionError as ce:
+            raise AppStoreException("Cannot connect to store: {0}".format(str(ce)))
+        except json.JSONDecodeError:
+            raise AppStoreException("Could not parse app store response")
 
-        self._teardown()
+        return [app for app in result["bubbles"][0]["results"][:amount]]
 
-    def summary(self) -> None:
-        """Prints a summary of app scrapes."""
-        width = 12
-        return (
-            f"{'Project Id'.rjust(width, ' ')} | {self._project_data['id']}\n"
-            f"{'Scraper'.rjust(width, ' ')} | {self._project_data['scraper']}\n"
-            f"{'Source'.rjust(width, ' ')} | {AppStoreDataScraper.__source}\n"
-            f"{'Data'.rjust(width, ' ')} | {AppStoreDataScraper.__datatype}\n"
-            f"{'Term'.rjust(width, ' ')} | {self._project_data['term']}\n"
-            f"{'Start Page'.rjust(width, ' ')} | {self._project_data['start_page']}\n"
-            f"{'End Page'.rjust(width, ' ')} | {self._project_data['end_page']}\n"
-            f"{'Results'.rjust(width, ' ')} | {self._project_data['results']}\n"
-            f"{'Stage'.rjust(width, ' ')} | {self._project_data['state']}\n"
-            f"{'Started'.rjust(width, ' ')} | {self._project_data['started'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
-            f"{'Ended'.rjust(width, ' ')} | {self._project_data['ended'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
-            f"{'Duration'.rjust(width, ' ')} | {round(self._project_data['duration'],2)} seconds.\n"
+    def get_app_data_for_collection_category(self, collection: str, category: str) -> list:
+        """Retrieve app IDs in given App Store collection and category
+
+        Args:
+            collection (str): Collection ID. One of the values in `AppStoreCollections`.
+            category (int):  Category ID. One of the values in AppStoreCategories.
+
+        Return:  List List of dictionaries containing app data
+        """
+        country = self.get_store_id_for_country(self._country)
+        params = (collection, category, self._num_results_per_page, country)
+        url = (
+            "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%s/%s/limit=%s/json?s=%s"
+            % params
         )
 
-    def _setup(self) -> None:
-        """Initial housekeeping"""
-        self._initialize_project_data()
-        self._initialize_request_data()
-        self._initialize_request_params()
-        self._initialize_headers()
-        self._logger.info(
-            f"{self.__class__.__name__} Project: {self._project_data['id']} started.\n\tSource: {self._project_data['source']}\n\tData: {self._project_data['datatype']}\n\tCategory: {self._project_data['term']}"
+        try:
+            result = requests.get(url).json()
+        except json.JSONDecodeError:
+            raise AppStoreException("Could not parse app store response")
+
+        return [entry for entry in result["feed"]["entry"]]
+
+    def get_app_data_for_developer(self, developer_id):
+        """Retrieve App data linked to given developer
+
+        Args:
+            developer_id (int): Developer ID
+
+        Return list:  List of App IDs linked to developer
+        """
+        url = "https://itunes.apple.com/lookup?id=%s&country=%s&entity=software" % (
+            developer_id,
+            self._country,
         )
 
-    def _teardown(self) -> None:
-        """Initial housekeeping"""
-        self._finalize_project()
-        self._register_project()
-        self._logger.info(
-            f"{self.__class__.__name__} Project: {self._project_data['id']} completed. Duration: {round(self._project_data['duration'],2)} seconds"
-        )
+        try:
+            result = requests.get(url).json()
+        except json.JSONDecodeError:
+            raise AppStoreException("Could not parse app store response")
 
-    def _request(
-        self,
-        url: str,
-        headers: dict,
-        params: dict,
-        timeout: int,
-        retries: int,
-    ) -> requests.Response:
-        """Executes an HTTP request with retries if exception."""
-        retry = 0
-        while retry <= retries:
-            try:
-                self._delay(retry=retry)
-                if self._mock:
-                    return mock_request()
-                else:
-                    return requests.get(url=url, params=params, headers=headers, timeout=timeout)
-            except Exception as e:  # pragma: no cover
-                retry = self._handle_exception(exception=e, retry=retry, retries=retries)
-
-    def _delay(self, retry: int = 0) -> None:
-        """Creates an exponential delay based upon the number of retries."""
-        delay = random.randint(*self._params.delay) * self._params.backoff_base**retry
-        self._logger.debug(f"Delaying {delay} seconds on attempt {retry}")
-        time.sleep(delay)
-
-    def _parse_results(self, results: dict) -> pd.DataFrame:
-        """Extracts data of interest from the response, and converts the data to a DataFrame"""
-        applist = []
-        appdata = {}
-        # Extract data of interest into a list of dictionaries.
-        for result in results["results"]:
-            for key, result_key in AppStoreResults.map.items():
-                appdata[key] = result.get(result_key, None)
-            appdata["project_id"] = self._project_data["id"]
-            appdata["created"] = datetime.now()
-            applist.append(appdata)
-
-        # Convert the list of dictionaries into a pandas DataFrame and return it.
-        return pd.DataFrame(data=applist)
-
-    def _add(self, data: pd.DataFrame) -> None:
-        """Adds the appdata to the database."""
-        self._appdata_repo.add(data=data)
-
-    def _register(self, results: dict) -> None:
-        """Registers request and the project data"""
-        self._update_request_data(results)
-        self._update_project_data(results)
-        self._register_request()
-        self._register_project()
-
-    def _set_next_request(self) -> None:
-        self._request_params["offset"] += 1
-        self._request_data["page"] += 1
-        self._project_data["end_page"] += 1
-
-    def _initialize_project_data(self) -> None:
-        """Initializes data that describe the  project"""
-        now = datetime.now().strftime("%Y-%m-%d-%H-%M_%S")
-        self._project_data[
-            "id"
-        ] = f"{AppStoreDataScraper.__source}_{AppStoreDataScraper.__datatype}_{self._params.term}_{now}"
-        self._project_data["scraper"] = self.__class__.__name__
-        self._project_data["source"] = AppStoreDataScraper.__source
-        self._project_data["datatype"] = AppStoreDataScraper.__datatype
-        self._project_data["term"] = self._params.term
-        self._project_data["url"] = self._params.base_url
-        self._project_data["start_page"] = self._params.offset
-        self._project_data["end_page"] = self._params.offset
-        self._project_data["results"] = 0
-        self._project_data["started"] = datetime.now()
-        self._project_data["ended"] = None
-        self._project_data["duration"] = None
-        self._project_data["state"] = None
-
-    def _initialize_request_data(self) -> None:
-        """Initializes data that is tracked for each request."""
-        now = datetime.now().strftime("%Y-%m-%d-%H-%M_%S")
-        self._request_data["id"] = f"{AppStoreDataScraper.__datatype}_{self._params.term}_0"
-        self._request_data[
-            "project_id"
-        ] = f"{AppStoreDataScraper.__source}_{AppStoreDataScraper.__datatype}_{self._params.term}_{now}"
-        self._request_data["scraper"] = self.__class__.__name__
-        self._request_data["source"] = AppStoreDataScraper.__source
-        self._request_data["datatype"] = AppStoreDataScraper.__datatype
-        self._request_data["term"] = self._params.term
-        self._request_data["page"] = self._params.offset
-        self._request_data["results"] = 0
-        self._request_data["datetime"] = None
-
-    def _initialize_request_params(self) -> None:
-        """Initializes the HTTP request parameters"""
-        self._request_params["media"] = "software"
-        self._request_params["country"] = "us"
-        self._request_params["lang"] = "en-us"
-        self._request_params["explicit"] = "yes"
-        self._request_params["offset"] = 0
-        self._request_params["limit"] = 200
-
-    def _initialize_headers(self) -> None:
-        self._headers = {"X-Apple-Store-Front": "143441-1,29", "Accept-Language": self._params.lang}
-
-    def _update_request_data(self, results: dict) -> None:
-        """Updates the request data at the end of each iteration"""
-        self._request_data["results"] = results["resultCount"]
-        self._request_data["datetime"] = datetime.now()
-
-    def _update_project_data(self, results: dict) -> None:
-        self._project_data["results"] += results["resultCount"]
-        self._project_data["ended"] = datetime.now()
-        self._project_data["duration"] = (
-            self._project_data["ended"] - self._project_data["started"]
-        ).total_seconds()
-        self._project_data["state"] = self._project_data["state"] or "in_progress"
-
-    def _finalize_project(self) -> None:
-        self._project_data["ended"] = datetime.now()
-        self._project_data["duration"] = (
-            self._project_data["ended"] - self._project_data["started"]
-        ).total_seconds()
-        self._project_data["state"] = "success"
-
-    def _register_request(self) -> None:
-        """Finalizes the request object and adds it to the repository."""
-        request_data = pd.DataFrame(self._request_data, index=[0])
-        self._repo.register(data=request_data, tablename="request")
-
-    def _register_project(self) -> None:
-        """Finalizes the project object and adds it to the repository."""
-        project_data_df = pd.DataFrame(data=self._project_data, index=[0])
-        self._repo.register(data=project_data_df, tablename="project")
-
-    def _handle_exception(self, exception: Exception, attempt: int, retries: int) -> int:
-        """Handles exceptions in the event of retries."""
-        attempt += 1
-        if attempt >= retries:
-            msg = f"Request {self._request_data['request_id']}. Response code: {exception.response.status_code}\n{exception}."
-            self._logger.error(msg)
-            raise exception
+        if "results" in result:
+            return [app for app in result["results"] if app["wrapperType"] == "software"]
         else:
-            msg = f"Request {self._request_data['request_id']}. Response code: {exception.response.status_code}\nRetrying attempt {attempt} of {retries}."
-            self._logger.error(msg)
-        return attempt
+            # probably an invalid developer ID
+            return []
 
+    def get_similar_app_ids_for_app(self, app_id):
+        """Retrieve list of App IDs of apps similar to given app
 
-# ------------------------------------------------------------------------------------------------ #
-@dataclass
-class AppStoreScrapeParams(ScrapeParams):
-    collection: str  #
-    category_id: str
-    project_id: str = None
-    base_url: str = "https://itunes.apple.com/search?"
-    media: str = "software"
-    country: str = "us"
-    lang: str = "en-us"
-    explicit: str = "yes"
-    offset: int = 0
-    limit: int = 200
-    max_pages: int = sys.maxsize
-    timeout: int = 600
-    delay: tuple = (5, 20)
-    retries: int = 5
-    backoff_base: int = 2
+        This one is a bit special because the response is not JSON, but HTML.
+        We extract a JSON blob from the HTML which contains the relevant App
+        IDs.
 
-    def __post_init__(self) -> None:
-        self.project_id = self.term + "_" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        Args:
+            app_id (str): App ID for which similar apps are identified.
+
+        Return list:  List of similar app IDs
+        """
+        url = "https://itunes.apple.com/us/app/app/id%s" % app_id
+
+        country = self.get_store_id_for_country(self._country)
+        headers = {"X-Apple-Store-Front": "%s,32" % country, "Accept-Language": self._lang}
+
+        result = requests.get(url, headers=headers).text
+        if "customersAlsoBoughtApps" not in result:
+            return []
+
+        blob = re.search(r"customersAlsoBoughtApps\":\s*(\[[^\]]+\])", result)
+        if not blob:
+            return []
+
+        try:
+            ids = json.loads(blob[1])
+        except (json.JSONDecodeError, IndexError):
+            return []
+
+        return ids
+
+    def get_store_id_for_country(self, country):
+        """
+        Get store ID for country code
+
+        :param str country:  Two-letter country code
+        :param str country:  Two-letter country code for the store to search in.
+                             Defaults to 'nl'.
+        """
+        country = country.upper()
+
+        if hasattr(AppStoreMarkets, country):
+            return getattr(AppStoreMarkets, country)
+        else:
+            raise AppStoreException("Country code not found for {0}".format(country))
+
+    def get_app_ratings(self, app_id, countries=None, sleep=1):
+        """
+        Get app ratings for given app ID
+
+        :param app_id:  App ID to retrieve details for. Can be either the
+                        numerical trackID or the textual BundleID.
+        :countries:     List of countries (lowercase, 2 letter code) or single country (e.g. 'de')
+                        to generate the rating for
+                        if left empty, it defaults to mostly european countries (see below)
+        :param int sleep: Seconds to sleep before request to prevent being
+                                          temporary blocked if there are many requests in a
+                                          short time. Defaults to 1.
+
+        :return dict:  App ratings, as scraped from the app store.
+        """
+        dataset = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+        if countries is None:
+            countries = COUNTRIES
+        elif isinstance(countries, str):  # only a string provided
+            countries = [countries]
+        else:
+            countries = countries
+
+        for country in countries:
+            url = "https://itunes.apple.com/%s/customer-reviews/id%s?displayable-kind=11" % (
+                country,
+                app_id,
+            )
+            store_id = self.get_store_id_for_country(country)
+            headers = {"X-Apple-Store-Front": "%s,12 t:native" % store_id}
+
+            try:
+                if sleep is not None:
+                    time.sleep(sleep)
+                result = requests.get(url, headers=headers).text
+            except Exception:
+                try:
+                    # handle the retry here.
+                    # Take an extra sleep as back off and then retry the URL once.
+                    time.sleep(2)
+                    result = requests.get(url, headers=headers).text
+                except Exception:
+                    raise AppStoreException(
+                        "Could not parse app store rating response for ID %s" % app_id
+                    )
+
+            ratings = self._parse_rating(result)
+
+            if ratings is not None:
+                dataset[1] = dataset[1] + ratings[1]
+                dataset[2] = dataset[2] + ratings[2]
+                dataset[3] = dataset[3] + ratings[3]
+                dataset[4] = dataset[4] + ratings[4]
+                dataset[5] = dataset[5] + ratings[5]
+
+                # debug
+        # ,print("-----------------------")
+        # ,print('%d ratings' % (dataset[1] + dataset[2] + dataset[3] + dataset[4] + dataset[5]))
+        # ,print(dataset)
+
+        return dataset
+
+    def _parse_rating(self, text):
+        matches = Regex.STARS.findall(text)
+
+        if len(matches) != 5:
+            # raise AppStoreException("Cant get stars - expected 5 - but got %d" % len(matches))
+            return None
+
+        ratings = {}
+        star = 5
+
+        for match in matches:
+            value = match
+            value = value.replace('<span class="total">', "")
+            value = value.replace("</span>", "")
+            ratings[star] = int(value)
+            star = star - 1
+
+        return ratings
+
+    def _log_error(self, app_store_country, message):
+        """
+        Write the error to a local file to capture the error.
+
+        :param str app_store_country: the country for the app store
+        :param str message: the error message to log
+        """
+        log_dir = "log/"
+        if not os.path.isdir(log_dir):
+            os.mkdir(log_dir)
+
+        app_log = os.path.join(log_dir, "{0}_log.txt".format(app_store_country))
+        errortime = datetime.now().strftime("%Y%m%d_%H:%M:%S - ")
+        fh = open(app_log, "a")
+        fh.write("%s %s \n" % (errortime, message))
+        fh.close()
