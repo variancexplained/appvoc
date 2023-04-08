@@ -1,33 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
+# Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.8                                                                              #
 # Filename   : /tests/test_appstore/test_appstore.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday March 27th 2023 06:03:50 pm                                                  #
-# Modified   : Saturday April 1st 2023 05:17:39 am                                                 #
+# Created    : Wednesday April 5th 2023 01:39:09 am                                                #
+# Modified   : Wednesday April 5th 2023 02:58:04 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-import os
-import sys
 import inspect
 from datetime import datetime
 import pytest
 import logging
-import shutil
 
-import pandas as pd
-
-from aimobile.data.scraper.appstore.service.appdata import AppStoreDataScraper, AppStoreScrapeParams
-
+from aimobile.data.scraper.appstore.service.appdata import AppStoreScraper
+from aimobile.data.scraper.utils.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -35,14 +30,18 @@ logger = logging.getLogger(__name__)
 double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 # ------------------------------------------------------------------------------------------------ #
-DIRECTORY = "data/appstore/app_data"
+PROJECT_NAME = "Alpha"
+PROJECT_DESCRIPTION = "Alpha version, testing requests and responses"
+NUM_RESULTS_PER_PAGE = 3
+PAGES = 1
+OUTPUT = "tests/data/appdata_health.csv"
+# ------------------------------------------------------------------------------------------------ #
 
 
 @pytest.mark.appstore
-@pytest.mark.appdata
-class TestAppStoreDataScraper:  # pragma: no cover
+class TestAppStore:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, caplog):
+    def test_search(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -54,7 +53,15 @@ class TestAppStoreDataScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        shutil.rmtree(os.path.dirname(DIRECTORY), ignore_errors=True)
+        scraper = AppStoreScraper(
+            project_name=PROJECT_NAME,
+            project_description=PROJECT_DESCRIPTION,
+            num_results_per_page=NUM_RESULTS_PER_PAGE,
+            pages=PAGES,
+        )
+        result = scraper.search(term="health")
+        IOService.write(filepath=OUTPUT, data=result)
+
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -71,7 +78,7 @@ class TestAppStoreDataScraper:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_no_data(self, caplog):
+    def test_something(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -83,10 +90,6 @@ class TestAppStoreDataScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        appdata = AppStoreDataScraper(directory=DIRECTORY)
-        with pytest.raises(ValueError):
-            appdata.read(category="health")
-        appdata.summary()
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -104,7 +107,7 @@ class TestAppStoreDataScraper:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_appdata(self, caplog):
+    def test_teardown(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -116,86 +119,6 @@ class TestAppStoreDataScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        params = AppStoreScrapeParams(category="weather", max_pages=1, page_size=10)
-        appdata = AppStoreDataScraper(directory=DIRECTORY)
-        appdata.scrape(params=params)
-
-        params = AppStoreScrapeParams(category="books", max_pages=2, page_size=10)
-        appdata.scrape(params=params)
-
-        df_weather = appdata.read(category="weather")
-        df_books = appdata.read(category="books")
-        assert isinstance(df_weather, pd.DataFrame)
-        assert isinstance(df_books, pd.DataFrame)
-        appdata.summary()
-        logger.debug(df_weather)
-        logger.debug(df_books)
-
-        # ---------------------------------------------------------------------------------------- #
-        end = datetime.now()
-        duration = round((end - start).total_seconds(), 1)
-
-        logger.info(
-            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                duration,
-                end.strftime("%I:%M:%S %p"),
-                end.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(single_line)
-
-    # ============================================================================================ #
-    def test_summary(self, caplog):
-        start = datetime.now()
-        logger.info(
-            "\n\nStarted {} {} at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                start.strftime("%I:%M:%S %p"),
-                start.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(double_line)
-        # ---------------------------------------------------------------------------------------- #
-        appdata = AppStoreDataScraper(directory=DIRECTORY)
-        appdata.summary()
-
-        # ---------------------------------------------------------------------------------------- #
-        end = datetime.now()
-        duration = round((end - start).total_seconds(), 1)
-
-        logger.info(
-            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                duration,
-                end.strftime("%I:%M:%S %p"),
-                end.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(single_line)
-
-    # ============================================================================================ #
-    def test_read_all(self, caplog):
-        start = datetime.now()
-        logger.info(
-            "\n\nStarted {} {} at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                start.strftime("%I:%M:%S %p"),
-                start.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(double_line)
-        # ---------------------------------------------------------------------------------------- #
-        params = AppStoreScrapeParams(category="weather", max_pages=sys.maxsize)
-        appdata = AppStoreDataScraper(directory=DIRECTORY)
-        appdata.scrape(params=params)
-        df = appdata.read(category="weather")
-        assert isinstance(df, pd.DataFrame)
-        logger.debug(f"Total of {df.shape[0]} apps downloaded.")
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
