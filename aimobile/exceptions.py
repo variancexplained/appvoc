@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Opportunity Discovery in Mobile Applications                             #
+# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
 # Filename   : /aimobile/exceptions.py                                                             #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 7th 2023 10:08:23 pm                                                   #
-# Modified   : Friday April 7th 2023 10:47:51 pm                                                   #
+# Modified   : Saturday April 8th 2023 05:29:06 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,6 +20,30 @@
 
 # ------------------------------------------------------------------------------------------------ #
 #                                       EXCEPTIONS                                                 #
+# ------------------------------------------------------------------------------------------------ #
+class ProgrammingError(Exception):
+    """Exception raised when a programming error is encountered.
+
+    Args:
+        message (str): The string message to be displayed.
+    """
+
+    def __init__(self, message) -> None:
+        super().__init__(message)
+
+
+# ------------------------------------------------------------------------------------------------ #
+class InvalidMode(Exception):
+    """Exception raised when an invalid mode is encountered.
+
+    Args:
+        message (str): The string message to be displayed.
+    """
+
+    def __init__(self, message) -> None:
+        super().__init__(message)
+
+
 # ------------------------------------------------------------------------------------------------ #
 class EntityNotFound(Exception):
     """Exception raised when an entity is not found.
