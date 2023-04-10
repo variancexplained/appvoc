@@ -13,5 +13,8 @@
             ["version", "0.1.0"],
             ["pythonversion","3.10.10"]
         ],
+        "python.linting.flake8Args": [
+            "--ignore=E501,E265,W503,C901"
+        ],
     }
 }

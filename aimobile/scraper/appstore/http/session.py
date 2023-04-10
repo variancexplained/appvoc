@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/scraper/appstore/internet/session.py                                      #
+# Filename   : /aimobile/scraper/appstore/http/session.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Sunday April 9th 2023 09:54:48 pm                                                   #
+# Modified   : Monday April 10th 2023 09:21:04 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,12 +22,13 @@ from datetime import datetime
 import random
 import time
 import logging
+import json
 from dotenv import load_dotenv
 import requests
 from urllib3.util import Retry
 
-from aimobile.scraper.appstore.internet.adapter import TimeoutHTTPAdapter
-from aimobile.scraper.appstore.internet.base import SERVERS, HEADERS, Handler
+from aimobile.scraper.appstore.http.adapter import TimeoutHTTPAdapter
+from aimobile.scraper.appstore.http.base import SERVERS, HEADERS, Handler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -116,7 +117,7 @@ class SessionHandler(Handler):
             timeout=self._config["time"]["timeout"], max_retries=retry
         )
 
-    def get(self, url: str, headers: dict = None, params: dict = None) -> requests.Response:
+    def get(self, url: str, headers: dict = None, params: dict = None):  # noqa: C901
         """Executes the http request and returns a Response object.
 
         Args:
@@ -160,9 +161,12 @@ class SessionHandler(Handler):
                 self._logger.error(msg)
             except requests.exceptions.JSONDecodeError as e:  # pragma: no cover
                 self._sessions += 1
-                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Unable to decode response. Aborting request"
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Unable to decode response. Retrying."
                 self._logger.error(msg)
-                break
+            except json.decoder.JSONDecodeError as e:  # pragma: no cover
+                self._sessions += 1
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Unable to decode response. Retrying."
+                self._logger.error(msg)
             except requests.exceptions.InvalidURL as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. Likely a problem with the url: {url}. Aborting request."
@@ -205,7 +209,7 @@ class SessionHandler(Handler):
         try:
             self._content_length = int(self._response.headers["Content-Length"])
         except KeyError:  # pragma: no cover
-            self._content_length = int(self._response.headers["content-length"])
+            self._content_length = 0
         self._logger.debug(
             f"\nRequest status code: {self._response.status_code}. Session: {self._sessions}"
         )

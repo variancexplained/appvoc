@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/scraper/appstore/internet/base.py                                         #
+# Filename   : /aimobile/scraper/appstore/http/base.py                                             #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Saturday April 8th 2023 02:45:31 pm                                                 #
+# Modified   : Monday April 10th 2023 08:12:49 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,9 @@ class HTTPDefault:
     TIMEOUT = 30
     TOTAL_RETRIES = 5
     SESSIONS = 3
+    MAX_PAGES = 99999
+    LIMIT = 200
+    EPOCH = 40246871
     DELAY_MIN = 1
     DELAY_MAX = 5
     BACKOFF_FACTOR = 2

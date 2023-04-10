@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/scraper/appstore/tests/test_internet/test_request.py                      #
+# Filename   : /aimobile/scraper/appstore/tests/test_http/test_reviews.py                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Saturday April 8th 2023 02:02:28 pm                                                 #
-# Modified   : Saturday April 8th 2023 02:45:32 pm                                                 #
+# Created    : Monday April 10th 2023 06:43:20 am                                                  #
+# Modified   : Monday April 10th 2023 09:00:17 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,9 +23,13 @@ import logging
 
 import pandas as pd
 
-from aimobile.scraper.appstore.internet.request import AppStoreSearchRequest
 
+from aimobile.scraper.appstore.http.reviews import AppStoreReviewRequest
 
+ID = 297606951
+PAGE = 1
+AFTER = datetime.fromisoformat("2010-01-01T05:00:00")
+MAX_PAGES = 2
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -33,9 +37,9 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.internet
-@pytest.mark.search
-class TestAppStoreSearchRequest:  # pragma: no cover
+@pytest.mark.http
+@pytest.mark.reviews
+class TestAppStoreReviewRequest:  # pragma: no cover
     # ============================================================================================ #
     def test_search(self, container, caplog):
         start = datetime.now()
@@ -49,13 +53,14 @@ class TestAppStoreSearchRequest:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        search = AppStoreSearchRequest(term="health", limit=10, max_pages=5)
-        for result in search:
-            assert isinstance(result, pd.DataFrame)
-            logger.debug(f"\nResult\n{result}")
-
-        assert search.pages == 5
-        assert search.apps == 50
+        session_handler = container.session.handler()
+        search = AppStoreReviewRequest(
+            id=ID, handler=session_handler, page=PAGE, after=AFTER, max_pages=MAX_PAGES
+        )
+        for request in search:
+            assert isinstance(request.result, pd.DataFrame)
+            logger.debug(f"\nResult\n{request.result}")
+            logger.debug(f"URL:\n{request.url}")
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

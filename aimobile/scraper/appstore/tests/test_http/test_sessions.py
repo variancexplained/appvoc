@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 10:53:07 am                                                 #
-# Modified   : Sunday April 9th 2023 09:54:25 pm                                                   #
+# Modified   : Monday April 10th 2023 06:36:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.internet
+@pytest.mark.http
 @pytest.mark.sessions
 class TestSessionHandler:  # pragma: no cover
     # ============================================================================================ #

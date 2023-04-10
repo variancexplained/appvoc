@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 01:06:35 am                                                  #
-# Modified   : Monday April 10th 2023 01:34:29 am                                                  #
+# Modified   : Monday April 10th 2023 06:40:03 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ def wireup() -> None:
             __name__,
             "aimobile.scraper.appstore.container",
             "aimobile.scraper.appstore.repo.datacentre",
-            "aimobile.scraper.appstore.internet.request",
+            "aimobile.scraper.appstore.http.appdata",
             "aimobile.scraper.appstore.service.appdata",
         ]
     )

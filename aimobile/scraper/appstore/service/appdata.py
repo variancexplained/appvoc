@@ -11,21 +11,22 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Monday April 10th 2023 02:50:41 am                                                  #
+# Modified   : Monday April 10th 2023 06:38:50 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+"""AppStore App Details Scraper Module"""
 import logging
 
 from dependency_injector.wiring import Provide, inject
 
 from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
-from aimobile.scraper.appstore.internet.request import AppStoreSearchRequest
+from aimobile.scraper.appstore.http.appdata import AppStoreSearchRequest
 from aimobile.scraper.base import AbstractAppDataScraper
 from aimobile.scraper.appstore.container import AppStoreContainer
-from aimobile.scraper.appstore.internet.base import Handler
+from aimobile.scraper.appstore.http.base import Handler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -37,10 +38,12 @@ class AppStoreScraper(AbstractAppDataScraper):
     which can be found at  https://github.com/digitalmethodsinitiative/itunes-app-scraper
 
     Args:
-        project (Project): The project definition, in terms of the search term, number of results
-            per page, and maximum number of pages to scrape.
-        country (str): Two letter country code. Default is 'us'
-        lang (str): Two character language code. Default is 'en'
+        request (type[AppStoreSearchRequest]): A request object that specifies the request
+            parameters and defines the process for parsing the request response.
+        session_handler (Handler): Handles the session that performs the request, managing
+            retries as defined in the session handler object.
+        datacentre (AppStoreDataCentre): Manages the project, request and app data
+            repositories under single database context.
     """
 
     @inject
@@ -66,6 +69,8 @@ class AppStoreScraper(AbstractAppDataScraper):
 
         Args:
             term (str): Search term.
+            max_pages (int): The maximum number of pages to return
+            limit (int): The maximum number of results to return per page.
 
         """
         # Initialize the project.

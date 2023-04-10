@@ -4,65 +4,54 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/scraper/appstore/internet/request.py                                      #
+# Filename   : /aimobile/scraper/appstore/http/reviews.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Monday April 10th 2023 03:36:36 am                                                  #
+# Created    : Monday April 10th 2023 05:01:05 am                                                  #
+# Modified   : Monday April 10th 2023 09:06:23 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Module containing command objects which encapsulate requests and response processing."""
+"""AppStore Review Request Module"""
 from __future__ import annotations
-import requests
 import logging
+from datetime import datetime
 
 import pandas as pd
 
-from aimobile.scraper.appstore.internet.base import RequestIterator, Handler
+from aimobile.scraper.appstore.http.base import RequestIterator, Handler, HTTPDefault
 from aimobile.scraper.appstore.entity.request import AppStoreRequest
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreSearchRequest(RequestIterator):
-    # This is what the formatted url should look like to the target.
-    # https://itunes.apple.com/search?media=software&term=Health&country=us&lang=en-us&explicit=yes&limit=10&offset=0/json
-    __scheme = "https"
-    __host = "itunes.apple.com"
-    __command = "search?"
-    __media = "software"
-    __country = "us"
-    __explicit = "yes"
-    __lang = "en-us"
-    __limit = 200
-    __max_pages = 99999
-
+class AppStoreReviewRequest(RequestIterator):
     def __init__(
         self,
-        term: str,
+        id: int,
         handler: Handler,
-        limit: int = None,
-        max_pages: int = None,
-        page: int = 0,
+        page: int = 1,
+        after: datetime = datetime.fromtimestamp(HTTPDefault.EPOCH),
+        max_pages: int = HTTPDefault.MAX_PAGES,
     ) -> None:
-        self._host = self.__host
-        self._term = term
-        self._limit = limit or self.__limit
-        self._max_pages = max_pages or self.__max_pages
+        self._id = id  # App id
         self._handler = handler
         self._page = page
+        self._after = after
+        self._max_pages = max_pages
         self._pages = 0
         self._results = 0
         self._content_length = 0
         self._sessions = 1
+        self._params = {}
         self._status_code = None
         self._result = None
         self._proxy = None
 
+        self._host = "itunes.apple.com"
         self._url = None
         self._params = None
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
@@ -70,7 +59,12 @@ class AppStoreSearchRequest(RequestIterator):
     @property
     def host(self) -> int:
         """Returns the current page processed."""
-        return self.__host
+        return self._host
+
+    @property
+    def url(self) -> int:
+        """Returns the current page processed."""
+        return self._url
 
     @property
     def content_length(self) -> int:
@@ -136,40 +130,84 @@ class AppStoreSearchRequest(RequestIterator):
         """Returns the proxy server used."""
         return self._proxy
 
-    def __iter__(self) -> AppStoreSearchRequest:
+    def __iter__(self) -> AppStoreReviewRequest:
+        self._setup()
+        return self
+
+    def __next__(self) -> None:
+        """Formats an itunes request for the next page"""
+        while True:
+            random_404s = 0
+            if self._pages < self._max_pages:
+                session = self._handler.get(url=self._url, params=self._params)
+                response = session.response.json()["feed"]
+                if session.status_code == 404:
+                    random_404s += 1
+                    if random_404s > 5:
+                        self._teardown()
+                else:
+                    self._result = self._parse_response(response)
+                    self._parse_session(session)
+                    self._request = self._create_request_object()
+                    self._page += 1
+                    self._pages += 1
+                    self._set_next_url()
+                return self
+            else:
+                self._teardown()
+                return self
+
+    def summarize(self) -> None:
+        """Prints a summary of the review scraping project."""
+        print(self._project)
+
+    def _setup(self) -> None:
+        """Initializes the iterator"""
         self._pages = 0
         self._results = 0
         self._content_length = 0
         self._status_code = None
         self._result = None
         self._proxy = None
-        self._url = f"{self.__scheme}://{self.__host}/{self.__command}"
-        self._params = {
-            "media": self.__media,
-            "term": self._term,
-            "country": self.__country,
-            "lang": self.__lang,
-            "explicit": self.__explicit,
-            "limit": self._limit,
-            "offset": self._page,
-        }
-        return self
+        self._set_url()
 
-    def __next__(self) -> None:
-        """Formats an itunes request for the next page"""
-        if self._page < self._max_pages:
-            self._set_next_url()
-            session = self._handler.get(url=self._url, params=self._params)
-            if session.status_code == 404:
-                raise StopIteration
-            self._result = self._parse_response(response=session.response)
-            self._parse_session(session)
-            self._request = self._create_request_object()
-            self._page += 1
-            self._pages += 1
-            return self
-        else:
-            raise StopIteration
+    def _teardown(self) -> None:
+        raise StopIteration
+
+    def _set_url(self) -> None:
+        """Sets the initial request url"""
+        self._url = (
+            f"http://itunes.apple.com/us/rss/customerreviews/id={self._id}/sortBy=mostHelpful/json"
+        )
+
+    def _set_next_url(self) -> None:
+        """Sets the URL based upon the starting page."""
+        self._url = f"http://itunes.apple.com/us/rss/customerreviews/page={self._page}/id={self._id}/sortby=mosthelpful/json"
+
+    def _parse_response(self, response: dict) -> pd.DataFrame:
+        """Accepts a requests Response object and returns a DataFrame
+
+        Args:
+            response (dict): A requests Response object.
+
+        """
+        result_list = []
+        for result in response["entry"]:
+            review = {}
+            review["app_id"] = self._id
+            review["id"] = int(result["id"]["label"])
+            review["author"] = result["author"]["name"]["label"]
+            review["rating"] = int(result["im:rating"]["label"])
+            review["title"] = result["title"]["label"]
+            review["content"] = result["content"]["label"]
+            review["vote_sum"] = int(result["im:voteSum"]["label"])
+            review["vote_count"] = int(result["im:voteCount"]["label"])
+            review["date"] = datetime.fromisoformat(result["updated"]["label"])
+            review["source"] = self._host
+            result_list.append(review)
+        df = pd.DataFrame(data=result_list)
+        self._results = len(result_list)
+        return df
 
     def _parse_session(self, session: Handler):
         """Extracts data from the sesion object"""
@@ -182,43 +220,11 @@ class AppStoreSearchRequest(RequestIterator):
         self._proxy = session.proxy
         self._content_length = session.content_length
 
-    def _parse_response(self, response: requests.Response) -> pd.DataFrame:
-        """Accepts a requests Response object and returns a DataFrame
-
-        Args:
-            response (requests.Response): A requests Response object.
-
-        """
-        result_list = []
-        results = response.json()["results"]
-        for result in results:
-            appdata = {}
-            appdata["id"] = result["trackId"]
-            appdata["name"] = result["trackName"]
-            appdata["description"] = result["description"]
-            appdata["category_id"] = result["primaryGenreId"]
-            appdata["category"] = result["primaryGenreName"]
-            appdata["price"] = result["price"]
-            appdata["developer_id"] = result["artistId"]
-            appdata["developer"] = result["artistName"]
-            appdata["rating"] = result["averageUserRating"]
-            appdata["ratings"] = result["userRatingCount"]
-            appdata["released"] = result["releaseDate"]
-            appdata["source"] = self._host
-            result_list.append(appdata)
-        df = pd.DataFrame(data=result_list)
-        self._results = len(result_list)
-        return df
-
-    def _set_next_url(self) -> None:
-        """Sets the parameter variable for the next url."""
-        self._params["offset"] = self._page * self._limit
-
-    def _create_request_object(self) -> AppStoreRequest:
+    def _create_request_object(self) -> AppStoreReviewRequest:
         """Creates the request object"""
         data = {
             "host": self._host,
-            "name": self._term,
+            "term": self._id,
             "page": self._page,
             "content_length": self._content_length,
             "results": self._results,
