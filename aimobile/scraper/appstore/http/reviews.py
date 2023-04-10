@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Monday April 10th 2023 09:06:23 am                                                  #
+# Modified   : Monday April 10th 2023 12:21:06 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,6 @@
 """AppStore Review Request Module"""
 from __future__ import annotations
 import logging
-from datetime import datetime
 
 import pandas as pd
 
@@ -29,18 +28,23 @@ from aimobile.scraper.appstore.entity.request import AppStoreRequest
 
 # ------------------------------------------------------------------------------------------------ #
 class AppStoreReviewRequest(RequestIterator):
+    __max_anomalies = 5
+
     def __init__(
         self,
         id: int,
+        name: str,
+        category_id: int,
+        category: str,
         handler: Handler,
-        page: int = 1,
-        after: datetime = datetime.fromtimestamp(HTTPDefault.EPOCH),
         max_pages: int = HTTPDefault.MAX_PAGES,
     ) -> None:
         self._id = id  # App id
+        self._name = name  # App name
+        self._category_id = category_id
+        self._category = category
         self._handler = handler
-        self._page = page
-        self._after = after
+        self._page = 1
         self._max_pages = max_pages
         self._pages = 0
         self._results = 0
@@ -136,26 +140,22 @@ class AppStoreReviewRequest(RequestIterator):
 
     def __next__(self) -> None:
         """Formats an itunes request for the next page"""
-        while True:
-            random_404s = 0
-            if self._pages < self._max_pages:
-                session = self._handler.get(url=self._url, params=self._params)
-                response = session.response.json()["feed"]
-                if session.status_code == 404:
-                    random_404s += 1
-                    if random_404s > 5:
-                        self._teardown()
-                else:
-                    self._result = self._parse_response(response)
-                    self._parse_session(session)
-                    self._request = self._create_request_object()
-                    self._page += 1
-                    self._pages += 1
-                    self._set_next_url()
-                return self
-            else:
-                self._teardown()
-                return self
+        if self._pages < self._max_pages:
+            session = self._handler.get(url=self._url, params=self._params)
+            self._process_session(session)
+            return self
+        else:
+            self._teardown()
+            return self
+
+    def _process_session(self, session: Handler) -> None:
+        response = session.response.json()["feed"]
+        self._result = self._parse_response(response)
+        self._parse_session(session)
+        self._request = self._create_request_object()
+        self._page += 1
+        self._pages += 1
+        self._set_next_url()
 
     def summarize(self) -> None:
         """Prints a summary of the review scraping project."""
@@ -194,15 +194,18 @@ class AppStoreReviewRequest(RequestIterator):
         result_list = []
         for result in response["entry"]:
             review = {}
-            review["app_id"] = self._id
             review["id"] = int(result["id"]["label"])
+            review["app_id"] = self._id
+            review["app_name"] = self._name
+            review["category_id"] = self._category_id
+            review["category"] = self._category
             review["author"] = result["author"]["name"]["label"]
             review["rating"] = int(result["im:rating"]["label"])
             review["title"] = result["title"]["label"]
             review["content"] = result["content"]["label"]
             review["vote_sum"] = int(result["im:voteSum"]["label"])
             review["vote_count"] = int(result["im:voteCount"]["label"])
-            review["date"] = datetime.fromisoformat(result["updated"]["label"])
+            review["date"] = result["updated"]["label"]
             review["source"] = self._host
             result_list.append(review)
         df = pd.DataFrame(data=result_list)

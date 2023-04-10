@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Monday April 10th 2023 09:21:04 am                                                  #
+# Modified   : Monday April 10th 2023 12:27:19 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -143,8 +143,13 @@ class SessionHandler(Handler):
                 self._response = session.get(
                     url=self._url, headers=self._headers, params=self._params, proxies=self._proxies
                 )
-                self._post_request()
-                return self
+                if self._response.status_code == 404:
+                    self._sessions += 1
+                    msg = f"A 404 status code was encountered. Retrying with new session #{self._sessions}."
+                    self._logger.error(msg)
+                else:
+                    self._post_request()
+                    return self
 
             except requests.exceptions.Timeout as e:  # pragma: no cover
                 self._sessions += 1

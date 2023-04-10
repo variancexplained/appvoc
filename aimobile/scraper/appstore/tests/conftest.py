@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Monday April 10th 2023 06:40:03 am                                                  #
+# Modified   : Monday April 10th 2023 10:50:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -129,7 +129,7 @@ def container():
         modules=[
             "aimobile.scraper.appstore.container",
             "aimobile.scraper.appstore.repo.datacentre",
-            "aimobile.scraper.appstore.http.appdata",
+            "aimobile.scraper.appstore.service.reviews",
             "aimobile.scraper.appstore.service.appdata",
         ]
     )

@@ -11,12 +11,21 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Monday April 10th 2023 08:12:49 am                                                  #
+# Modified   : Monday April 10th 2023 12:06:13 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from aimobile.scraper.base import RequestIterator, Handler  # noqa: F401
+from enum import Enum
+
+
+# ------------------------------------------------------------------------------------------------ #
+class SessionResponse(Enum):
+    SUCCESS = 0
+    RETRY = 1
+    GRACEFUL_EXIT = 2
+    IGNITE_HAIR = 3
 
 
 # ------------------------------------------------------------------------------------------------ #

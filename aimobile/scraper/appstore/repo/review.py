@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:23:39 am                                                  #
-# Modified   : Saturday April 8th 2023 02:45:31 pm                                                 #
+# Modified   : Monday April 10th 2023 11:07:48 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -36,15 +36,31 @@ class AppStoreReviewRepo(Repo):
         self._database = database
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
-    def get(self, category: str) -> pd.DataFrame:
-        """Retrieves AppData by category
+    def get(self, app_id: int) -> pd.DataFrame:
+        """Retrieves reviews by app_id
 
         Args:
             category_name (str): A category_name from AppStoreCategories
         """
-        query = "SELECT * FROM review WHERE review.category = :category;"
-        params = {"category": category}
+        query = "SELECT * FROM review WHERE review.app_id = :app_id;"
+        params = {"app_id": app_id}
         return self._database.query(query=query, params=params)
+
+    def get_by_category(self, category_id: int) -> pd.DataFrame:
+        """Retrieves reviews by category_id
+
+        Args:
+            category_id (int): A category_id from AppStoreCategories
+        """
+        query = "SELECT * FROM review WHERE review.category_id = :category_id;"
+        params = {"category_id": category_id}
+        return self._database.query(query=query, params=params)
+
+    def getall(self) -> pd.DataFrame:
+        """Returns a DataFrame of all reviews in the repository"""
+        query = "SELECT * FROM review;"
+        df = self._database.query(query=query)
+        return df
 
     def add(self, data: pd.DataFrame) -> None:
         """Adds a DataFrame to the Database
@@ -62,3 +78,12 @@ class AppStoreReviewRepo(Repo):
 
         """
         raise NotImplementedError("Request data are immutable. Update is not implemented.")
+
+    def remove(self, id: int) -> None:
+        """Removes review by id.
+
+        Args:
+            data (pd.DataFrame): The data to replace existing data
+
+        """
+        raise NotImplementedError("Review data are immutable. Remove is not implemented.")

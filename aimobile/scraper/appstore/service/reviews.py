@@ -11,27 +11,29 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:42 pm                                                 #
-# Modified   : Monday April 10th 2023 06:38:10 am                                                  #
+# Modified   : Monday April 10th 2023 12:35:02 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Reviews Scraper Module"""
 import logging
-from datetime import datetime
+import requests
 
+import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
 from aimobile.scraper.appstore.http.reviews import AppStoreReviewRequest
-from aimobile.scraper.base import AbstractAppDataScraper
+from aimobile.scraper.base import AbstractReviewScraper
 from aimobile.scraper.appstore.container import AppStoreContainer
 from aimobile.scraper.appstore.http.base import Handler
+from aimobile.scraper.appstore.entity.base import AppStoreCategoryIds
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewScraper(AbstractAppDataScraper):
+class AppStoreReviewScraper(AbstractReviewScraper):
     """App Store Reviews Scraper
 
     This class implements methods to retrieve information about iTunes App
@@ -65,38 +67,57 @@ class AppStoreReviewScraper(AbstractAppDataScraper):
     def project(self) -> AppStoreProject:
         return self._project
 
-    def search(
-        self, id: int, page: int, after: datetime, max_pages: int = None, limit: int = None
-    ) -> None:
+    def search(self, category_id: int, max_pages: int = None) -> None:
         """Executes a search of app data, and persists the results in the appstore appdate repository.
 
         Args:
-            id (int): An appstore app id.
+            category_id (int): An app category id from AppStoreCategories
+            page (int): The starting page.
             max_pages (int): The maximum number of pages to return
-            limit (int): The maximum number of results to return per page.
 
         """
-        # Initialize the project.
-        self._setup(id)
+        # Initialize the project and obtain the list of app ids.
+        app_count = 0
+        apps = self._setup(category_id)
 
-        # Iterate over our requests iterator
-        for request in self._request(
-            term=id,
-            page=page,
-            after=after,
-            max_pages=max_pages,
-            handler=self._session_handler,
-        ):
-            self._persist(request)
+        for _, row in apps.iterrows():
+            app_count += 1
+            self._logger.debug(
+                f"\n\nScraping reviews for app #: {app_count}, App Id: {row['id']} - App Name: {row['name']}"
+            )
+            try:
+                # Iterate over our requests iterator
+                for request in self._request(
+                    id=row["id"],
+                    name=row["name"],
+                    category_id=row["category_id"],
+                    category=row["category"],
+                    max_pages=max_pages,
+                    handler=self._session_handler,
+                ):
+                    self._persist(request)
+            except requests.exceptions.JSONDecodeError:
+                msg = "Encountered a json error, implying the end of reviews for this app."
+                self._logger.debug(msg)
 
         # Close the project
         self._teardown()
 
-    def _setup(self, id: int = None) -> None:
+    def _setup(self, category_id: int = None) -> None:
         """Some initialization"""
-        self._project = AppStoreProject(name=id)
+        self._setup_project(category_id)
+        return self._get_apps(category_id)
+
+    def _setup_project(self, category_id: int) -> None:
+        """Creates the project and saves it in the repository"""
+        name = str(category_id) + "-" + AppStoreCategoryIds.NAMES.get(category_id)
+        self._project = AppStoreProject(name=name)
         self._project.start()
         self._datacentre.project_repository.add(project=self._project)
+
+    def _get_apps(self, category_id: int) -> pd.DataFrame:
+        """Obtains the all app ids and names for the category id"""
+        return self._datacentre.appdata_repository.get_category(category_id=category_id)
 
     def _persist(self, request: AppStoreReviewRequest) -> None:
         """Saves the app and project data to the database."""

@@ -11,62 +11,64 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 2nd 2023 08:43:21 pm                                                   #
-# Modified   : Saturday April 8th 2023 02:45:32 pm                                                 #
+# Modified   : Monday April 10th 2023 11:01:33 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from dataclasses import dataclass
-from datetime import datetime
-from types import SimpleNamespace
 
-from aimobile.scraper.base import Entity, AbstractScraperProject
+import pandas as pd
+
+from aimobile.scraper.base import Entity
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class AppStoreReview(Entity):
-    id: str = None
-    app_id: str = None
+    id: int = None
+    app_id: int = None
     app_name: str = None
-    collection_id: int = None
-    collection: str = None
+    category_id: int = None
     category: str = None
-    author_id: str = None
-    author_name: str = None
+    author: str = None
     rating: float = None
-    review_text: str = None
-    helpful: int = None
-    reviewed_at: str = None
+    title: str = None
+    content: str = None
+    vote_sum: int = None
+    vote_count: int = None
+    date: str = None
     source: str = None
-    created: datetime = None
 
-    def from_result(self, result: dict, project: AbstractScraperProject) -> None:
+    @classmethod
+    def from_df(cls, data: pd.DataFrame) -> None:
         """Builds the Review object from the request and results
 
         Args:
             result (dict): Results from HTTP request
             request (AbstractRequest): Contains the HTTP request parameters
         """
-        self.id = result["id"]
-        self.app_id = self._extract_app_id(result["link"]["attributes"]["href"])
-        self.app_name = app_name
-        self.category = category
-        self.author_id = result["author"]["uri"]["label"].split("id")[1]
-        self.author_name = result["author"]["name"]["label"]
-        self.rating = float(result["im:rating"]["label"])
-        self.review_text = result["content"]["label"]
-        self.helpful = int(result["im:voteSum"]["label"])
-        self.reviewed_at = result["updated"]["label"]
-        self.project_id = project_id
-        self.source = "appstore"
-        self.created = datetime.now()
+        return cls(
+            id=data["id"],
+            app_id=data["app_id"],
+            app_name=data["app_name"],
+            category_id=data["category_id"],
+            category=data["category"],
+            author=data["author"],
+            rating=data["rating"],
+            title=data["title"],
+            content=data["content"],
+            vote_sum=data["vote_sum"],
+            vote_count=data["vote_count"],
+            date=data["date"],
+            source=data["source"],
+        )
 
-    def _extract_app_id(self, url) -> str:
+    @classmethod
+    def from_dict(cls, data: dict) -> str:
         """Extracts the app_id from the review url
 
         Args:
             url (str): A URL for the itunes review, containing the app_id
         """
-        part = url.split("id=")[1]
-        return part.split("&")[0]
+        return cls.from_df(data)
