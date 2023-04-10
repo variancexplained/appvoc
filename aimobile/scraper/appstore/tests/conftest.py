@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Sunday April 9th 2023 11:00:47 pm                                                   #
+# Modified   : Monday April 10th 2023 02:40:39 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -116,6 +116,7 @@ def request_entity():
         response_time=232,
         status_code=200,
         sessions=2,
+        proxy="128.456.78",
     )
 
 

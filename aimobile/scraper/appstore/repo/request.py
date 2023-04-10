@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Sunday April 9th 2023 11:02:16 pm                                                   #
+# Modified   : Monday April 10th 2023 02:38:42 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -92,6 +92,7 @@ class AppStoreRequestRepo(Repo):
 
         Args:
             data (AppStoreRequest): A Request object.
+
         """
         request.id = next(AppStoreRequestRepo.__id_gen)
         df = request.as_df()

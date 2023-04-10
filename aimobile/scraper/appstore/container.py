@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Sunday April 9th 2023 11:36:48 pm                                                   #
+# Modified   : Monday April 10th 2023 01:32:07 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -40,6 +40,8 @@ class ServicesContainer(containers.DeclarativeContainer):
 # ------------------------------------------------------------------------------------------------ #
 class DataCentreContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
+
+    print(f"\n{40*'='}\n{config.database}\n{40*'='}")
 
     database = providers.Singleton(
         SQLiteDatabase,

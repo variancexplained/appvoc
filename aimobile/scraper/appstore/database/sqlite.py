@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday March 30th 2023 03:03:56 pm                                                #
-# Modified   : Monday April 10th 2023 12:02:50 am                                                  #
+# Modified   : Monday April 10th 2023 01:24:31 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -44,6 +44,9 @@ class SQLiteDatabase(Database):
         self._is_connected = False
 
         os.makedirs(os.path.dirname(self._filepath), exist_ok=True)
+        self._filepath = (
+            "sqlite:///" + self._filepath
+        )  # Added as per https://docs.sqlalchemy.org/en/14/core/engines.html#sqlite
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
     @property

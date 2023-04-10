@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Monday April 10th 2023 12:53:36 am                                                  #
+# Modified   : Monday April 10th 2023 02:41:25 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -59,7 +59,7 @@ class AppStoreSearchRequest(RequestIterator):
         self._results = 0
         self._content_length = 0
         self._sessions = 1
-        self._status = None
+        self._status_code = None
         self._result = None
         self._proxy = None
 
@@ -140,7 +140,7 @@ class AppStoreSearchRequest(RequestIterator):
         self._pages = 0
         self._results = 0
         self._content_length = 0
-        self._status = None
+        self._status_code = None
         self._result = None
         self._proxy = None
         self._url = f"{self.__scheme}://{self.__host}/{self.__command}"
@@ -167,11 +167,12 @@ class AppStoreSearchRequest(RequestIterator):
             self._request = self._create_request_object()
             self._page += 1
             self._pages += 1
-        return self
+            return self
+        else:
+            raise StopIteration
 
     def _parse_session(self, session: Handler):
         """Extracts data from the sesion object"""
-        self._results = self._result.shape[0]
         self._requested = session.requested
         self._responded = session.responded
         self._response_time = session.response_time
@@ -206,6 +207,7 @@ class AppStoreSearchRequest(RequestIterator):
             appdata["source"] = self._host
             result_list.append(appdata)
         df = pd.DataFrame(data=result_list)
+        self._results = len(result_list)
         return df
 
     def _set_next_url(self) -> None:
@@ -224,7 +226,8 @@ class AppStoreSearchRequest(RequestIterator):
             "responded": self._responded,
             "response_time": self._response_time,
             "sessions": self._sessions,
-            "status_code": self._status,
+            "proxy": self._proxy,
+            "status_code": self._status_code,
         }
 
         return AppStoreRequest.from_dict(data=data)

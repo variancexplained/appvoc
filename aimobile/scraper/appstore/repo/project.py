@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Sunday April 9th 2023 07:15:44 pm                                                   #
+# Modified   : Monday April 10th 2023 02:38:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -59,7 +59,7 @@ class AppStoreProjectRepo(Repo):
         else:
             return AppStoreProject.from_df(df.loc[0])
 
-    def get_by_name(self, name: str, as_df: bool = True) -> Union[AppStoreProject, pd.DataFrame]:
+    def get_by_name(self, name: str, as_df: bool = False) -> Union[AppStoreProject, pd.DataFrame]:
         """Returns a dictionary or DataFrame of projects with the specified name from the project repository
 
         Args:
@@ -102,6 +102,7 @@ class AppStoreProjectRepo(Repo):
 
         Args:
             data (AppStoreProject): A Project object.
+
         """
         project.id = next(AppStoreProjectRepo.__id_gen)
         df = project.as_df()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 10:46:15 am                                                #
-# Modified   : Sunday April 9th 2023 11:28:09 pm                                                   #
+# Modified   : Monday April 10th 2023 02:13:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,7 +20,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
-import pprint
 
 import pandas as pd
 
@@ -49,6 +48,12 @@ class AppStoreProject(Entity):
             and self.source == other.source
             and self.id == other.id
         )
+
+    def __repr__(self) -> str:
+        return f"{self.__module__}.{self.__class__.__name__}.{self.source} {self.name}: app_count={self.app_count}, page_count={self.page_count}, started={self.started}, ended={self.ended}, duration={self.duration}, state={self.state}"
+
+    def __str__(self) -> str:
+        return f"Name: {self.name}: App Count: {self.app_count}, Page Count: {self.page_count}, Started: {self.started}, Ended: {self.ended}, Duration: {self.duration}, State: {self.state}"
 
     def start(self) -> None:
         """Initialization"""
@@ -98,8 +103,3 @@ class AppStoreProject(Entity):
             state=data["state"],
             source=data["source"],
         )
-
-    def summary(self) -> None:
-        """Prints a summary of the project"""
-        summary = self.as_dict()
-        pprint(summary)

@@ -3941,3 +3941,1007 @@ Request status code: 200. Session: 0
 [04/10/2023 12:57:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
 [04/10/2023 12:57:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 [04/10/2023 12:57:16 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 01:49:06 AM on 04/10/2023
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 01:49:06 AM on 04/10/2023
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 01:49:06 AM on 04/10/2023
+[04/10/2023 01:49:06 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00058s] ()
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00092s] ('health', 0, 0, '04/10/2023, 01:49:06', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 01:49:06')
+[04/10/2023 01:49:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:49:10 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 01:49:11 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 01:49:11 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 01:49:50 AM on 04/10/2023
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 01:49:50 AM on 04/10/2023
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 01:49:50 AM on 04/10/2023
+[04/10/2023 01:49:50 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00045s] ()
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00070s] ('health', 0, 0, '04/10/2023, 01:49:50', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 01:49:50')
+[04/10/2023 01:49:50 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:49:55 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 01:49:55 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 01:49:55 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00048s] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00089s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00126s] ('health', 5, 1, '04/10/2023, 01:49:50', '04/10/2023, 01:49:55', 4.986813, 'in-progress', 'appstore', 1)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00047s] ()
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00081s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 01:49:55', '04/10/2023 01:49:55', 0.879307, 1, None, 1)
+[04/10/2023 01:49:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:50:00 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 01:50:00 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00094s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 4.719s ago] ('health', 10, 2, '04/10/2023, 01:49:50', '04/10/2023, 01:50:00', 9.70556, 'in-progress', 'appstore', 1)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00068s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 01:49:59', '04/10/2023 01:50:00', 0.637127, 1, None, 2)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 4.749s ago] ('health', 10, 2, '04/10/2023, 01:49:50', '04/10/2023, 01:50:00', 9.735648, 'success', 'appstore', 1)
+[04/10/2023 01:50:00 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_rollback_impl] : ROLLBACK
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 01:52:06 AM on 04/10/2023
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 01:52:06 AM on 04/10/2023
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 01:52:06 AM on 04/10/2023
+[04/10/2023 01:52:06 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00045s] ()
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00077s] ('health', 0, 0, '04/10/2023, 01:52:06', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 01:52:06')
+[04/10/2023 01:52:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:52:07 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 01:52:08 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 01:52:08 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00044s] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00082s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00105s] ('health', 5, 1, '04/10/2023, 01:52:06', '04/10/2023, 01:52:08', 1.719554, 'in-progress', 'appstore', 1)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00052s] ()
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00066s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 01:52:07', '04/10/2023 01:52:08', 0.606518, 1, None, 1)
+[04/10/2023 01:52:08 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:52:09 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 01:52:09 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00082s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.232s ago] ('health', 10, 2, '04/10/2023, 01:52:06', '04/10/2023, 01:52:09', 2.951358, 'in-progress', 'appstore', 1)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00082s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 01:52:09', '04/10/2023 01:52:09', 0.16345, 1, None, 2)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.258s ago] ('health', 10, 2, '04/10/2023, 01:52:06', '04/10/2023, 01:52:09', 2.97742, 'success', 'appstore', 1)
+[04/10/2023 01:52:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_rollback_impl] : ROLLBACK
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 01:55:55 AM on 04/10/2023
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 01:55:55 AM on 04/10/2023
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 01:55:55 AM on 04/10/2023
+[04/10/2023 01:55:55 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 01:55:55 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00067s] ()
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00072s] ('health', 0, 0, '04/10/2023, 01:55:55', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 01:55:55')
+[04/10/2023 01:55:56 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:56:01 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 01:56:01 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 01:56:01 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00045s] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00088s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00111s] ('health', 5, 1, '04/10/2023, 01:55:55', '04/10/2023, 01:56:01', 5.699379, 'in-progress', 'appstore', 1)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00050s] ()
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00064s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 01:56:01', '04/10/2023 01:56:01', 0.585858, 1, None, 1)
+[04/10/2023 01:56:01 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:56:02 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 01:56:02 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00083s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.248s ago] ('health', 10, 2, '04/10/2023, 01:55:55', '04/10/2023, 01:56:02', 6.946997, 'in-progress', 'appstore', 1)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00067s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 01:56:02', '04/10/2023 01:56:02', 0.170187, 1, None, 2)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.272s ago] ('health', 10, 2, '04/10/2023, 01:55:55', '04/10/2023, 01:56:02', 6.970932, 'success', 'appstore', 1)
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM project WHERE project.name = :name;
+[04/10/2023 01:56:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] {'name': 'health'}
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 01:57:03 AM on 04/10/2023
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 01:57:03 AM on 04/10/2023
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 01:57:03 AM on 04/10/2023
+[04/10/2023 01:57:03 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00051s] ()
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00087s] ('health', 0, 0, '04/10/2023, 01:57:03', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 01:57:03')
+[04/10/2023 01:57:03 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:57:06 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 01:57:07 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 01:57:07 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00042s] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00091s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00110s] ('health', 5, 1, '04/10/2023, 01:57:03', '04/10/2023, 01:57:07', 3.698946, 'in-progress', 'appstore', 1)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00062s] ()
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00061s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 01:57:06', '04/10/2023 01:57:07', 0.585605, 1, None, 1)
+[04/10/2023 01:57:07 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:57:10 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 01:57:10 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00096s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 3.214s ago] ('health', 10, 2, '04/10/2023, 01:57:03', '04/10/2023, 01:57:10', 6.912171, 'in-progress', 'appstore', 1)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00070s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 01:57:10', '04/10/2023 01:57:10', 0.131766, 1, None, 2)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 3.239s ago] ('health', 10, 2, '04/10/2023, 01:57:03', '04/10/2023, 01:57:10', 6.937082, 'success', 'appstore', 1)
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM project WHERE project.name = :name;
+[04/10/2023 01:57:10 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] {'name': 'health'}
+[04/10/2023 01:57:10 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : 
+Project: 
+AppStoreProject(name='health', app_count=10, page_count=2, started='04/10/2023, 01:57:03', ended='04/10/2023, 01:57:10', duration=6, state='success', source='appstore', id=1)
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 02:14:01 AM on 04/10/2023
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 02:14:02 AM on 04/10/2023
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 02:14:02 AM on 04/10/2023
+[04/10/2023 02:14:02 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00041s] ()
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00088s] ('health', 0, 0, '04/10/2023, 02:14:02', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 02:14:02')
+[04/10/2023 02:14:02 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:14:06 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 02:14:06 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 02:14:06 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00053s] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00091s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00112s] ('health', 5, 1, '04/10/2023, 02:14:02', '04/10/2023, 02:14:06', 4.751266, 'in-progress', 'appstore', 1)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00062s] ()
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00074s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 02:14:06', '04/10/2023 02:14:06', 0.618687, 1, None, 1)
+[04/10/2023 02:14:06 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:14:11 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 02:14:12 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00083s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 5.257s ago] ('health', 10, 2, '04/10/2023, 02:14:02', '04/10/2023, 02:14:12', 10.007978, 'in-progress', 'appstore', 1)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00069s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 02:14:11', '04/10/2023 02:14:12', 0.178359, 1, None, 2)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 5.286s ago] ('health', 10, 2, '04/10/2023, 02:14:02', '04/10/2023, 02:14:12', 10.036533, 'success', 'appstore', 1)
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM project WHERE project.name = :name;
+[04/10/2023 02:14:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] {'name': 'health'}
+[04/10/2023 02:14:12 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : 
+Project: 
+Name: health: App Count: 10, Page Count: 2, Started: 04/10/2023, 02:14:02, Ended: 04/10/2023, 02:14:12, Duration: 10, State: success
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 02:15:09 AM on 04/10/2023
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 02:15:09 AM on 04/10/2023
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 02:15:09 AM on 04/10/2023
+[04/10/2023 02:15:09 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00052s] ()
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00067s] ('health', 0, 0, '04/10/2023, 02:15:09', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 02:15:09')
+[04/10/2023 02:15:09 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:15:12 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 02:15:12 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 02:15:12 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 02:15:12 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00045s] ()
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00084s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00108s] ('health', 5, 1, '04/10/2023, 02:15:09', '04/10/2023, 02:15:13', 3.795013, 'in-progress', 'appstore', 1)
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	status_code TEXT, 
+	id BIGINT
+)
+
+
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00047s] ()
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00068s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 02:15:12', '04/10/2023 02:15:12', 0.611464, 1, None, 1)
+[04/10/2023 02:15:13 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:15:15 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 02:15:15 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00077s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 2.199s ago] ('health', 10, 2, '04/10/2023, 02:15:09', '04/10/2023, 02:15:15', 5.993825, 'in-progress', 'appstore', 1)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00070s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 02:15:15', '04/10/2023 02:15:15', 0.124097, 1, None, 2)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 2.223s ago] ('health', 10, 2, '04/10/2023, 02:15:09', '04/10/2023, 02:15:15', 6.017367, 'success', 'appstore', 1)
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM project WHERE project.name = :name;
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] {'name': 'health'}
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : 
+Project: 
+Name: health: App Count: 10, Page Count: 2, Started: 04/10/2023, 02:15:09, Ended: 04/10/2023, 02:15:15, Duration: 6, State: success
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Name: health: App Count: 10, Page Count: 2, Started: 04/10/2023, 02:15:09, Ended: 04/10/2023, 02:15:15, Duration: 6, State: success
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM appdata;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM appdata;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM appdata;
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Appdata head: 
+           id                           name                                        description  category_id          category  ...               developer   rating  ratings              released            source
+0  1208224953                        Fitness  Get a comprehensive view of your fitness, incl...         6013  Health & Fitness  ...                   Apple  3.01396     3653  2017-04-10T23:30:13Z  itunes.apple.com
+1   341232718  MyFitnessPal: Calorie Counter  Track progress toward your nutrition, water, f...         6013  Health & Fitness  ...      MyFitnessPal, Inc.  4.71498  1611688  2009-12-08T02:04:45Z  itunes.apple.com
+2   571800810                           Calm  ** Best of 2018 Award Winner ** — Apple\n\n** ...         6013  Health & Fitness  ...                Calm.com  4.77172  1610620  2013-02-22T20:09:23Z  itunes.apple.com
+3   335364882                      Walgreens  It's your Walgreens - shop and manage your pre...         6024          Shopping  ...            Walgreen Co.  4.82003  3805419  2009-10-27T00:10:29Z  itunes.apple.com
+4   331308914            WW / WeightWatchers  WeightWatchers® is for people who want more fr...         6013  Health & Fitness  ...  WW International, Inc.  4.83695  1962470  2009-09-19T00:05:27Z  itunes.apple.com
+
+[5 rows x 12 columns]
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Appdata info: 
+None
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM request;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM request;")
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM request;
+[04/10/2023 02:15:15 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Requests head: 
+               host    name  page  content_length  results            requested            responded  response_time  sessions status_code  id
+0  itunes.apple.com  health     0           15990        5  04/10/2023 02:15:12  04/10/2023 02:15:12       0.611464         1        None   1
+1  itunes.apple.com  health     1           16363        5  04/10/2023 02:15:15  04/10/2023 02:15:15       0.124097         1        None   2
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Requests info: 
+None
+[04/10/2023 02:15:15 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : None
+[04/10/2023 02:15:15 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+Completed TestAppStoreScraper test_scraper in 6.1 seconds at 02:15:15 AM on 04/10/2023
+[04/10/2023 02:15:15 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 02:40:45 AM on 04/10/2023
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 02:40:45 AM on 04/10/2023
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 02:40:45 AM on 04/10/2023
+[04/10/2023 02:40:45 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00067s] ()
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00079s] ('health', 0, 0, '04/10/2023, 02:40:45', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 02:40:45')
+[04/10/2023 02:40:45 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:40:50 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 02:40:50 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 02:40:50 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+
+Started TestAppStoreScraper test_setup at 02:41:32 AM on 04/10/2023
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+====================================================================================================
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+Completed TestAppStoreScraper test_setup in 0.1 seconds at 02:41:32 AM on 04/10/2023
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_setup] : 
+----------------------------------------------------------------------------------------------------
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+
+Started TestAppStoreScraper test_scraper at 02:41:32 AM on 04/10/2023
+[04/10/2023 02:41:32 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+====================================================================================================
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("project")
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("project")
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE project (
+	name TEXT, 
+	app_count BIGINT, 
+	page_count BIGINT, 
+	started TEXT, 
+	ended TEXT, 
+	duration BIGINT, 
+	state TEXT, 
+	source TEXT, 
+	id BIGINT, 
+	_started TEXT
+)
+
+
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00046s] ()
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO project (name, app_count, page_count, started, ended, duration, state, source, id, _started) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00069s] ('health', 0, 0, '04/10/2023, 02:41:32', '', 0, 'not_started', 'appstore', 1, '04/10/2023, 02:41:32')
+[04/10/2023 02:41:32 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:41:35 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_new_conn] : Starting new HTTPS connection (1): itunes.apple.com:443
+[04/10/2023 02:41:36 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=0 HTTP/1.1" 200 15990
+[04/10/2023 02:41:36 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("appdata")
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE appdata (
+	id BIGINT, 
+	name TEXT, 
+	description TEXT, 
+	category_id BIGINT, 
+	category TEXT, 
+	price FLOAT, 
+	developer_id BIGINT, 
+	developer TEXT, 
+	rating FLOAT, 
+	ratings BIGINT, 
+	released TEXT, 
+	source TEXT
+)
+
+
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00048s] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00093s] [(1208224953, 'Fitness', "Get a comprehensive view of your fitness, including Activity Details, Workout and Mindfulness History, Trends, Awards, Apple Fitness+ for Apple Watch ... (3020 characters truncated) ... l cancelled. Terms apply. Cancel anytime by going to account setting and turning off auto-renew.\n\n*Apple Fitness+ not available in all territories.", 6013, 'Health & Fitness', 0.0, 284417353, 'Apple', 3.01396, 3653, '2017-04-10T23:30:13Z', 'itunes.apple.com'), (341232718, 'MyFitnessPal: Calorie Counter', 'Track progress toward your nutrition, water, fitness, and weight loss goals with MyFitnessPal. This all-in-one food tracker and health app is like ha ... (2968 characters truncated) ... acker and smartwatch apps, including the Health app\nTrack With Apple Watch – A calorie tracker, water tracker, and macro tracker on your watch face.', 6013, 'Health & Fitness', 0.0, 341232721, 'MyFitnessPal, Inc.', 4.71498, 1611688, '2009-12-08T02:04:45Z', 'itunes.apple.com'), (571800810, 'Calm', '** Best of 2018 Award Winner ** — Apple\n\n** 2017 App of the Year ** — Apple\n\n** Happiest App in the World ** — Center for Humane Technology\n\nCa ... (3735 characters truncated) ... icable.\n\nRead more about our terms and conditions here:\nTerms of service: https://www.calm.com/terms\nPrivacy policy: https://www.calm.com/privacy', 6013, 'Health & Fitness', 0.0, 571800813, 'Calm.com', 4.77172, 1610620, '2013-02-22T20:09:23Z', 'itunes.apple.com'), (335364882, 'Walgreens', "It's your Walgreens - shop and manage your prescriptions.\n\nPrescriptions\n• Refill in a snap by scanning your barcode\n• Track order status for you ... (1654 characters truncated) ... our wireless provider and other fees as noted in your Walgreens account agreement(s) still apply.\n\n*See Walgreens.com for details and restrictions.", 6024, 'Shopping', 0.0, 335364885, 'Walgreen Co.', 4.82003, 3805419, '2009-10-27T00:10:29Z', 'itunes.apple.com'), (331308914, 'WW / WeightWatchers', "WeightWatchers® is for people who want more from weight loss.\nWe’re for eating what you love with the people you love. \nWe’re for keeping the fun a ... (3149 characters truncated) ...  Policy: https://www.weightwatchers.com/us/privacy/policy\nTerms of Service: https://www.weightwatchers.com/us/termsandconditions/onlineplus-coaching", 6013, 'Health & Fitness', 0.0, 331308917, 'WW International, Inc.', 4.83695, 1962470, '2009-09-19T00:05:27Z', 'itunes.apple.com')]
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00104s] ('health', 5, 1, '04/10/2023, 02:41:32', '04/10/2023, 02:41:36', 3.741432, 'in-progress', 'appstore', 1)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("request")
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : 
+CREATE TABLE request (
+	host TEXT, 
+	name TEXT, 
+	page BIGINT, 
+	content_length BIGINT, 
+	results BIGINT, 
+	requested TEXT, 
+	responded TEXT, 
+	response_time FLOAT, 
+	sessions BIGINT, 
+	proxy TEXT, 
+	status_code BIGINT, 
+	id BIGINT
+)
+
+
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [no key 0.00049s] ()
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, proxy, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00104s] ('itunes.apple.com', 'health', 0, 15990, 5, '04/10/2023 02:41:35', '04/10/2023 02:41:36', 0.640736, 1, 'http://geonode_38XyYOcjdy:4a4393ab-d810-45aa-b89e-7c8544c04f56@rotating-residential.geonode.com:9008', 200, 1)
+[04/10/2023 02:41:36 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:41:37 AM] [DEBUG] [urllib3.connectionpool] [connectionpool] [_make_request] : https://itunes.apple.com:443 "GET /search?media=software&term=health&country=us&lang=en-us&explicit=yes&limit=5&offset=5 HTTP/1.1" 200 16363
+[04/10/2023 02:41:37 AM] [DEBUG] [aimobile.scraper.appstore.internet.session.SessionHandler] [session] [_post_request] : 
+Request status code: 200. Session: 0
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("appdata")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO appdata (id, name, description, category_id, category, price, developer_id, developer, rating, ratings, released, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00082s] [(1038369065, 'Flo Period Tracker & Calendar', "Discover the most popular female health & well-being guide chosen by 280M women, co-created with 100+ leading health & medical experts, and acclaimed ... (3619 characters truncated) ... lth app and to read menstrual cycle data.\n \nFlo’s predictions should not be used as a form of birth control/contraception.\n \nsupport@owhealth.com", 6013, 'Health & Fitness', 0.0, 1149787531, 'FLO HEALTH UK LIMITED', 4.77016, 1049779, '2015-10-03T22:28:36Z', 'itunes.apple.com'), (297368629, 'Lose It! – Calorie Counter', "Lose It! is a calorie counting, nutrition tracking, and intermittent fasting tool that helps you ditch the unwanted behaviors that are holding you ba ... (3589 characters truncated) ... bscription auto-renew can be turned off or managed in your iTunes account settings. Any unused portion of the free trial is forfeited after purchase.", 6013, 'Health & Fitness', 0.0, 297368632, 'FitNow', 4.75729, 582643, '2008-11-21T22:54:04Z', 'itunes.apple.com'), (493145008, 'Headspace: Mindful Meditation', "Stress less, sleep soundly, and get happier. Headspace is everyday mindfulness and meditation, so you can make mindfulness a daily habit and be kind  ... (3739 characters truncated) ...  terms and conditions here:\nhttp://www.headspace.com/terms-and-conditions\n\nRead the privacy policy here:\nhttps://www.headspace.com/privacy-policy", 6013, 'Health & Fitness', 0.0, 384434796, 'Headspace Inc.', 4.84837, 928489, '2012-02-02T18:57:49Z', 'itunes.apple.com'), (405075943, 'AllTrails: Hike, Bike & Run', 'Whether you hike, bike, run, or walk, AllTrails is your companion and guide to the outdoors. Find detailed reviews and inspiration from a community o ... (2411 characters truncated) ... tional park, browsing bucket-list mountain bike routes, or planning a trail run to clear your head, AllTrails+ makes the great outdoors even greater.', 6013, 'Health & Fitness', 0.0, 405075946, 'AllTrails, Inc.', 4.88774, 763846, '2010-12-17T23:35:17Z', 'itunes.apple.com'), (485357017, 'GoodRx: Prescription Saver', 'GoodRx is a free pharmacy coupons app that helps millions of Americans save money on pills, prescription drugs & medical costs. Our coupon finder hel ... (3586 characters truncated) ... ertising-on-GoodRx\n\nNotice of Collection:\nhttps://support.goodrx.com/hc/en-us/articles/360037920971-California-Consumer-Privacy-Act-Privacy-Notice', 6020, 'Medical', 0.0, 485357020, 'GoodRx', 4.83995, 625835, '2011-12-07T20:47:44Z', 'itunes.apple.com')]
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.278s ago] ('health', 10, 2, '04/10/2023, 02:41:32', '04/10/2023, 02:41:37', 5.018582, 'in-progress', 'appstore', 1)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("request")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : INSERT INTO request (host, name, page, content_length, results, requested, responded, response_time, sessions, proxy, status_code, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [generated in 0.00071s] ('itunes.apple.com', 'health', 1, 16363, 5, '04/10/2023 02:41:37', '04/10/2023 02:41:37', 0.201271, 1, 'http://geonode_38XyYOcjdy:4a4393ab-d810-45aa-b89e-7c8544c04f56@rotating-residential.geonode.com:9006', 200, 2)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_commit_impl] : COMMIT
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_begin_impl] : BEGIN (implicit)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : UPDATE project SET name = ?, app_count = ?, page_count = ?, started = ?, ended = ?, duration = ?, state = ?, source = ? WHERE project.id == ?;
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [cached since 1.305s ago] ('health', 10, 2, '04/10/2023, 02:41:32', '04/10/2023, 02:41:37', 5.045895, 'success', 'appstore', 1)
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM project WHERE project.name = :name;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM project WHERE project.name = :name;
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] {'name': 'health'}
+[04/10/2023 02:41:37 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : 
+Project: 
+Name: health: App Count: 10, Page Count: 2, Started: 04/10/2023, 02:41:32, Ended: 04/10/2023, 02:41:37, Duration: 5, State: success
+[04/10/2023 02:41:37 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Name: health: App Count: 10, Page Count: 2, Started: 04/10/2023, 02:41:32, Ended: 04/10/2023, 02:41:37, Duration: 5, State: success
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM appdata;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM appdata;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM appdata;
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Appdata head: 
+           id                           name                                        description  category_id          category  ...               developer   rating  ratings              released            source
+0  1208224953                        Fitness  Get a comprehensive view of your fitness, incl...         6013  Health & Fitness  ...                   Apple  3.01396     3653  2017-04-10T23:30:13Z  itunes.apple.com
+1   341232718  MyFitnessPal: Calorie Counter  Track progress toward your nutrition, water, f...         6013  Health & Fitness  ...      MyFitnessPal, Inc.  4.71498  1611688  2009-12-08T02:04:45Z  itunes.apple.com
+2   571800810                           Calm  ** Best of 2018 Award Winner ** — Apple\n\n** ...         6013  Health & Fitness  ...                Calm.com  4.77172  1610620  2013-02-22T20:09:23Z  itunes.apple.com
+3   335364882                      Walgreens  It's your Walgreens - shop and manage your pre...         6024          Shopping  ...            Walgreen Co.  4.82003  3805419  2009-10-27T00:10:29Z  itunes.apple.com
+4   331308914            WW / WeightWatchers  WeightWatchers® is for people who want more fr...         6013  Health & Fitness  ...  WW International, Inc.  4.83695  1962470  2009-09-19T00:05:27Z  itunes.apple.com
+
+[5 rows x 12 columns]
+[04/10/2023 02:41:37 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Appdata info: 
+None
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA main.table_info("SELECT * FROM request;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : PRAGMA temp.table_info("SELECT * FROM request;")
+[04/10/2023 02:41:37 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:38 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : SELECT * FROM request;
+[04/10/2023 02:41:38 AM] [INFO] [sqlalchemy.engine.Engine] [base] [_exec_single_context] : [raw sql] ()
+[04/10/2023 02:41:38 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Requests head: 
+               host    name  page  content_length  results            requested            responded  response_time  sessions                                              proxy  status_code  id
+0  itunes.apple.com  health     0           15990        5  04/10/2023 02:41:35  04/10/2023 02:41:36       0.640736         1  http://geonode_38XyYOcjdy:4a4393ab-d810-45aa-b...          200   1
+1  itunes.apple.com  health     1           16363        5  04/10/2023 02:41:37  04/10/2023 02:41:37       0.201271         1  http://geonode_38XyYOcjdy:4a4393ab-d810-45aa-b...          200   2
+[04/10/2023 02:41:38 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : Requests info: 
+None
+[04/10/2023 02:41:38 AM] [DEBUG] [test_appdata] [test_appdata] [test_scraper] : None
+[04/10/2023 02:41:38 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+Completed TestAppStoreScraper test_scraper in 5.2 seconds at 02:41:38 AM on 04/10/2023
+[04/10/2023 02:41:38 AM] [INFO] [test_appdata] [test_appdata] [test_scraper] : 
+----------------------------------------------------------------------------------------------------

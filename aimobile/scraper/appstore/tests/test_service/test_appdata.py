@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:57:14 pm                                                 #
-# Modified   : Monday April 10th 2023 01:01:41 am                                                  #
+# Modified   : Monday April 10th 2023 02:14:53 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -95,7 +95,7 @@ class TestAppStoreScraper:  # pragma: no cover
         project = dc.project_repository.get_by_name(name=TERM)
         assert isinstance(project, AppStoreProject)
         logger.debug(f"\nProject: \n{project}")
-        logger.debug(f"Summary:\n{project.summary()}")
+        logger.debug(project)
 
         # Evaluate appdata
         appdata = dc.appdata_repository.getall()

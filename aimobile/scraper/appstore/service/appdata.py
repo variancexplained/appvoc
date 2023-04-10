@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Monday April 10th 2023 12:32:23 am                                                  #
+# Modified   : Monday April 10th 2023 02:39:11 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -107,9 +107,7 @@ class AppStoreScraper(AbstractAppDataScraper):
         # Set the status to success, unless an exception has occurred and
         # post the project to the database and release the resources.
         self._datacentre.project_repository.update(self._project)
-        self._datacentre.close()
-        self._datacentre.dispose()
 
     def summarize(self) -> None:
         """Prints a summary of the appdata scraping project."""
-        self._project.summary()
+        print(self._project)
