@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 09:12:04 am                                                 #
-# Modified   : Saturday April 8th 2023 02:45:32 pm                                                 #
+# Modified   : Sunday April 9th 2023 09:34:10 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,7 +26,7 @@ import pandas as pd
 from aimobile.scraper.appstore import exceptions, home
 from aimobile.scraper.appstore.entity.appdata import AppStoreAppData
 
-DBFILE = os.path.join(home, "tests/testdata/appstore.db")
+DBFILE = os.path.join(home, "envs/test/data/database.db")
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #

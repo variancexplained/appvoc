@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 07:50:05 pm                                                #
-# Modified   : Saturday April 8th 2023 03:12:47 pm                                                 #
+# Modified   : Sunday April 9th 2023 09:34:20 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,7 +26,7 @@ import pandas as pd
 from aimobile.scraper.appstore import exceptions, home
 from aimobile.scraper.appstore.entity.project import AppStoreProject
 
-DBFILE = os.path.join(home, "tests/testdata/appstore.db")
+DBFILE = os.path.join(home, "envs/test/data/database.db")
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -222,7 +222,11 @@ class TestProjectRepo:  # pragma: no cover
         assert isinstance(df, pd.DataFrame)
 
         data = dc.project_repository.get_by_name(name="health", as_df=False)
-        assert isinstance(data, dict)
+        assert isinstance(data, AppStoreProject)
+        assert data.name == "health"
+
+        with pytest.raises(exceptions.ProjectNotFound):
+            data = dc.project_repository.get_by_name(name="lasd", as_df=False)
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 04:11:43 am                                                #
-# Modified   : Saturday April 8th 2023 02:45:31 pm                                                 #
+# Modified   : Monday April 10th 2023 12:03:50 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,6 +20,7 @@
 from aimobile.scraper.appstore.repo.appdata import AppStoreDataRepo
 from aimobile.scraper.appstore.database.sqlite import SQLiteDatabase
 from aimobile.scraper.appstore.repo.project import AppStoreProjectRepo
+from aimobile.scraper.appstore.repo.request import AppStoreRequestRepo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -38,12 +39,14 @@ class DataCentre:
     def __init__(
         self,
         database: SQLiteDatabase,
-        appdata_repository: AppStoreDataRepo,
-        project_repository=AppStoreProjectRepo,
+        appdata_repository: type[AppStoreDataRepo] = AppStoreRequestRepo,
+        project_repository: type[AppStoreProjectRepo] = AppStoreProjectRepo,
+        request_repository: type[AppStoreRequestRepo] = AppStoreRequestRepo,
     ) -> None:
-        self._database = database
+        self._database = database.connect()
         self._appdata_repository = appdata_repository
         self._project_repository = project_repository
+        self._request_repository = request_repository
 
     @property
     def database(self) -> SQLiteDatabase:
@@ -58,6 +61,11 @@ class DataCentre:
     def project_repository(self) -> AppStoreProjectRepo:
         """Returns a project repository instantiated with the database context."""
         return self._project_repository(database=self._database)
+
+    @property
+    def request_repository(self) -> AppStoreRequestRepo:
+        """Returns a project repository instantiated with the database context."""
+        return self._request_repository(database=self._database)
 
     def begin(self) -> None:
         """Begin a transaction"""

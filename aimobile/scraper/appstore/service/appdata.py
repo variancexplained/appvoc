@@ -11,21 +11,21 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Saturday April 8th 2023 03:31:43 pm                                                 #
+# Modified   : Monday April 10th 2023 12:32:23 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import logging
 
-import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
-from aimobile.scraper.appstore.internet.request import RequestIterator
+from aimobile.scraper.appstore.internet.request import AppStoreSearchRequest
 from aimobile.scraper.base import AbstractAppDataScraper
 from aimobile.scraper.appstore.container import AppStoreContainer
+from aimobile.scraper.appstore.internet.base import Handler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -46,12 +46,13 @@ class AppStoreScraper(AbstractAppDataScraper):
     @inject
     def __init__(
         self,
-        request: type[RequestIterator] = RequestIterator,
+        request: type[AppStoreSearchRequest] = AppStoreSearchRequest,
+        session_handler: Handler = Provide[AppStoreContainer.session.handler],
         datacentre: DataCentre = Provide[AppStoreContainer.datacentre.repo],
     ) -> None:
         self._request = request
+        self._session_handler = session_handler
         self._datacentre = datacentre
-        self._request_iterator = None
         self._project = None
 
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
@@ -67,12 +68,14 @@ class AppStoreScraper(AbstractAppDataScraper):
             term (str): Search term.
 
         """
-        # Initialize the request iterator and the project.
+        # Initialize the project.
         self._setup(term)
 
         # Iterate over our requests iterator
-        for result in self._request(term=term, max_pages=max_pages, limit=limit):
-            self._persist(result)
+        for request in self._request(
+            term=term, max_pages=max_pages, limit=limit, handler=self._session_handler
+        ):
+            self._persist(request)
 
         # Close the project
         self._teardown()
@@ -81,14 +84,21 @@ class AppStoreScraper(AbstractAppDataScraper):
         """Some initialization"""
         self._project = AppStoreProject(name=term)
         self._project.start()
+        assert self._datacentre.database.is_connected
         self._datacentre.project_repository.add(project=self._project)
 
-    def _persist(self, result: pd.DataFrame) -> None:
+    def _persist(self, request: AppStoreSearchRequest) -> None:
         """Saves the app and project data to the database."""
+        # Save App data
+        assert self._datacentre.database.is_connected
+        self._datacentre.appdata_repository.add(data=request.result)
 
-        self._datacentre.appdata_repository.add(data=result)
-        self._project.update(num_results=result.shape[0])
+        # Update project and persist
+        self._project.update(num_results=request.results)
         self._datacentre.project_repository.update(project=self._project)
+
+        # Save request object
+        self._datacentre.request_repository.add(request.request)
         self._datacentre.save()
 
     def _teardown(self) -> None:

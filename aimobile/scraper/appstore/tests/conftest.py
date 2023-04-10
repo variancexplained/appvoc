@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Saturday April 8th 2023 03:29:52 pm                                                 #
+# Modified   : Sunday April 9th 2023 11:00:47 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,6 +26,7 @@ import pandas as pd
 from ..container import AppStoreContainer
 from .. import IOService
 from ..entity.project import AppStoreProject
+from ..entity.request import AppStoreRequest
 from ..entity.base import AppStoreCategories
 from .. import directories
 
@@ -100,6 +101,22 @@ def http_request():
             "offset": 0,
         },
     }
+
+
+@pytest.fixture(scope="session", autouse=True)
+def request_entity():
+    return AppStoreRequest(
+        host="itunes.apple.com",
+        name="health",
+        page=0,
+        content_length=322,
+        results=25,
+        requested=datetime.now(),
+        responded=datetime.now(),
+        response_time=232,
+        status_code=200,
+        sessions=2,
+    )
 
 
 @pytest.fixture(scope="session", autouse=True)

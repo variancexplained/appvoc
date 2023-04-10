@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday March 30th 2023 03:03:56 pm                                                #
-# Modified   : Saturday April 8th 2023 02:45:32 pm                                                 #
+# Modified   : Monday April 10th 2023 12:02:50 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -41,9 +41,20 @@ class SQLiteDatabase(Database):
         self._engine = None
         self._connection = None
         self._transaction = None
+        self._is_connected = False
 
         os.makedirs(os.path.dirname(self._filepath), exist_ok=True)
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
+
+    @property
+    def name(self) -> str:
+        """Returns the name of the database"""
+        return self.__class__.__name__
+
+    @property
+    def is_connected(self) -> bool:
+        """If connected, returns True; otherwise..."""
+        return self._is_connected
 
     @property
     def filepath(self) -> str:
@@ -84,7 +95,10 @@ class SQLiteDatabase(Database):
                 self._connection.execution_options(isolation_level="AUTOCOMMIT")
             else:
                 self._connection.execution_options(isolation_level="READ UNCOMMITTED")
+            self._is_connected = True
+            return self
         except sqlite3.DatabaseError as e:  # pragma: no cover
+            self._is_connected = False
             msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
             self._logger.error(msg)
             raise e
@@ -135,11 +149,14 @@ class SQLiteDatabase(Database):
         """Closes the database connection."""
         try:
             self._connection.close()
+            self._is_connected = False
         except sqlite3.DatabaseError as e:  # pragma: no cover
+            self._is_connected = False
             msg = f"Database connection close failed.\nException type: {type[e]}\n{e}"
             self._logger.error(msg)
             raise e
         except SQLAlchemyError as e:  # pragma: no cover
+            self._is_connected = False
             msg = f"Database connection close failed.\nException type: {type[e]}\n{e}"
             self._logger.error(msg)
             raise e
@@ -148,6 +165,7 @@ class SQLiteDatabase(Database):
         """Disposes the connection and releases resources."""
         try:
             self._engine.dispose()
+            self._is_connected = False
         except sqlite3.DatabaseError as e:  # pragma: no cover
             msg = f"Database connection close failed.\nException type: {type[e]}\n{e}"
             self._logger.error(msg)

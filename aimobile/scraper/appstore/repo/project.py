@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Saturday April 8th 2023 03:07:51 pm                                                 #
+# Modified   : Sunday April 9th 2023 07:15:44 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -46,7 +46,7 @@ class AppStoreProjectRepo(Repo):
         """Retrieves a project by id.
 
         Args:
-            id (str): Project id. Optional. If None, all projects are returned.
+            id (str): Project id.
 
         Raises: ProjectNotFound if the project was not found.
         """
@@ -59,7 +59,7 @@ class AppStoreProjectRepo(Repo):
         else:
             return AppStoreProject.from_df(df.loc[0])
 
-    def get_by_name(self, name: str, as_df: bool = True) -> Union[dict, pd.DataFrame]:
+    def get_by_name(self, name: str, as_df: bool = True) -> Union[AppStoreProject, pd.DataFrame]:
         """Returns a dictionary or DataFrame of projects with the specified name from the project repository
 
         Args:
@@ -73,11 +73,11 @@ class AppStoreProjectRepo(Repo):
         params = {"name": name}
         df = self._database.query(query=query, params=params)
         if df.shape[0] == 0:
-            raise exceptions.ProjectsNotFound()
+            raise exceptions.ProjectNotFound(name=name)
         elif as_df is True:
             return df
         else:
-            return self._df_to_dict(df=df)
+            return AppStoreProject.from_df(df.loc[0])
 
     def getall(self, as_df: bool = True) -> Union[dict, pd.DataFrame]:
         """Returns a dictionary or DataFrame of all projects in the repository

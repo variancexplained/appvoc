@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 10:53:07 am                                                 #
-# Modified   : Saturday April 8th 2023 03:15:25 pm                                                 #
+# Modified   : Sunday April 9th 2023 09:54:25 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -46,26 +46,37 @@ class TestSessionHandler:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         handler = container.session.handler()
-        response = handler.get(url=http_request["url"], params=http_request["params"])
-        headers = handler.headers
-        proxies = handler.proxies
-        assert isinstance(response, requests.Response)
-        assert response.status_code == 200
-        assert isinstance(handler.headers, dict)
-        assert isinstance(handler.proxies, dict)
-        assert isinstance(handler.url, str)
-        assert isinstance(handler.sessions, int)
-        logger.debug(f"\nHeaders\n{handler.headers}")
-        logger.debug(f"\nProxies\n{handler.proxies}")
+        session = handler.get(url=http_request["url"], params=http_request["params"])
+        assert session.url == http_request["url"]
+        assert isinstance(session.headers, dict)
+        assert session.status_code == 200
+        assert isinstance(session.proxy, str)
+        assert isinstance(session.sessions, int)
+        assert isinstance(session.requested, datetime)
+        assert isinstance(session.responded, datetime)
+        assert isinstance(session.response_time, float)
+        assert isinstance(session.content_length, int)
+        assert isinstance(session.response, requests.Response)
+        headers = session.headers
+        proxies = session.proxy
+        logger.debug(f"\nHeaders\n{session.headers}")
+        logger.debug(f"\nProxies\n{session.proxy}")
 
         # Get next page
         http_request["params"]["offset"] += 1
-        response = handler.get(url=http_request["url"], params=http_request["params"])
-        headers2 = handler.headers
-        proxies2 = handler.proxies
+        session = handler.get(url=http_request["url"], params=http_request["params"])
+        headers2 = session.headers
+        proxies2 = session.proxy
         assert headers != headers2
         assert proxies != proxies2
-        assert response.status_code == 200
+        assert isinstance(session.headers, dict)
+        assert session.status_code == 200
+        assert isinstance(session.proxy, str)
+        assert isinstance(session.sessions, int)
+        assert isinstance(session.requested, datetime)
+        assert isinstance(session.responded, datetime)
+        assert isinstance(session.response_time, float)
+        assert isinstance(session.content_length, int)
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

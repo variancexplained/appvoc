@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 7th 2023 10:08:23 pm                                                   #
-# Modified   : Saturday April 8th 2023 05:29:06 am                                                 #
+# Modified   : Sunday April 9th 2023 09:08:39 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -58,16 +58,17 @@ class EntityNotFound(Exception):
 
 # ------------------------------------------------------------------------------------------------ #
 class ProjectNotFound(EntityNotFound):
-    """Exception raised when a row is not found in the project table.
+    """Exception raised when a row is not found in the project repository.
 
     Args:
         id (int): The id for the project being queried.
     """
 
-    def __init__(self, id: int) -> None:
-        self._id = id
-        self._message = f"Project id={id} not found in the Project Repository"
-        super().__init__(self._message)
+    def __init__(self, id: int = None, name: str = None) -> None:
+        id = "" if id is None else f" id = {id}"
+        name = "" if name is None else f" name = {name}"
+        message = f"Project{id}{name} not found in the Project Repository."
+        super().__init__(message)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -80,16 +81,17 @@ class ProjectsNotFound(EntityNotFound):
 
 # ------------------------------------------------------------------------------------------------ #
 class AppNotFound(EntityNotFound):
-    """Exception raised when a row is not found in the appdata table.
+    """Exception raised when a row is not found in the appdata repository.
 
     Args:
         id (int): The id for the app being queried.
     """
 
-    def __init__(self, id: int) -> None:
-        self._id = id
-        self._message = f"App id={id} not found in the AppData Repository"
-        super().__init__(self._message)
+    def __init__(self, id: int = None, name: str = None) -> None:
+        id = "" if id is None else f" id = {id}"
+        name = "" if name is None else f" name = {name}"
+        message = f"App{id}{name} not found in the AppData Repository."
+        super().__init__(message)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -98,3 +100,26 @@ class AppsNotFound(EntityNotFound):
 
     def __init__(self) -> None:
         super().__init__("No Apps were found in the repository matching search criteria.")
+
+
+# ------------------------------------------------------------------------------------------------ #
+class RequestNotFound(EntityNotFound):
+    """Exception raised when a row is not found in the requests repository.
+
+    Args:
+        id (int): The id for the app being queried.
+    """
+
+    def __init__(self, id: int = None, name: str = None) -> None:
+        id = "" if id is None else f" id = {id}"
+        name = "" if name is None else f" name = {name}"
+        message = f"App{id}{name} not found in the AppData Repository."
+        super().__init__(message)
+
+
+# ------------------------------------------------------------------------------------------------ #
+class RequestsNotFound(EntityNotFound):
+    """Exception raised when no requests were found matching the query."""
+
+    def __init__(self) -> None:
+        super().__init__("No requests were found in the repository matching search criteria.")

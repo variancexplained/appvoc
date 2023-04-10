@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 10:46:15 am                                                #
-# Modified   : Saturday April 8th 2023 02:45:32 pm                                                 #
+# Modified   : Sunday April 9th 2023 11:28:09 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -54,12 +54,14 @@ class AppStoreProject(Entity):
         """Initialization"""
         self.app_count = 0
         self.page_count = 0
-        self.started = datetime.now()
+        self._started = datetime.now()
+        self.started = self._started.strftime("%m/%d/%Y, %H:%M:%S")
 
     def end(self) -> None:
         """Finalizes the project state"""
-        self.ended = datetime.now()
-        self.duration = (self.ended - self.started).total_seconds()
+        self._ended = datetime.now()
+        self.ended = self._ended.strftime("%m/%d/%Y, %H:%M:%S")
+        self.duration = (self._ended - self._started).total_seconds()
         self.state = "success" if self.state == "in-progress" else self.state
 
     def update(self, num_results: int) -> None:
@@ -76,9 +78,11 @@ class AppStoreProject(Entity):
         self.app_count += num_results
         self.page_count += 1
         # Snapshot
-        self.started = datetime.now() if isinstance(self.started, str) else self.started
-        self.ended = datetime.now()
-        self.duration = (self.ended - self.started).total_seconds()
+        self._started = datetime.now() if self._started == "" else self._started
+        self.started = self._started.strftime("%m/%d/%Y, %H:%M:%S")
+        self._ended = datetime.now()
+        self.ended = self._ended.strftime("%m/%d/%Y, %H:%M:%S")
+        self.duration = (self._ended - self._started).total_seconds()
         self.state = "in-progress" if self.state != "fail" else self.state
 
     @classmethod

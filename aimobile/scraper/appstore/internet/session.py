@@ -11,13 +11,14 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Saturday April 8th 2023 02:45:31 pm                                                 #
+# Modified   : Sunday April 9th 2023 09:54:48 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
 from types import SimpleNamespace
+from datetime import datetime
 import random
 import time
 import logging
@@ -43,7 +44,11 @@ class SessionHandler(Handler):
         self._url = None
         self._headers = None
         self._proxies = None
+        self._content_length = 0
         self._sessions = 0
+        self._response = None
+        self._rotate_headers = True
+        self._status_code = None
         self.configure()
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
@@ -58,14 +63,44 @@ class SessionHandler(Handler):
         return self._headers
 
     @property
-    def proxies(self) -> dict:
-        """Returns the proxies that were used in the last request."""
-        return self._proxies
+    def status_code(self) -> dict:
+        """Returns status_code from the last request."""
+        return self._status_code
+
+    @property
+    def proxy(self) -> dict:
+        """Returns the proxy server"""
+        return self._proxies.get("http")
 
     @property
     def sessions(self) -> dict:
         """Returns the number of sessions used during the last request."""
         return self._sessions + 1
+
+    @property
+    def content_length(self) -> int:
+        """Size of content returned."""
+        return self._content_length
+
+    @property
+    def requested(self) -> datetime:
+        """Returns datetime request was made"""
+        return self._requested
+
+    @property
+    def responded(self) -> datetime:
+        """Returns datetime response was received"""
+        return self._responded
+
+    @property
+    def response_time(self) -> dict:
+        """Returns the response time in milliseconds."""
+        return self._response_time
+
+    @property
+    def response(self) -> requests.Response:
+        """Returns the response"""
+        return self._response
 
     def configure(self) -> None:
         """Configures the timeout adapter with retries."""
@@ -91,6 +126,9 @@ class SessionHandler(Handler):
                 the headers will be rotated.
         """
         self._sessions = 0
+        self._headers = headers
+        self._rotate_headers = True if headers is None or len(headers) == 0 else False
+        self._requested = None
         self._params = params
         self._url = url
         while self._sessions < self._config["retry"]["sessions"]:
@@ -99,25 +137,13 @@ class SessionHandler(Handler):
             session.mount("http://", self._timeout)
 
             try:
-                # Random delay
-                sleep = random.randint(
-                    self._config["time"]["delay_min"], self._config["time"]["delay_max"]
-                )
-                time.sleep(sleep)
-
-                # Get headers
-                self._headers = headers or self._get_headers()
-                # Get proxy servers
-                self._proxies = self._get_proxy()
-                # Execute the session request
-                response = session.get(
+                self._wait()
+                self._pre_request()
+                self._response = session.get(
                     url=self._url, headers=self._headers, params=self._params, proxies=self._proxies
                 )
-                # Report response status code
-                self._logger.debug(
-                    f"\nRequest status code: {response.status_code}. Session: {self._sessions}"
-                )
-                return response
+                self._post_request()
+                return self
 
             except requests.exceptions.Timeout as e:  # pragma: no cover
                 self._sessions += 1
@@ -154,6 +180,35 @@ class SessionHandler(Handler):
         self._logger.error(
             "All retry and session limits have been reached. Exiting."
         )  # pragma: no cover
+
+    def _wait(self) -> None:
+        """Waits a random number of seconds between delay min and delay max."""
+        sleep = random.randint(self._config["time"]["delay_min"], self._config["time"]["delay_max"])
+        time.sleep(sleep)
+
+    def _pre_request(self, headers: dict = None) -> None:
+        """Conducts pre-request initializations"""
+        if self._rotate_headers is True:
+            self._headers = self._get_headers()
+        self._proxies = self._get_proxy()
+        self._response = None
+        self._responded = None
+        self._response_time = None
+        self._content_length = 0
+        self._requested = datetime.now() if self._requested is None else self._requested
+
+    def _post_request(self) -> None:
+        """Conducts post-request housekeeping"""
+        self._status_code = int(self._response.status_code)
+        self._responded = datetime.now()
+        self._response_time = (self._responded - self._requested).total_seconds()
+        try:
+            self._content_length = int(self._response.headers["Content-Length"])
+        except KeyError:  # pragma: no cover
+            self._content_length = int(self._response.headers["content-length"])
+        self._logger.debug(
+            f"\nRequest status code: {self._response.status_code}. Session: {self._sessions}"
+        )
 
     def _get_headers(self) -> dict:
         """Returns a randomly selected header from available HEADERS"""
