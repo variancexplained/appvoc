@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Monday April 10th 2023 02:38:26 am                                                  #
+# Modified   : Monday April 10th 2023 03:32:57 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -115,12 +115,13 @@ class AppStoreProjectRepo(Repo):
             project (AppStoreProject): Project data
 
         """
-        query = "UPDATE project SET name = :name, app_count = :app_count, page_count = :page_count, started = :started, ended = :ended, duration = :duration, state = :state, source = :source WHERE project.id == :id;"
+        query = "UPDATE project SET name = :name, app_count = :app_count, page_count = :page_count, content_length = :content_length, started = :started, ended = :ended, duration = :duration, state = :state, source = :source WHERE project.id == :id;"
 
         params = {
             "name": project.name,
             "app_count": project.app_count,
             "page_count": project.page_count,
+            "content_length": project.content_length,
             "started": project.started,
             "ended": project.ended,
             "duration": project.duration,

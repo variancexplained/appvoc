@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Monday April 10th 2023 02:41:25 am                                                  #
+# Modified   : Monday April 10th 2023 03:36:36 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -177,7 +177,7 @@ class AppStoreSearchRequest(RequestIterator):
         self._responded = session.responded
         self._response_time = session.response_time
         self._content_length = session.content_length
-        self._status_code = session.response.status_code
+        self._status_code = int(session.response.status_code)
         self._sessions = session.sessions
         self._proxy = session.proxy
         self._content_length = session.content_length

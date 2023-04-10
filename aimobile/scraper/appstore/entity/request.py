@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 10:46:15 am                                                #
-# Modified   : Monday April 10th 2023 02:31:46 am                                                  #
+# Modified   : Monday April 10th 2023 03:40:05 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -65,7 +65,7 @@ class AppStoreRequest(Entity):
             response_time=float(data["response_time"]),
             sessions=int(data["sessions"]),
             proxy=str(data["proxy"]),
-            status_code=data["status_code"],
+            status_code=int(data["status_code"]),
         )
 
     @classmethod
@@ -82,5 +82,5 @@ class AppStoreRequest(Entity):
             response_time=float(data.get("response_time", 0)),
             sessions=int(data.get("sessions", 1)),
             proxy=str(data.get("proxy", None)),
-            status_code=data.get("status_code", 200),
+            status_code=int(data.get("status_code", 200)),
         )

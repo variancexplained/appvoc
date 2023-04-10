@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 07:50:05 pm                                                #
-# Modified   : Sunday April 9th 2023 09:34:20 pm                                                   #
+# Modified   : Monday April 10th 2023 03:53:18 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,7 +27,7 @@ from aimobile.scraper.appstore import exceptions, home
 from aimobile.scraper.appstore.entity.project import AppStoreProject
 
 DBFILE = os.path.join(home, "envs/test/data/database.db")
-
+FILEPATH = os.path.join(home, "envs/test/data/projects.csv")
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -43,6 +43,7 @@ class TestProjectRepo:  # pragma: no cover
         assert isinstance(project.name, str)
         assert isinstance(project.app_count, int)
         assert isinstance(project.page_count, int)
+        assert isinstance(project.content_length, int)
         assert isinstance(project.started, str)
         assert isinstance(project.ended, str)
         assert isinstance(project.duration, int)
@@ -205,6 +206,37 @@ class TestProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
+    def test_save(self, container, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        dc = container.datacentre.repo()
+        dc.project_repository.save(filepath=FILEPATH)
+        assert os.path.exists(FILEPATH)
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
     def test_get_by_name(self, container, caplog):
         start = datetime.now()
         logger.info(
@@ -258,7 +290,7 @@ class TestProjectRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
         project = dc.project_repository.get(id=3)
-        project.update(num_results=150)
+        project.update(num_results=150, content_length=383)
         dc.project_repository.update(project)
         p2 = dc.project_repository.get(id=3)
         assert project == p2

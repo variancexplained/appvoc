@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday March 30th 2023 03:03:56 pm                                                #
-# Modified   : Monday April 10th 2023 01:24:31 am                                                  #
+# Modified   : Monday April 10th 2023 03:23:54 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -113,6 +113,10 @@ class SQLiteDatabase(Database):
         except AttributeError:
             self.connect()
             self._transaction = self._connection.begin()
+        except sqlalchemy.exc.InvalidRequestError:
+            self.close()
+            self.connect()
+            self._connection.begin()
 
     def in_transaction(self) -> bool:
         """Queries the SQLite autocommit mode and returns True if the connection is in transaction."""

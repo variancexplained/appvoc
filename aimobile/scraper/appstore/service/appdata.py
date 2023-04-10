@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Monday April 10th 2023 02:39:11 am                                                  #
+# Modified   : Monday April 10th 2023 02:50:41 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -94,7 +94,7 @@ class AppStoreScraper(AbstractAppDataScraper):
         self._datacentre.appdata_repository.add(data=request.result)
 
         # Update project and persist
-        self._project.update(num_results=request.results)
+        self._project.update(num_results=request.results, content_length=request.content_length)
         self._datacentre.project_repository.update(project=self._project)
 
         # Save request object

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 3rd 2023 12:36:15 am                                                   #
-# Modified   : Sunday April 9th 2023 08:40:43 pm                                                   #
+# Modified   : Monday April 10th 2023 03:14:16 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,8 @@ from dataclasses import dataclass
 from typing import Union
 
 import pandas as pd
+
+from aimobile.utils.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None))
@@ -131,6 +133,11 @@ class Repo(ABC):
 
         Raises: EntityNotFound if the entity was not found.
         """
+
+    def save(self, filepath) -> None:
+        """Saves the database to file."""
+        df = self.getall()
+        IOService.write(filepath=filepath, data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #

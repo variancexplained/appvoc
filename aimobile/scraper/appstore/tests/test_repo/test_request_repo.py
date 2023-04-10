@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 9th 2023 08:42:40 pm                                                   #
-# Modified   : Sunday April 9th 2023 11:13:30 pm                                                   #
+# Modified   : Monday April 10th 2023 03:18:25 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,6 +28,7 @@ from aimobile.scraper.appstore import exceptions, home
 from aimobile.scraper.appstore.repo.request import AppStoreRequest
 
 DBFILE = os.path.join(home, "envs/test/data/database.db")
+FILEPATH = os.path.join(home, "envs/test/data/requests.csv")
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -224,6 +225,37 @@ class TestAppStoreRequestRepo:  # pragma: no cover
         with pytest.raises(exceptions.RequestNotFound):
             data = dc.request_repository.get_by_name(name="lasd", as_df=False)
 
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_save(self, container, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        dc = container.datacentre.repo()
+        dc.request_repository.save(filepath=FILEPATH)
+        assert os.path.exists(FILEPATH)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
