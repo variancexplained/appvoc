@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Saturday April 15th 2023 11:56:30 pm                                                #
+# Modified   : Sunday April 16th 2023 03:22:51 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,6 @@ import logging
 
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
 from aimobile.scraper.appstore.http.appdata import AppStoreSearchRequest
 from aimobile.scraper.base import AbstractAppDataScraper
@@ -56,16 +55,11 @@ class AppStoreScraper(AbstractAppDataScraper):
         self._request = request
         self._session_handler = session_handler
         self._datacentre = datacentre
-        self._project = None
         self._page = None
         self._pages = 0
         self._results = 0
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    @property
-    def project(self) -> AppStoreProject:
-        return self._project
 
     def search(
         self, term: str, page: int = 0, max_pages: int = None, limit: int = None, verbose: int = 10
@@ -91,20 +85,15 @@ class AppStoreScraper(AbstractAppDataScraper):
             if request.status_code == 200:
                 self._update_stats(request=request)
                 self._persist(request=request)
-                self._announce(term=term, request=request, verbose=verbose)
-
-        # Close the project
-        self._teardown()
+                self._announce(request=request, verbose=verbose)
 
     def _setup(self, term: str, page: int) -> None:
         """Some initialization"""
+        self._term = term
         self._page = page
         self._pages = 0
         self._results = 0
         self._total_results = 0
-        self._project = AppStoreProject(name=term)
-        self._project.start()
-        self._datacentre.project_repository.add(project=self._project)
 
     def _update_stats(self, request: AppStoreSearchRequest) -> None:
         """Updates progress metadata."""
@@ -118,27 +107,11 @@ class AppStoreScraper(AbstractAppDataScraper):
         # Save App data
         self._datacentre.appdata_repository.add(data=request.result)
 
-        # Update project and persist
-        self._project.update(num_results=request.results, content_length=request.content_length)
-        self._datacentre.project_repository.update(project=self._project)
-
-        # Save request object
-        self._datacentre.request_repository.add(request.request)
+        # Commit changes to the repositories.
         self._datacentre.save()
 
-    def _announce(self, term: str, request: AppStoreSearchRequest, verbose: int) -> None:
+    def _announce(self, request: AppStoreSearchRequest, verbose: int) -> None:
         if self._pages % verbose == 0:
-            term = term.capitalize()
+            term = self._term.capitalize()
             msg = f"Term: {term} - Page {self._page} returned {self._results} for a total of {self._total_results} returned. Pages returned: {self._pages}. App id: {request.result['id'][0]} thru {request.result['id'].iloc[-1]}"
             self._logger.info(msg)
-
-    def _teardown(self) -> None:
-        """Some final bookeeping."""
-        self._project.end()
-        # Set the status to success, unless an exception has occurred and
-        # post the project to the database and release the resources.
-        self._datacentre.project_repository.update(self._project)
-
-    def summarize(self) -> None:
-        """Prints a summary of the appdata scraping project."""
-        print(self._project)

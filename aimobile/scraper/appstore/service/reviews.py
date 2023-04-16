@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:42 pm                                                 #
-# Modified   : Saturday April 15th 2023 08:38:12 pm                                                #
+# Modified   : Sunday April 16th 2023 05:00:59 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,6 @@ import logging
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
 from aimobile.scraper.appstore.http.review import AppStoreReviewRequest
 from aimobile.scraper.base import AbstractReviewScraper
@@ -72,10 +71,6 @@ class AppStoreReviewScraper(AbstractReviewScraper):
 
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
 
-    @property
-    def project(self) -> AppStoreProject:
-        return self._project
-
     def search(self, category_id: int, max_pages: int = HTTPVars.MAX_PAGES) -> None:
         """Executes a search of app data, and persists the results in the appstore appdate repository.
 
@@ -101,43 +96,31 @@ class AppStoreReviewScraper(AbstractReviewScraper):
                 max_pages=max_pages,
                 handler=self._session_handler,
             ):
-                if request:
+                if request.status_code == 200:
                     self._logger.info(
                         f"\n\nScraped {request.result.shape[0]} reviews for app #: {self._total_apps}, App: {row['id']} - {row['name']}"
                     )
                     self._update_stats(row=row, reviews=request.results)
                     self._persist(request)
                 else:
-                    break
-
-        # Close the project
-        self._teardown()
-        self.summarize()
+                    break  # pragma: no cover
 
     def _setup(self, category_id: int = None) -> pd.DataFrame:
         """Some initialization and returns all apps for a category_id."""
         self._category_id = category_id
         self._category = AppStoreCategoryIds.NAMES[category_id]
-        self._setup_project(category_id)
         return self._get_apps(category_id)
-
-    def _setup_project(self, category_id: int) -> None:
-        """Creates the project and saves it in the repository"""
-        name = str(category_id) + "-" + AppStoreCategoryIds.NAMES.get(category_id)
-        self._project = AppStoreProject(name=name)
-        self._project.start()
-        self._datacentre.project_repository.add(project=self._project)
 
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         """Obtains the all app ids and names for the category id"""
         apps = self._datacentre.appdata_repository.get_by_category(category_id=category_id)
         msg = f"Apps in category: {apps.shape[0]}"
         self._logger.info(msg)
-        try:
+        try:  # pragma: no cover
             reviewed = self._datacentre.review_repository.get_by_category(category_id=category_id)
             msg = f"App reviews obtained: {reviewed.shape[0]}"
             self._logger.info(msg)
-        except Exception:
+        except Exception:  # pragma: no cover
             return apps
         apps = apps[~apps["id"].isin(reviewed["app_id"])]
         msg = f"Apps requiring review data: {apps.shape[0]}"
@@ -157,35 +140,5 @@ class AppStoreReviewScraper(AbstractReviewScraper):
         # Save review data
         self._datacentre.review_repository.add(data=request.result)
 
-        # Update project and persist
-        self._project.update(num_results=request.results, content_length=request.content_length)
-        self._datacentre.project_repository.update(project=self._project)
-
         # Save request object
-        self._datacentre.request_repository.add(request.request)
         self._datacentre.save()
-
-    def _teardown(self) -> None:
-        """Some final bookeeping."""
-        self._project.end()
-        # Set the status to success, unless an exception has occurred and
-        # post the project to the database and release the resources.
-        self._datacentre.project_repository.update(self._project)
-
-    def summarize(self) -> dict:
-        """Summarizes the scraping operation."""
-        d = {
-            "Class": self.__class__.__name__,
-            "Category Id:": self._category_id,
-            "Category:": self._category,
-            "First App Id:": self._first_app_id,
-            "First App Name:": self._first_app_name,
-            "Last App Id:": self._last_app_id,
-            "Last App Name:": self._last_app_name,
-            "Total Apps:": self._total_apps,
-            "Total Reviews:": self._total_reviews,
-        }
-        print(
-            f"{self.__class__.__name__}\n\tCategory: {self._category_id} - {self._category}\n\tFirst App: {self._first_app_id} - {self._first_app_name}\n\tLast App: {self._last_app_id} - {self._last_app_name}\n\tTotal Apps: {self._total_apps}\n\tTotal Reviews: {self._total_reviews}"
-        )
-        return d

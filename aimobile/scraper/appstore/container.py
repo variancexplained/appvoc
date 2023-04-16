@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Saturday April 15th 2023 06:29:18 pm                                                #
+# Modified   : Sunday April 16th 2023 03:16:54 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,8 +22,7 @@ from aimobile.scraper.appstore.database.sqlite import SQLiteDatabase
 from aimobile.scraper.appstore.database.mysql import MySQLDatabase
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
 from aimobile.scraper.appstore.repo.appdata import AppStoreDataRepo
-from aimobile.scraper.appstore.repo.project import AppStoreProjectRepo
-from aimobile.scraper.appstore.repo.request import AppStoreRequestRepo
+from aimobile.scraper.appstore.repo.rating import AppStoreRatingsRepo
 from aimobile.scraper.appstore.repo.review import AppStoreReviewRepo
 from aimobile.scraper.appstore.config.selector import Config
 from aimobile.scraper.appstore.http.session import SessionHandler
@@ -58,8 +57,7 @@ class DataCentreContainer(containers.DeclarativeContainer):
         sqlite=sqlite,
         mysql=mysql,
         appdata_repository=AppStoreDataRepo,
-        project_repository=AppStoreProjectRepo,
-        request_repository=AppStoreRequestRepo,
+        rating_repository=AppStoreRatingsRepo,
         review_repository=AppStoreReviewRepo,
     )
 

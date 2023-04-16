@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:57:14 pm                                                 #
-# Modified   : Monday April 10th 2023 06:42:36 am                                                  #
+# Modified   : Sunday April 16th 2023 04:06:15 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,6 @@ import logging
 
 import pandas as pd
 
-from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.service.appdata import AppStoreScraper
 from aimobile.scraper.appstore import home
 
@@ -36,7 +35,7 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 # ------------------------------------------------------------------------------------------------ #
 TERM = "health"
-MAX_PAGES = 2
+MAX_PAGES = 10
 LIMIT = 5
 
 
@@ -89,13 +88,7 @@ class TestAppStoreScraper:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
         scraper = AppStoreScraper()
-        scraper.search(term=TERM, max_pages=MAX_PAGES, limit=LIMIT)
-
-        # Evaluate project
-        project = dc.project_repository.get_by_name(name=TERM)
-        assert isinstance(project, AppStoreProject)
-        logger.debug(f"\nProject: \n{project}")
-        logger.debug(project)
+        scraper.search(term=TERM, max_pages=MAX_PAGES, limit=LIMIT, verbose=5)
 
         # Evaluate appdata
         appdata = dc.appdata_repository.getall()
@@ -103,15 +96,6 @@ class TestAppStoreScraper:  # pragma: no cover
         assert appdata.shape[0] == MAX_PAGES * LIMIT
         logger.debug(f"Appdata head: \n{appdata.head()}")
         logger.debug(f"Appdata info: \n{appdata.info()}")
-
-        # Evaluate Requests
-        requests = dc.request_repository.getall()
-        assert isinstance(requests, pd.DataFrame)
-        logger.debug(f"Requests head: \n{requests.head()}")
-        logger.debug(f"Requests info: \n{requests.info()}")
-
-        # Summarize
-        logger.debug(scraper.summarize())
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

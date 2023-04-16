@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Sunday April 16th 2023 04:55:00 am                                                  #
+# Modified   : Sunday April 16th 2023 02:19:01 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,6 @@ import logging
 import pandas as pd
 
 from aimobile.scraper.appstore.http.base import RequestIterator, Handler, HEADERS
-from aimobile.scraper.appstore.entity.request import AppStoreRequest
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -57,11 +56,8 @@ class AppStoreSearchRequest(RequestIterator):
         self._page = page
         self._pages = 0
         self._results = 0
-        self._content_length = 0
-        self._sessions = 1
         self._status_code = None
         self._result = None
-        self._proxy = None
 
         self._url = None
         self._params = None
@@ -71,16 +67,6 @@ class AppStoreSearchRequest(RequestIterator):
     def host(self) -> int:
         """Returns the current page processed."""
         return self.__host
-
-    @property
-    def content_length(self) -> int:
-        """Returns the length of the response"""
-        return self._content_length
-
-    @property
-    def sessions(self) -> int:
-        """Returns the length of the response"""
-        return self._sessions
 
     @property
     def status_code(self) -> int:
@@ -103,38 +89,14 @@ class AppStoreSearchRequest(RequestIterator):
         return self._pages
 
     @property
-    def request(self) -> AppStoreRequest:
-        return self._request
-
-    @property
     def results(self) -> int:
         """Returns the number of results returned."""
         return self._results
 
     @property
-    def result(self) -> int:
+    def result(self) -> pd.DataFrame:
         """Returns result in DataFrame format."""
         return self._result
-
-    @property
-    def requested(self) -> int:
-        """Datetime string at which the request was made."""
-        return self._requested
-
-    @property
-    def responded(self) -> int:
-        """Datetime string at which the response was received."""
-        return self._responded
-
-    @property
-    def response_time(self) -> int:
-        """Response time in microseconds."""
-        return self._response_time
-
-    @property
-    def proxy(self) -> str:
-        """Returns the proxy server used."""
-        return self._proxy
 
     def __iter__(self) -> AppStoreSearchRequest:
         self._setup()
@@ -147,16 +109,21 @@ class AppStoreSearchRequest(RequestIterator):
             session = self._handler.get(url=self._url, headers=HEADERS, params=self._params)
             try:
                 if session.status_code == 200:
-                    self._process_iteration(session)
+                    response = self._parse_session(session)
+                    self._result = self._parse_response(response)
+                    self._page += 1
+                    self._pages += 1
+                    return self
                 else:
                     self._teardown()
+                    return self
 
             except requests.exceptions.JSONDecodeError as e:
                 msg = f"Encountered {type[e]} exception. Likely a Nonetype exception on the session. Implying 204. Returning to calling environment. Details\n{e}"
                 self._logger.error(msg)
                 self._status_code = 204
                 self._teardown()
-            return self
+                return self
         else:
             self._teardown()
             return self
@@ -169,10 +136,8 @@ class AppStoreSearchRequest(RequestIterator):
         """Initializes the iterator"""
         self._pages = 0
         self._results = 0
-        self._content_length = 0
         self._status_code = None
         self._result = None
-        self._proxy = None
         self._url = f"{self.__scheme}://{self.__host}/{self.__command}"
         self._params = {
             "media": self.__media,
@@ -184,27 +149,13 @@ class AppStoreSearchRequest(RequestIterator):
             "offset": self._page,
         }
 
-    def _process_iteration(self, session: Handler) -> None:
-        """Processes a successful response from the request"""
-        self._result = self._parse_response(response=session.response)
-        self._parse_session(session)
-        self._request = self._create_request_object()
-        self._page += 1
-        self._pages += 1
-
     def _teardown(self) -> None:
         raise StopIteration
 
     def _parse_session(self, session: Handler):
         """Extracts data from the sesion object"""
-        self._requested = session.requested
-        self._responded = session.responded
-        self._response_time = session.response_time
-        self._content_length = session.content_length
         self._status_code = int(session.response.status_code)
-        self._sessions = session.sessions
-        self._proxy = session.proxy
-        self._content_length = session.content_length
+        return session.response
 
     def _parse_response(self, response: requests.Response) -> pd.DataFrame:
         """Accepts a requests Response object and returns a DataFrame
@@ -237,21 +188,3 @@ class AppStoreSearchRequest(RequestIterator):
     def _set_next_url(self) -> None:
         """Sets the parameter variable for the next url."""
         self._params["offset"] += self._results
-
-    def _create_request_object(self) -> AppStoreRequest:
-        """Creates the request object"""
-        data = {
-            "host": self._host,
-            "name": self._term,
-            "page": self._page,
-            "content_length": self._content_length,
-            "results": self._results,
-            "requested": self._requested,
-            "responded": self._responded,
-            "response_time": self._response_time,
-            "sessions": self._sessions,
-            "proxy": self._proxy,
-            "status_code": self._status_code,
-        }
-
-        return AppStoreRequest.from_dict(data=data)

@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/scraper/appstore/tests/test_internet/test_appdata.py                      #
+# Filename   : /aimobile/scraper/appstore/tests/test_http/test_appdata.py                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:02:28 pm                                                 #
-# Modified   : Monday April 10th 2023 06:41:10 am                                                  #
+# Modified   : Sunday April 16th 2023 02:22:29 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,6 @@ import logging
 import pandas as pd
 
 from aimobile.scraper.appstore.http.appdata import AppStoreSearchRequest
-
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -49,13 +48,14 @@ class TestAppStoreSearchRequest:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        search = AppStoreSearchRequest(term="health", limit=10, max_pages=5)
-        for result in search:
-            assert isinstance(result, pd.DataFrame)
-            logger.debug(f"\nResult\n{result}")
+        handler = container.session.handler()
+        requests = AppStoreSearchRequest(term="health", limit=10, max_pages=5, handler=handler)
+        for request in requests:
+            assert isinstance(request.result, pd.DataFrame)
+            logger.debug(f"\nResult\n{request.result}")
 
-        assert search.pages == 5
-        assert search.apps == 50
+        assert requests.pages == 5
+        assert requests.results == 10
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

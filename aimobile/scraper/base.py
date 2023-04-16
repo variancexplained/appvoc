@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 3rd 2023 12:36:15 am                                                   #
-# Modified   : Sunday April 16th 2023 02:26:06 am                                                  #
+# Modified   : Sunday April 16th 2023 02:01:07 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -207,26 +207,6 @@ class RequestIterator(ABC):
     @abstractmethod
     def pages(self) -> int:
         """Returns the number of pages processed. May not be the same as page if started at nonzero.."""
-
-    @property
-    @abstractmethod
-    def requested(self) -> int:
-        """Datetime string at which the request was made."""
-
-    @property
-    @abstractmethod
-    def responded(self) -> int:
-        """Datetime string at which the response was received."""
-
-    @property
-    @abstractmethod
-    def response_time(self) -> int:
-        """Response time in microseconds."""
-
-    @property
-    @abstractmethod
-    def content_length(self) -> int:
-        """Returns the length of the response"""
 
     @property
     @abstractmethod

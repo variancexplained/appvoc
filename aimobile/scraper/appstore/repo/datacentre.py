@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 04:11:43 am                                                #
-# Modified   : Thursday April 13th 2023 10:07:24 pm                                                #
+# Modified   : Sunday April 16th 2023 03:18:58 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,9 +20,8 @@
 from aimobile.scraper.appstore.repo.appdata import AppStoreDataRepo
 from aimobile.scraper.appstore.database.sqlite import SQLiteDatabase
 from aimobile.scraper.appstore.database.mysql import MySQLDatabase
-from aimobile.scraper.appstore.repo.project import AppStoreProjectRepo
-from aimobile.scraper.appstore.repo.request import AppStoreRequestRepo
 from aimobile.scraper.appstore.repo.review import AppStoreReviewRepo
+from aimobile.scraper.appstore.repo.rating import AppStoreRatingsRepo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -43,16 +42,14 @@ class DataCentre:
         sqlite: SQLiteDatabase,
         mysql: MySQLDatabase,
         appdata_repository: type[AppStoreDataRepo] = AppStoreDataRepo,
-        project_repository: type[AppStoreProjectRepo] = AppStoreProjectRepo,
-        request_repository: type[AppStoreRequestRepo] = AppStoreRequestRepo,
         review_repository: type[AppStoreReviewRepo] = AppStoreReviewRepo,
+        rating_repository: type[AppStoreRatingsRepo] = AppStoreRatingsRepo,
     ) -> None:
         self._sqlite = sqlite.connect()
         self._mysql = mysql.connect()
         self._appdata_repository = appdata_repository
-        self._project_repository = project_repository
-        self._request_repository = request_repository
         self._review_repository = review_repository
+        self._rating_repository = rating_repository
 
     @property
     def appdata_repository(self) -> AppStoreDataRepo:
@@ -60,14 +57,9 @@ class DataCentre:
         return self._appdata_repository(database=self._sqlite)
 
     @property
-    def project_repository(self) -> AppStoreProjectRepo:
-        """Returns a project repository instantiated with the sqlite context."""
-        return self._project_repository(database=self._sqlite)
-
-    @property
-    def request_repository(self) -> AppStoreRequestRepo:
-        """Returns a project repository instantiated with the sqlite context."""
-        return self._request_repository(database=self._sqlite)
+    def rating_repository(self) -> AppStoreRatingsRepo:
+        """Returns a appdata repository instantiated with the sqlite context."""
+        return self._rating_repository(database=self._sqlite)
 
     @property
     def review_repository(self) -> AppStoreReviewRepo:

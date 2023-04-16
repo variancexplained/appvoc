@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Thursday April 13th 2023 10:08:40 pm                                                #
+# Modified   : Sunday April 16th 2023 03:24:45 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,8 +25,6 @@ import pandas as pd
 
 from ..container import AppStoreContainer
 from .. import IOService
-from ..entity.project import AppStoreProject
-from ..entity.request import AppStoreRequest
 from ..entity.review import AppStoreReview
 from ..entity.base import AppStoreCategories
 from .. import directories
@@ -58,11 +56,6 @@ def make_directories() -> None:
 def dataframe():
     df = IOService.read(DATAFRAME_FILEPATH)
     return df
-
-
-@pytest.fixture(scope="session", autouse=True)
-def project():
-    return AppStoreProject(name="health")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -102,23 +95,6 @@ def http_request():
             "offset": 0,
         },
     }
-
-
-@pytest.fixture(scope="session", autouse=True)
-def request_entity():
-    return AppStoreRequest(
-        host="itunes.apple.com",
-        name="health",
-        page=0,
-        content_length=322,
-        results=25,
-        requested=datetime.now(),
-        responded=datetime.now(),
-        response_time=232,
-        status_code=200,
-        sessions=2,
-        proxy="128.456.78",
-    )
 
 
 @pytest.fixture(scope="session", autouse=True)

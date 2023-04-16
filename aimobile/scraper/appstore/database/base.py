@@ -11,14 +11,14 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Friday April 14th 2023 04:44:54 am                                                  #
+# Modified   : Sunday April 16th 2023 03:43:01 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Module provides basic database interface"""
 from __future__ import annotations
-from abc import ABC
+from abc import ABC, abstractmethod
 import logging
 
 import sqlalchemy
@@ -63,26 +63,13 @@ class Database(ABC):
             self.commit()
         self.close()
 
+    @abstractmethod
     def connect(self, autocommit: bool = False):
         """Connect to an underlying database.
 
         Args:
             autocommit (bool): Sets autocommit mode. Default is False.
         """
-        try:
-            self._engine = sqlalchemy.create_engine(self._filepath, echo=False, pool_pre_ping=True)
-            self._connection = self._engine.connect()
-            if autocommit is True:
-                self._connection.execution_options(isolation_level="AUTOCOMMIT")
-            else:
-                self._connection.execution_options(isolation_level="READ UNCOMMITTED")
-            self._is_connected = True
-            return self
-        except SQLAlchemyError as e:  # pragma: no cover
-            self._is_connected = False
-            msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
-            self._logger.error(msg)
-            raise e
 
     def begin(self):
         """Begins a transaction block."""

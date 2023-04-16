@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Saturday April 15th 2023 08:07:14 pm                                                #
+# Modified   : Sunday April 16th 2023 04:44:54 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import requests
 import pandas as pd
 
 from aimobile.scraper.appstore.http.base import RequestIterator, Handler, HTTPVars
-from aimobile.scraper.appstore.entity.request import AppStoreRequest
+from aimobile.scraper.appstore.http.base import HEADERS
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -48,12 +48,10 @@ class AppStoreReviewRequest(RequestIterator):
         self._max_pages = max_pages
         self._pages = 0
         self._results = 0
-        self._content_length = 0
-        self._sessions = 1
+
         self._params = {}
         self._status_code = None
         self._result = None
-        self._proxy = None
 
         self._host = "itunes.apple.com"
         self._url = None
@@ -69,16 +67,6 @@ class AppStoreReviewRequest(RequestIterator):
     def url(self) -> int:
         """Returns the current page processed."""
         return self._url
-
-    @property
-    def content_length(self) -> int:
-        """Returns the length of the response"""
-        return self._content_length
-
-    @property
-    def sessions(self) -> int:
-        """Returns the length of the response"""
-        return self._sessions
 
     @property
     def status_code(self) -> int:
@@ -101,10 +89,6 @@ class AppStoreReviewRequest(RequestIterator):
         return self._pages
 
     @property
-    def request(self) -> AppStoreRequest:
-        return self._request
-
-    @property
     def results(self) -> int:
         """Returns the number of results returned."""
         return self._results
@@ -114,26 +98,6 @@ class AppStoreReviewRequest(RequestIterator):
         """Returns result in DataFrame format."""
         return self._result
 
-    @property
-    def requested(self) -> int:
-        """Datetime string at which the request was made."""
-        return self._requested
-
-    @property
-    def responded(self) -> int:
-        """Datetime string at which the response was received."""
-        return self._responded
-
-    @property
-    def response_time(self) -> int:
-        """Response time in microseconds."""
-        return self._response_time
-
-    @property
-    def proxy(self) -> str:
-        """Returns the proxy server used."""
-        return self._proxy
-
     def __iter__(self) -> AppStoreReviewRequest:
         self._setup()
         return self
@@ -141,29 +105,28 @@ class AppStoreReviewRequest(RequestIterator):
     def __next__(self) -> None:
         """Formats an itunes request for the next page"""
         if self._pages < self._max_pages:
-            session = self._handler.get(url=self._url, params=self._params)
-            self._status_code = session.status_code
-            if self._is_valid_session(session):
-                if self._is_valid_response(session.response):
-                    self._result = self._parse_response(session.response)
-                    self._parse_session(session)
-                    self._request = self._create_request_object()
-                    self._set_next_page_and_url()
-                    return self
+            session = self._handler.get(url=self._url, params=self._params, headers=HEADERS)
 
-        msg = f"Invalid response: \n{session.response.json()}"
-        self._logger.debug(msg)
-        self._teardown()
-        return self
+            if self._is_valid_response(session):
+                response = self._parse_session(session)
+                self._result = self._parse_response(response)
+                self._pagenate_url()
+                return self
+            else:
+                msg = f"Invalid response: \n{response.json()}"
+                self._logger.debug(msg)
+                self._teardown()
+                return self
+        else:
+            self._teardown()
+            return self
 
     def _setup(self) -> None:
         """Initializes the iterator"""
         self._pages = 0
         self._results = 0
-        self._content_length = 0
         self._status_code = None
         self._result = None
-        self._proxy = None
         self._set_url()
 
     def _teardown(self) -> None:
@@ -176,8 +139,8 @@ class AppStoreReviewRequest(RequestIterator):
         """Sets the initial request url"""
         self._url = f"http://itunes.apple.com/us/rss/customerreviews/id={self._app_id}/sortBy=mostHelpful/json"
 
-    def _set_next_page_and_url(self) -> None:
-        """Sets the URL based upon the starting page."""
+    def _pagenate_url(self) -> None:
+        """Sets the URL to retrieve the next page."""
         self._page += 1
         self._pages += 1
         self._url = f"http://itunes.apple.com/us/rss/customerreviews/page={self._page}/id={self._app_id}/sortby=mosthelpful/json"
@@ -216,46 +179,20 @@ class AppStoreReviewRequest(RequestIterator):
         except requests.exceptions.JSONDecodeError:
             return pd.DataFrame()
 
-    def _parse_session(self, session: Handler):
+    def _parse_session(self, session: Handler) -> requests.Response:
         """Extracts data from the sesion object"""
-        self._requested = session.requested
-        self._responded = session.responded
-        self._response_time = session.response_time
-        self._content_length = session.content_length
         self._status_code = int(session.response.status_code)
-        self._sessions = session.sessions
-        self._proxy = session.proxy
-        self._content_length = session.content_length
+        return session.response
 
-    def _create_request_object(self) -> AppStoreReviewRequest:
-        """Creates the request object"""
-        data = {
-            "host": self._host,
-            "name": self._app_id,
-            "page": self._page,
-            "content_length": self._content_length,
-            "results": self._results,
-            "requested": self._requested,
-            "responded": self._responded,
-            "response_time": self._response_time,
-            "sessions": self._sessions,
-            "proxy": self._proxy,
-            "status_code": self._status_code,
-        }
-
-        return AppStoreRequest.from_dict(data=data)
-
-    def _is_valid_session(self, session: Handler) -> bool:
+    def _is_valid_response(self, session: Handler) -> bool:
         """Returns True if an requests.Response object was returned."""
-
-        return session.status_code == 200 and isinstance(session.response, requests.Response)
-
-    def _is_valid_response(self, response: requests.Response) -> bool:
-        """Evaluates the response and returns a boolean reflecting its validity."""
         try:
+            response = session.response
             results = response.json()
             return (
-                "feed" in results
+                session.status_code == 200
+                and isinstance(response, requests.Response)
+                and "feed" in results
                 and "entry" in results["feed"]
                 and isinstance(results["feed"]["entry"], list)
             )

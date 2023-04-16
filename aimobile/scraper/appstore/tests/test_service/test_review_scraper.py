@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:57:14 pm                                                 #
-# Modified   : Monday April 10th 2023 12:40:20 pm                                                  #
+# Modified   : Sunday April 16th 2023 04:54:54 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,6 @@ import logging
 
 import pandas as pd
 
-from aimobile.scraper.appstore.entity.project import AppStoreProject
 from aimobile.scraper.appstore.service.reviews import AppStoreReviewScraper
 from aimobile.scraper.appstore.service.appdata import AppStoreScraper
 from aimobile.scraper.appstore import home
@@ -37,7 +36,6 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 # ------------------------------------------------------------------------------------------------ #
 CATEGORY_ID = 6013
-MAX_PAGES = 2
 CATEGORY_NAME = "6013-HEALTH_AND_FITNESS"
 TERM = "health"
 MAX_PAGES = 2
@@ -61,8 +59,10 @@ class TestAppStoreScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        if os.path.exists(DBFILE):
-            os.remove(DBFILE)
+        dc = container.datacentre.repo()
+        dc.appdata_repository.drop()
+        dc.review_repository.remove(app_id=1208224953)  # Leave some behind to test restart
+        dc.save()
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -95,27 +95,12 @@ class TestAppStoreScraper:  # pragma: no cover
         scraper = AppStoreScraper()
         scraper.search(term=TERM, max_pages=MAX_PAGES, limit=LIMIT)
 
-        # Evaluate project
-        project = dc.project_repository.get_by_name(name=TERM)
-        assert isinstance(project, AppStoreProject)
-        logger.debug(f"\nProject: \n{project}")
-        logger.debug(project)
-
         # Evaluate appdata
         appdata = dc.appdata_repository.getall()
         assert isinstance(appdata, pd.DataFrame)
         assert appdata.shape[0] == MAX_PAGES * LIMIT
         logger.debug(f"Appdata head: \n{appdata.head()}")
         logger.debug(f"Appdata info: \n{appdata.info()}")
-
-        # Evaluate Requests
-        requests = dc.request_repository.getall()
-        assert isinstance(requests, pd.DataFrame)
-        logger.debug(f"Requests head: \n{requests.head()}")
-        logger.debug(f"Requests info: \n{requests.info()}")
-
-        # Summarize
-        logger.debug(scraper.summarize())
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -149,26 +134,11 @@ class TestAppStoreScraper:  # pragma: no cover
         scraper = AppStoreReviewScraper()
         scraper.search(category_id=CATEGORY_ID, max_pages=MAX_PAGES)
 
-        # Evaluate project
-        project = dc.project_repository.get_by_name(name=CATEGORY_NAME)
-        assert isinstance(project, AppStoreProject)
-        logger.debug(f"\nProject: \n{project}")
-        logger.debug(project)
-
         # Evaluate appdata
         reviews = dc.review_repository.getall()
         assert isinstance(reviews, pd.DataFrame)
         logger.debug(f"Appdata head: \n{reviews.head()}")
         logger.debug(f"Appdata info: \n{reviews.info()}")
-
-        # Evaluate Requests
-        requests = dc.request_repository.getall()
-        assert isinstance(requests, pd.DataFrame)
-        logger.debug(f"Requests head: \n{requests.head()}")
-        logger.debug(f"Requests info: \n{requests.info()}")
-
-        # Summarize
-        logger.debug(scraper.summarize())
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
