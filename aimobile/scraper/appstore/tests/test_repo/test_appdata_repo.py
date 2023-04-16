@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 09:12:04 am                                                 #
-# Modified   : Monday April 10th 2023 03:17:05 am                                                  #
+# Modified   : Sunday April 16th 2023 02:25:21 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -37,7 +37,7 @@ single_line = f"\n{100 * '-'}"
 
 @pytest.mark.repo
 @pytest.mark.appdata_repo
-class TestAppRepo:  # pragma: no cover
+class TestAppStoreAppDataRepo:  # pragma: no cover
     # ============================================================================================ #
     def _check_app(self, appdata: AppStoreAppData):
         assert isinstance(appdata.id, int)
@@ -108,7 +108,7 @@ class TestAppRepo:  # pragma: no cover
         # Rollback
         dc.rollback()
         dc.save()
-        with pytest.raises(exceptions.AppNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             app = dc.appdata_repository.get(id=1)
 
         # ---------------------------------------------------------------------------------------- #
@@ -140,7 +140,7 @@ class TestAppRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
-        with pytest.raises(exceptions.AppsNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.appdata_repository.getall()
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -171,8 +171,8 @@ class TestAppRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
-        with pytest.raises(exceptions.AppsNotFound):
-            dc.appdata_repository.get_category(category_id=6013)
+        with pytest.raises(exceptions.ObjectNotFound):
+            dc.appdata_repository.get_by_category(category_id=6013)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -222,7 +222,7 @@ class TestAppRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get_category(self, appdata, container, caplog):
+    def test_get_by_category(self, appdata, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -235,10 +235,10 @@ class TestAppRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
-        apps = dc.appdata_repository.get_category(category_id=6013)
+        apps = dc.appdata_repository.get_by_category(category_id=6013)
         assert isinstance(apps, pd.DataFrame)
 
-        with pytest.raises(exceptions.AppNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.appdata_repository.get(id=99)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -304,7 +304,7 @@ class TestAppRepo:  # pragma: no cover
         dc = container.datacentre.repo()
         dc.appdata_repository.remove(category_id=6013)
 
-        with pytest.raises(exceptions.AppsNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.appdata_repository.remove(category_id=6013)
 
         # ---------------------------------------------------------------------------------------- #

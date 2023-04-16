@@ -11,14 +11,14 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:21:04 am                                                 #
-# Modified   : Monday April 10th 2023 06:37:26 am                                                  #
+# Modified   : Friday April 14th 2023 06:57:08 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from requests.adapters import HTTPAdapter
 
-from aimobile.scraper.appstore.http.base import HTTPDefault
+from aimobile.scraper.appstore.http.base import HTTPVars
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -30,7 +30,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
             self._timeout = kwargs["timeout"]
             del kwargs["timeout"]
         else:
-            self._timeout = HTTPDefault.TIMEOUT
+            self._timeout = HTTPVars.TIMEOUT
 
         super().__init__(*args, **kwargs)
 

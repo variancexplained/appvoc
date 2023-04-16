@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 02:44:17 pm                                                 #
-# Modified   : Monday April 10th 2023 06:38:50 am                                                  #
+# Modified   : Saturday April 15th 2023 11:56:30 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -57,45 +57,65 @@ class AppStoreScraper(AbstractAppDataScraper):
         self._session_handler = session_handler
         self._datacentre = datacentre
         self._project = None
+        self._page = None
+        self._pages = 0
+        self._results = 0
 
-        self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
     def project(self) -> AppStoreProject:
         return self._project
 
-    def search(self, term, max_pages: int = None, limit: int = None) -> None:
+    def search(
+        self, term: str, page: int = 0, max_pages: int = None, limit: int = None, verbose: int = 10
+    ) -> None:
         """Executes a search of app data, and persists the results in the appstore appdate repository.
 
         Args:
             term (str): Search term.
+            page (int): Starting page
             max_pages (int): The maximum number of pages to return
             limit (int): The maximum number of results to return per page.
+            verbose (int): Indicates the degree of progress reporting. Progress will be
+                reported to standard after each 'verbose' page requests.
 
         """
         # Initialize the project.
-        self._setup(term)
+        self._setup(term=term, page=page)
 
         # Iterate over our requests iterator
         for request in self._request(
-            term=term, max_pages=max_pages, limit=limit, handler=self._session_handler
+            term=term, page=page, max_pages=max_pages, limit=limit, handler=self._session_handler
         ):
-            self._persist(request)
+            if request.status_code == 200:
+                self._update_stats(request=request)
+                self._persist(request=request)
+                self._announce(term=term, request=request, verbose=verbose)
 
         # Close the project
         self._teardown()
 
-    def _setup(self, term: str = None) -> None:
+    def _setup(self, term: str, page: int) -> None:
         """Some initialization"""
+        self._page = page
+        self._pages = 0
+        self._results = 0
+        self._total_results = 0
         self._project = AppStoreProject(name=term)
         self._project.start()
-        assert self._datacentre.database.is_connected
         self._datacentre.project_repository.add(project=self._project)
+
+    def _update_stats(self, request: AppStoreSearchRequest) -> None:
+        """Updates progress metadata."""
+        self._page += 1
+        self._pages += 1
+        self._results = request.results
+        self._total_results += request.results
 
     def _persist(self, request: AppStoreSearchRequest) -> None:
         """Saves the app and project data to the database."""
         # Save App data
-        assert self._datacentre.database.is_connected
         self._datacentre.appdata_repository.add(data=request.result)
 
         # Update project and persist
@@ -105,6 +125,12 @@ class AppStoreScraper(AbstractAppDataScraper):
         # Save request object
         self._datacentre.request_repository.add(request.request)
         self._datacentre.save()
+
+    def _announce(self, term: str, request: AppStoreSearchRequest, verbose: int) -> None:
+        if self._pages % verbose == 0:
+            term = term.capitalize()
+            msg = f"Term: {term} - Page {self._page} returned {self._results} for a total of {self._total_results} returned. Pages returned: {self._pages}. App id: {request.result['id'][0]} thru {request.result['id'].iloc[-1]}"
+            self._logger.info(msg)
 
     def _teardown(self) -> None:
         """Some final bookeeping."""

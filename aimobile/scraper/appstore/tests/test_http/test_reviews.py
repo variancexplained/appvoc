@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 06:43:20 am                                                  #
-# Modified   : Monday April 10th 2023 09:00:17 am                                                  #
+# Modified   : Saturday April 15th 2023 07:48:57 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 
 
-from aimobile.scraper.appstore.http.reviews import AppStoreReviewRequest
+from aimobile.scraper.appstore.http.review import AppStoreReviewRequest
 
 ID = 297606951
 PAGE = 1
@@ -55,7 +55,13 @@ class TestAppStoreReviewRequest:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         session_handler = container.session.handler()
         search = AppStoreReviewRequest(
-            id=ID, handler=session_handler, page=PAGE, after=AFTER, max_pages=MAX_PAGES
+            app_id=ID,
+            app_name="some_app_name",
+            category_id=6013,
+            category="HEALTH_AND_FITNESS",
+            handler=session_handler,
+            page=PAGE,
+            max_pages=MAX_PAGES,
         )
         for request in search:
             assert isinstance(request.result, pd.DataFrame)

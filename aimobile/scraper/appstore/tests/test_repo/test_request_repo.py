@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 9th 2023 08:42:40 pm                                                   #
-# Modified   : Monday April 10th 2023 03:18:25 am                                                  #
+# Modified   : Sunday April 16th 2023 02:24:56 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -108,7 +108,7 @@ class TestAppStoreRequestRepo:  # pragma: no cover
         # Rollback
         dc.rollback()
         dc.save()
-        with pytest.raises(exceptions.RequestNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             request = dc.request_repository.get(id=1)
 
         # ---------------------------------------------------------------------------------------- #
@@ -140,7 +140,7 @@ class TestAppStoreRequestRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
-        with pytest.raises(exceptions.RequestsNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.request_repository.getall()
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -184,7 +184,7 @@ class TestAppStoreRequestRepo:  # pragma: no cover
         requests = dc.request_repository.getall()
         assert isinstance(requests, pd.DataFrame)
 
-        with pytest.raises(exceptions.RequestNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.request_repository.get(id=99)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -222,7 +222,7 @@ class TestAppStoreRequestRepo:  # pragma: no cover
         assert isinstance(data, AppStoreRequest)
         assert data.name == "health"
 
-        with pytest.raises(exceptions.RequestNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             data = dc.request_repository.get_by_name(name="lasd", as_df=False)
 
         # ---------------------------------------------------------------------------------------- #

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Monday April 10th 2023 12:06:13 pm                                                  #
+# Modified   : Sunday April 16th 2023 04:40:07 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ class SessionResponse(Enum):
 
 
 # ------------------------------------------------------------------------------------------------ #
-class HTTPDefault:
+class HTTPVars:
     TIMEOUT = 30
     TOTAL_RETRIES = 5
     SESSIONS = 3
@@ -37,12 +37,15 @@ class HTTPDefault:
     LIMIT = 200
     EPOCH = 40246871
     DELAY_MIN = 1
-    DELAY_MAX = 5
+    DELAY_MAX = 8
     BACKOFF_FACTOR = 2
     STATUS_FORCELIST = [104, 429, 500, 502, 503, 504]
     METHOD_WHITELIST = ["HEAD", "GET" "POST", "PUT", "DELETE", "OPTIONS", "TRACE"]
     RAISE_ON_REDIRECT = False
     RAISE_ON_STATUS = False
+    ALLOWED_ANOMALIES = 5
+    DONE = 222
+    NO_CONTENT = 204
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -178,7 +181,13 @@ HEADERS = [
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 OPR/97.0.0.0",
     },
 ]
-
+# ------------------------------------------------------------------------------------------------ #
+STOREFRONTS = [
+    {"country": "us", "headers": {"X-Apple-Store-Front": "143441-1,29"}},
+    {"country": "au", "headers": {"X-Apple-Store-Front": "143460,29"}},
+    {"country": "ca", "headers": {"X-Apple-Store-Front": "143455-6,29"}},
+    {"country": "gb", "headers": {"X-Apple-Store-Front": "143444,29"}},
+]
 # ------------------------------------------------------------------------------------------------ #
 # Servers provided courtesy of https://github.com/clarketm/proxy-list
 SERVERS = [

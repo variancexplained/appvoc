@@ -6,12 +6,18 @@ __pycache__/
 # C extensions
 *.so
 
+# User Shell scripts
+**/user.sql
+
+# MySQL Setup files
+setup/database/MySQL/*.**
+
 # Logs
 **/log
 **/logs
 
 # Data
-**/data
+**/data/
 **/tests/testdata
 **/*.db
 

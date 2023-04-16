@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Monday April 10th 2023 06:37:14 am                                                  #
+# Modified   : Sunday April 16th 2023 04:55:00 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import pandas as pd
 
-from aimobile.scraper.appstore.http.base import RequestIterator, Handler
+from aimobile.scraper.appstore.http.base import RequestIterator, Handler, HEADERS
 from aimobile.scraper.appstore.entity.request import AppStoreRequest
 
 
@@ -142,13 +142,20 @@ class AppStoreSearchRequest(RequestIterator):
 
     def __next__(self) -> None:
         """Formats an itunes request for the next page"""
-        if self._page < self._max_pages:
+        if self._pages < self._max_pages:
             self._set_next_url()
-            session = self._handler.get(url=self._url, params=self._params)
-            if session.status_code == 404:
+            session = self._handler.get(url=self._url, headers=HEADERS, params=self._params)
+            try:
+                if session.status_code == 200:
+                    self._process_iteration(session)
+                else:
+                    self._teardown()
+
+            except requests.exceptions.JSONDecodeError as e:
+                msg = f"Encountered {type[e]} exception. Likely a Nonetype exception on the session. Implying 204. Returning to calling environment. Details\n{e}"
+                self._logger.error(msg)
+                self._status_code = 204
                 self._teardown()
-            else:
-                self._process_iteration(session)
             return self
         else:
             self._teardown()
@@ -215,7 +222,7 @@ class AppStoreSearchRequest(RequestIterator):
             appdata["description"] = result["description"]
             appdata["category_id"] = result["primaryGenreId"]
             appdata["category"] = result["primaryGenreName"]
-            appdata["price"] = result["price"]
+            appdata["price"] = result.get("price", 0)
             appdata["developer_id"] = result["artistId"]
             appdata["developer"] = result["artistName"]
             appdata["rating"] = result["averageUserRating"]
@@ -229,7 +236,7 @@ class AppStoreSearchRequest(RequestIterator):
 
     def _set_next_url(self) -> None:
         """Sets the parameter variable for the next url."""
-        self._params["offset"] = self._page * self._limit
+        self._params["offset"] += self._results
 
     def _create_request_object(self) -> AppStoreRequest:
         """Creates the request object"""

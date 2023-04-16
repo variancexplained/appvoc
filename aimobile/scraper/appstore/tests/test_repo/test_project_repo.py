@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 5th 2023 07:50:05 pm                                                #
-# Modified   : Monday April 10th 2023 03:53:18 am                                                  #
+# Modified   : Sunday April 16th 2023 02:25:42 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -106,7 +106,7 @@ class TestProjectRepo:  # pragma: no cover
         # Rollback
         dc.rollback()
         dc.save()
-        with pytest.raises(exceptions.ProjectNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             project = dc.project_repository.get(id=1)
 
         # ---------------------------------------------------------------------------------------- #
@@ -138,7 +138,7 @@ class TestProjectRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         dc = container.datacentre.repo()
-        with pytest.raises(exceptions.ProjectsNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.project_repository.getall()
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -188,7 +188,7 @@ class TestProjectRepo:  # pragma: no cover
         assert isinstance(projects, pd.DataFrame)
         assert projects.shape[0] == 2
 
-        with pytest.raises(exceptions.ProjectNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.project_repository.get(id=99)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -257,7 +257,7 @@ class TestProjectRepo:  # pragma: no cover
         assert isinstance(data, AppStoreProject)
         assert data.name == "health"
 
-        with pytest.raises(exceptions.ProjectNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             data = dc.project_repository.get_by_name(name="lasd", as_df=False)
 
         # ---------------------------------------------------------------------------------------- #
@@ -297,7 +297,7 @@ class TestProjectRepo:  # pragma: no cover
 
         # Test update non-existent project
         project.id = 99
-        with pytest.raises(exceptions.ProjectNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.project_repository.update(project)
 
         # ---------------------------------------------------------------------------------------- #
@@ -331,7 +331,7 @@ class TestProjectRepo:  # pragma: no cover
         dc = container.datacentre.repo()
         dc.project_repository.remove(id=3)
 
-        with pytest.raises(exceptions.ProjectNotFound):
+        with pytest.raises(exceptions.ObjectNotFound):
             dc.project_repository.remove(id=3)
 
         # ---------------------------------------------------------------------------------------- #

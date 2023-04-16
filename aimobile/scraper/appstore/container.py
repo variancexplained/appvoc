@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Monday April 10th 2023 06:39:04 am                                                  #
+# Modified   : Saturday April 15th 2023 06:29:18 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,10 +19,12 @@
 import logging.config  # pragma: no cover
 from dependency_injector import containers, providers
 from aimobile.scraper.appstore.database.sqlite import SQLiteDatabase
+from aimobile.scraper.appstore.database.mysql import MySQLDatabase
 from aimobile.scraper.appstore.repo.datacentre import DataCentre
 from aimobile.scraper.appstore.repo.appdata import AppStoreDataRepo
 from aimobile.scraper.appstore.repo.project import AppStoreProjectRepo
 from aimobile.scraper.appstore.repo.request import AppStoreRequestRepo
+from aimobile.scraper.appstore.repo.review import AppStoreReviewRepo
 from aimobile.scraper.appstore.config.selector import Config
 from aimobile.scraper.appstore.http.session import SessionHandler
 
@@ -41,19 +43,24 @@ class ServicesContainer(containers.DeclarativeContainer):
 class DataCentreContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    print(f"\n{40*'='}\n{config.database}\n{40*'='}")
-
-    database = providers.Singleton(
+    sqlite = providers.Singleton(
         SQLiteDatabase,
-        filepath=config.database,
+        filepath=config.database.sqlite,
+    )
+
+    mysql = providers.Singleton(
+        MySQLDatabase,
+        name=config.database.mysql,
     )
 
     repo = providers.Singleton(
         DataCentre,
-        database=database,
+        sqlite=sqlite,
+        mysql=mysql,
         appdata_repository=AppStoreDataRepo,
         project_repository=AppStoreProjectRepo,
         request_repository=AppStoreRequestRepo,
+        review_repository=AppStoreReviewRepo,
     )
 
 

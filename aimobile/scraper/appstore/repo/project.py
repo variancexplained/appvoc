@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Monday April 10th 2023 03:32:57 am                                                  #
+# Modified   : Sunday April 16th 2023 02:25:42 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -48,14 +48,14 @@ class AppStoreProjectRepo(Repo):
         Args:
             id (str): Project id.
 
-        Raises: ProjectNotFound if the project was not found.
+        Raises: ObjectNotFound if the project was not found.
         """
         query = "SELECT * FROM project WHERE project.id = :id;"
         params = {"id": id}
 
         df = self._database.query(query=query, params=params)
         if df.shape[0] == 0:
-            raise exceptions.ProjectNotFound(id=id)
+            raise exceptions.ObjectNotFound(id=id)
         else:
             return AppStoreProject.from_df(df.loc[0])
 
@@ -67,13 +67,13 @@ class AppStoreProjectRepo(Repo):
             as_df (bool): If True, a pandas DataFrame is returned; otherwise, a dictionary
                 where key is the entity id and value is the project, is returned.
 
-        raises ProjectsNotFound if the repository is empty.
+        raises ObjectNotFound if the repository is empty.
         """
         query = "SELECT * FROM project WHERE project.name = :name;"
         params = {"name": name}
         df = self._database.query(query=query, params=params)
         if df.shape[0] == 0:
-            raise exceptions.ProjectNotFound(name=name)
+            raise exceptions.ObjectNotFound(name=name)
         elif as_df is True:
             return df
         else:
@@ -86,12 +86,12 @@ class AppStoreProjectRepo(Repo):
             as_df (bool): If True, a pandas DataFrame is returned; otherwise, a dictionary
                 where key is the entity id and value is the project, is returned.
 
-        raises ProjectsNotFound if the repository is empty.
+        raises ObjectNotFound if the repository is empty.
         """
         query = "SELECT * FROM project;"
         df = self._database.query(query=query)
         if df.shape[0] == 0:
-            raise exceptions.ProjectsNotFound()
+            raise exceptions.ObjectNotFound()
         elif as_df is True:
             return df
         else:
@@ -131,7 +131,7 @@ class AppStoreProjectRepo(Repo):
         }
         rowcount = self._database.update(query=query, params=params)
         if rowcount == 0:
-            raise exceptions.ProjectNotFound(project.id)
+            raise exceptions.ObjectNotFound(project.id)
 
     def remove(self, id: int) -> None:
         """Removes a project from the repo.
@@ -144,7 +144,12 @@ class AppStoreProjectRepo(Repo):
         rowcount = self._database.delete(query=query, params=params)
 
         if rowcount == 0:
-            raise exceptions.ProjectNotFound(id)
+            raise exceptions.ObjectNotFound(id)
+
+    def drop(self) -> None:
+        """Drops the project table."""
+        query = "DROP TABLE IF EXISTS project;"
+        self._database.execute(query=query)
 
     def _df_to_dict(self, df: pd.DataFrame) -> dict:
         """Converts a Dataframe to a dictionary of Projects."""

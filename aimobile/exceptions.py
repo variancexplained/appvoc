@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 7th 2023 10:08:23 pm                                                   #
-# Modified   : Sunday April 9th 2023 09:08:39 pm                                                   #
+# Modified   : Sunday April 16th 2023 02:27:53 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -45,81 +45,16 @@ class InvalidMode(Exception):
 
 
 # ------------------------------------------------------------------------------------------------ #
-class EntityNotFound(Exception):
-    """Exception raised when an entity is not found.
+class ObjectNotFound(Exception):
+    """Object not found exception
 
     Args:
-        message (str): The string message to be displayed.
-    """
-
-    def __init__(self, message) -> None:
-        super().__init__(message)
-
-
-# ------------------------------------------------------------------------------------------------ #
-class ProjectNotFound(EntityNotFound):
-    """Exception raised when a row is not found in the project repository.
-
-    Args:
-        id (int): The id for the project being queried.
+        id (int): Object id. Optional.
+        name (str): Object name. Optional.
     """
 
     def __init__(self, id: int = None, name: str = None) -> None:
         id = "" if id is None else f" id = {id}"
         name = "" if name is None else f" name = {name}"
-        message = f"Project{id}{name} not found in the Project Repository."
+        message = f"Object {id} {name} not found in the Repository."
         super().__init__(message)
-
-
-# ------------------------------------------------------------------------------------------------ #
-class ProjectsNotFound(EntityNotFound):
-    """Exception raised when no projects were found matching the query."""
-
-    def __init__(self) -> None:
-        super().__init__("No Projects were found in the repository matching search criteria.")
-
-
-# ------------------------------------------------------------------------------------------------ #
-class AppNotFound(EntityNotFound):
-    """Exception raised when a row is not found in the appdata repository.
-
-    Args:
-        id (int): The id for the app being queried.
-    """
-
-    def __init__(self, id: int = None, name: str = None) -> None:
-        id = "" if id is None else f" id = {id}"
-        name = "" if name is None else f" name = {name}"
-        message = f"App{id}{name} not found in the AppData Repository."
-        super().__init__(message)
-
-
-# ------------------------------------------------------------------------------------------------ #
-class AppsNotFound(EntityNotFound):
-    """Exception raised when no apps were found matching the query."""
-
-    def __init__(self) -> None:
-        super().__init__("No Apps were found in the repository matching search criteria.")
-
-
-# ------------------------------------------------------------------------------------------------ #
-class RequestNotFound(EntityNotFound):
-    """Exception raised when a row is not found in the requests repository.
-
-    Args:
-        id (int): The id for the app being queried.
-    """
-
-    def __init__(self, id: int = None, name: str = None) -> None:
-        id = "" if id is None else f" id = {id}"
-        name = "" if name is None else f" name = {name}"
-        message = f"App{id}{name} not found in the AppData Repository."
-        super().__init__(message)
-
-
-# ------------------------------------------------------------------------------------------------ #
-class RequestsNotFound(EntityNotFound):
-    """Exception raised when no requests were found matching the query."""
-
-    def __init__(self) -> None:
-        super().__init__("No requests were found in the repository matching search criteria.")

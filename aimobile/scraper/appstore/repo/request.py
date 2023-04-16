@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 06:11:59 am                                                  #
-# Modified   : Monday April 10th 2023 02:38:42 am                                                  #
+# Modified   : Sunday April 16th 2023 02:24:56 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -47,14 +47,14 @@ class AppStoreRequestRepo(Repo):
         Args:
             id (int): Request id
 
-        Raises: RequestNotFound if the request was not found.
+        Raises: ObjectNotFound if the request was not found.
         """
         query = "SELECT * FROM request WHERE request.id = :id;"
         params = {"id": id}
 
         df = self._database.query(query=query, params=params)
         if df.shape[0] == 0:
-            raise exceptions.RequestNotFound(id=id)
+            raise exceptions.ObjectNotFound(id=id)
         return AppStoreRequest.from_df(df.loc[0])
 
     def get_by_name(self, name: str, as_df=None) -> AppStoreRequest:
@@ -63,14 +63,14 @@ class AppStoreRequestRepo(Repo):
         Args:
             name (str): Request id
 
-        Raises: RequestNotFound if the request was not found.
+        Raises: ObjectNotFound if the request was not found.
         """
         query = "SELECT * FROM request WHERE request.name = :name;"
         params = {"name": name}
 
         df = self._database.query(query=query, params=params)
         if df.shape[0] == 0:
-            raise exceptions.RequestNotFound(name=name)
+            raise exceptions.ObjectNotFound(name=name)
         if as_df is True:
             return df
         else:
@@ -79,12 +79,12 @@ class AppStoreRequestRepo(Repo):
     def getall(self) -> pd.DataFrame:
         """Returns a DataFrame of all requests in the repository
 
-        raises RequestsNotFound if the repository is empty.
+        raises ObjectNotFound if the repository is empty.
         """
         query = "SELECT * FROM request;"
         df = self._database.query(query=query)
         if df.shape[0] == 0:
-            raise exceptions.RequestsNotFound()
+            raise exceptions.ObjectNotFound()
         return df
 
     def add(self, request: dict) -> None:
@@ -114,3 +114,8 @@ class AppStoreRequestRepo(Repo):
             id (int): Request identifier.
         """
         raise NotImplementedError()
+
+    def drop(self) -> None:
+        """Drops the request table."""
+        query = "DROP TABLE IF EXISTS request;"
+        self._database.execute(query=query)

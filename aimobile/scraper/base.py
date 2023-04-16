@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 3rd 2023 12:36:15 am                                                   #
-# Modified   : Monday April 10th 2023 03:14:16 am                                                  #
+# Modified   : Sunday April 16th 2023 02:26:06 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,8 +24,6 @@ from dataclasses import dataclass
 from typing import Union
 
 import pandas as pd
-
-from aimobile.utils.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None))
@@ -40,6 +38,14 @@ class AbstractScraperFactory(ABC):
 
     @abstractmethod
     def create_appdata_scraper(self) -> AbstractAppDataScraper:
+        """Returns a concrete AppDataScraper
+
+        Args:
+            project (AbtractScraperProject): Object defining the projecturation for the scraper.
+        """
+
+    @abstractmethod
+    def create_rating_scraper(self) -> AbstractAppDataScraper:
         """Returns a concrete AppDataScraper
 
         Args:
@@ -78,6 +84,13 @@ class AbstractReviewScraper(ABC):
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                              ABSTRACT RATING SCRAPER                                             #
+# ------------------------------------------------------------------------------------------------ #
+class AbstractRatingScraper(ABC):
+    """Defines the interface for ratings scrapers."""
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                           REPO                                                   #
 # ------------------------------------------------------------------------------------------------ #
 class Repo(ABC):
@@ -90,7 +103,7 @@ class Repo(ABC):
         Args:
             id (int): The identifier for the entity
 
-        Raises: EntityNotFound if the entity was not found.
+        Raises: ObjectNotFound if the entity was not found.
         """
 
     @abstractmethod
@@ -101,7 +114,7 @@ class Repo(ABC):
             as_df (bool): If True, a pandas DataFrame is returned; otherwise, a dictionary
                 where key is the entity id and value is the entity, is returned.
 
-        raises EntityNotFound if the repository is empty.
+        raises ObjectNotFound if the repository is empty.
         """
 
     @abstractmethod
@@ -121,7 +134,7 @@ class Repo(ABC):
         Args:
             entity (Entity): The entity to update.
 
-        Raises: EntityNotFound if the entity was not found.
+        Raises: ObjectNotFound if the entity was not found.
         """
 
     @abstractmethod
@@ -131,13 +144,8 @@ class Repo(ABC):
         Args:
             id (int): Id for the entity to be removed.
 
-        Raises: EntityNotFound if the entity was not found.
+        Raises: ObjectNotFound if the entity was not found.
         """
-
-    def save(self, filepath) -> None:
-        """Saves the database to file."""
-        df = self.getall()
-        IOService.write(filepath=filepath, data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #

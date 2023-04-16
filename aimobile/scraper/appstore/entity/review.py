@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 2nd 2023 08:43:21 pm                                                   #
-# Modified   : Monday April 10th 2023 11:01:33 am                                                  #
+# Modified   : Thursday April 13th 2023 09:58:25 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -45,23 +45,22 @@ class AppStoreReview(Entity):
         """Builds the Review object from the request and results
 
         Args:
-            result (dict): Results from HTTP request
-            request (AbstractRequest): Contains the HTTP request parameters
+            data (pd.DataFrame): Review data in pandas DataFrame format.
         """
         return cls(
-            id=data["id"],
-            app_id=data["app_id"],
-            app_name=data["app_name"],
-            category_id=data["category_id"],
-            category=data["category"],
-            author=data["author"],
-            rating=data["rating"],
-            title=data["title"],
-            content=data["content"],
-            vote_sum=data["vote_sum"],
-            vote_count=data["vote_count"],
-            date=data["date"],
-            source=data["source"],
+            id=int(data["id"]),
+            app_id=int(data["app_id"]),
+            app_name=str(data["app_name"]),
+            category_id=int(data["category_id"]),
+            category=str(data["category"]),
+            author=str(data["author"]),
+            rating=float(data["rating"]),
+            title=str(data["title"]),
+            content=str(data["content"]),
+            vote_sum=int(data["vote_sum"]),
+            vote_count=int(data["vote_count"]),
+            date=str(data["date"]),
+            source=str(data["source"]),
         )
 
     @classmethod
@@ -69,6 +68,6 @@ class AppStoreReview(Entity):
         """Extracts the app_id from the review url
 
         Args:
-            url (str): A URL for the itunes review, containing the app_id
+            data (dict): Review data in dict format.
         """
-        return cls.from_df(data)
+        return cls.from_df(data=data)

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Monday April 10th 2023 12:27:19 pm                                                  #
+# Modified   : Sunday April 16th 2023 04:43:52 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,9 +26,10 @@ import json
 from dotenv import load_dotenv
 import requests
 from urllib3.util import Retry
+from typing import Union
 
 from aimobile.scraper.appstore.http.adapter import TimeoutHTTPAdapter
-from aimobile.scraper.appstore.http.base import SERVERS, HEADERS, Handler
+from aimobile.scraper.appstore.http.base import SERVERS, Handler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -117,18 +118,18 @@ class SessionHandler(Handler):
             timeout=self._config["time"]["timeout"], max_retries=retry
         )
 
-    def get(self, url: str, headers: dict = None, params: dict = None):  # noqa: C901
+    def get(self, url: str, headers: Union[dict, list], params: dict = None):  # noqa: C901
         """Executes the http request and returns a Response object.
 
         Args:
             url (str): The base url for the http request
             params (dict): The parameters to be added to the url
-            headers (dict): Dictionary containing the HTTP header. Optional. If not provided,
-                the headers will be rotated.
+            headers (Union[dict,list]): Dictionary or list of dictionaries containing the
+                http headers. If headers is a list type, the request module will randomly
+                select a header from the list for each session.
         """
         self._sessions = 0
         self._headers = headers
-        self._rotate_headers = True if headers is None or len(headers) == 0 else False
         self._requested = None
         self._params = params
         self._url = url
@@ -137,58 +138,86 @@ class SessionHandler(Handler):
             session.mount("https://", self._timeout)
             session.mount("http://", self._timeout)
 
-            try:
-                self._wait()
-                self._pre_request()
-                self._response = session.get(
-                    url=self._url, headers=self._headers, params=self._params, proxies=self._proxies
-                )
-                if self._response.status_code == 404:
-                    self._sessions += 1
-                    msg = f"A 404 status code was encountered. Retrying with new session #{self._sessions}."
-                    self._logger.error(msg)
-                else:
-                    self._post_request()
-                    return self
+            self._wait()
+            self._pre_request()
 
+            # If headers is a list, randomly rotate
+            if isinstance(self._headers, list):
+                headers = random.choice(self._headers)
+
+            try:
+                self._response = session.get(
+                    url=self._url, headers=headers, params=self._params, proxies=self._proxies
+                )
+                self._post_request()
+                return self
+
+            except requests.exceptions.HTTPError as e:  # pragma: no cover
+                self._sessions += 1
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Retrying with new session #{self._sessions}."
+                self._logger.error(msg)
+                self._status_code = e.response.status_code
             except requests.exceptions.Timeout as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Retrying with new session #{self._sessions}."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
             except requests.exceptions.TooManyRedirects as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. Likely a problem with the url: {url}. Aborting request."
                 self._logger.error(msg)
-                break
+                self._status_code = e.response.status_code
             except requests.exceptions.ConnectionError as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Retrying with new session #{self._sessions}."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
             except requests.exceptions.JSONDecodeError as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Unable to decode response. Retrying."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
             except json.decoder.JSONDecodeError as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Unable to decode response. Retrying."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
             except requests.exceptions.InvalidURL as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. Likely a problem with the url: {url}. Aborting request."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
                 break
             except requests.exceptions.InvalidHeader as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. Check headers.\n{headers}. Retrying with new session #{self._sessions}."
                 self._logger.error(msg)
+                self._status_code = e.response.status_code
             except requests.exceptions.RetryError as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Retrying with new session #{self._sessions}."
+                self._logger.error(msg)
+                self._status_code = e.response.status_code
+            except ValueError as e:  # pragma: no cover
+                self._sessions += 1
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Aborting request."
+                self._logger.error(msg)
+                self._status_code = e.response.status_code
+                break
+            except requests.exceptions.ChunkedEncodingError as e:  # pragma: no cover
+                self._sessions += 1
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Aborting request."
+                self._logger.error(msg)
+                break
+            except requests.exceptions.ContentDecodingError as e:  # pragma: no cover
+                self._sessions += 1
+                msg = f"A {type(e)} exception occurred after {self._config['retry']['total_retries']} retries. Aborting request."
                 self._logger.error(msg)
 
         self._logger.error(
             "All retry and session limits have been reached. Exiting."
         )  # pragma: no cover
+        return self
 
     def _wait(self) -> None:
         """Waits a random number of seconds between delay min and delay max."""
@@ -197,8 +226,7 @@ class SessionHandler(Handler):
 
     def _pre_request(self, headers: dict = None) -> None:
         """Conducts pre-request initializations"""
-        if self._rotate_headers is True:
-            self._headers = self._get_headers()
+
         self._proxies = self._get_proxy()
         self._response = None
         self._responded = None
@@ -218,10 +246,6 @@ class SessionHandler(Handler):
         self._logger.debug(
             f"\nRequest status code: {self._response.status_code}. Session: {self._sessions}"
         )
-
-    def _get_headers(self) -> dict:
-        """Returns a randomly selected header from available HEADERS"""
-        return random.choice(HEADERS)
 
     def _get_proxy(self) -> dict:
         """Returns proxy servers"""

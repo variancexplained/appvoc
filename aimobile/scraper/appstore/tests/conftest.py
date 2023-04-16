@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Monday April 10th 2023 10:50:26 am                                                  #
+# Modified   : Thursday April 13th 2023 10:08:40 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,6 +27,7 @@ from ..container import AppStoreContainer
 from .. import IOService
 from ..entity.project import AppStoreProject
 from ..entity.request import AppStoreRequest
+from ..entity.review import AppStoreReview
 from ..entity.base import AppStoreCategories
 from .. import directories
 
@@ -43,7 +44,7 @@ CATEGORIES = [
 ]
 DEVELOPERS = ["apple", "microsoft", "oracle", "youtube", "meta", "google", "amazon"]
 # ------------------------------------------------------------------------------------------------ #
-collect_ignore = []
+collect_ignore = ["/home/john/projects/aimobile/mysqld.sock"]
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -117,6 +118,25 @@ def request_entity():
         status_code=200,
         sessions=2,
         proxy="128.456.78",
+    )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def review():
+    return AppStoreReview(
+        id=1,
+        app_id=652145,
+        app_name="some_test_app",
+        category_id=6013,
+        category="test_category",
+        author="test_author",
+        rating=4.258,
+        title="some_title",
+        content="love this test app",
+        vote_sum=4574,
+        vote_count=6523,
+        date="April 13, 2023",
+        source="my.test.source",
     )
 
 
