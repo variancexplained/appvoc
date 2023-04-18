@@ -11,12 +11,12 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 01:06:35 am                                                  #
-# Modified   : Monday April 10th 2023 06:40:03 am                                                  #
+# Modified   : Tuesday April 18th 2023 11:15:18 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from aimobile.scraper.appstore.container import AppStoreContainer
+from aimobile.framework.container import AppStoreContainer
 
 
 # ------------------------------------------------------------------------------------------------ #

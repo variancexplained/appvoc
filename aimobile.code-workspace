@@ -17,5 +17,9 @@
             "--ignore=E501,E265,W503,C901"
         ],
         "mdb.useDefaultTemplateForPlayground": false,
+        "psi-header.config": {
+
+
+        },
     }
 }

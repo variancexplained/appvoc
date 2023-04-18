@@ -6,19 +6,17 @@ __pycache__/
 # C extensions
 *.so
 
-# User Shell scripts
+# Shell scripts with secrets
 **/user.sql
+**/database/management
 
-# MySQL Setup files
-setup/database/MySQL/*.**
 
 # Logs
-**/log
 **/logs
 
 # Data
-**/data/
-**/tests/testdata
+/data/
+**/tests/data
 **/*.db
 
 # Notes and references

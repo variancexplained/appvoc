@@ -1,0 +1,2 @@
+id,app_id,app_name,category_id,category,author,rating,title,content,vote_sum,vote_count,date,source
+1,652145,some_test_app,6013,test_category,test_author,4.258,some_title,love this test app,4574,6523,"April 13, 2023",my.test.source
