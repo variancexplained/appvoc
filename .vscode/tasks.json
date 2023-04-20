@@ -1,0 +1,25 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start",
+            "type": "shell",
+            "command": "scripts/database/management/start.sh",
+            "group": "build"
+        },
+        {
+            "label": "stop",
+            "type": "shell",
+            "command": "scripts/database/management/stop.sh",
+            "group": "build"
+        },
+        {
+            "label": "restart",
+            "type": "shell",
+            "command": "scripts/database/management/restart.sh",
+            "group": "build"
+        },
+    ]
+}
