@@ -11,21 +11,23 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Thursday April 20th 2023 07:27:26 am                                                #
+# Modified   : Friday April 21st 2023 09:29:48 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Framework Dependency Container"""
 import logging.config  # pragma: no cover
+
 from dependency_injector import containers, providers
 from urllib3.util import Retry
 
-from aimobile.infrastructure.dal.mysql import MySQLDatabase
 from aimobile.infrastructure.io.local import IOService
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.session import SessionHandler
-from aimobile.infrastructure.dal.repo import DAO
+from aimobile.infrastructure.dal.mysql import MySQLDatabase
+from aimobile.infrastructure.dal.uow import AppStoreUoW
+from aimobile.infrastructure.dal.repo import AppDataRepo, ReviewRepo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -41,19 +43,6 @@ class LoggingContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                       DATABASE                                                   #
-# ------------------------------------------------------------------------------------------------ #
-class DAOContainer(containers.DeclarativeContainer):
-    appstore_db = providers.Resource(MySQLDatabase, name="appstore")
-
-    appstore = providers.Resource(DAO, database=appstore_db)
-
-    googleplay_db = providers.Resource(MySQLDatabase, name="googleplay")
-
-    test = providers.Resource(MySQLDatabase, name="test")
-
-
-# ------------------------------------------------------------------------------------------------ #
 #                                         IO                                                       #
 # ------------------------------------------------------------------------------------------------ #
 class IOContainer(containers.DeclarativeContainer):
@@ -61,51 +50,72 @@ class IOContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                         WEB                                                      #
+#                                APPSTORE PERSISTENCE                                              #
 # ------------------------------------------------------------------------------------------------ #
-class WebContainer(containers.DeclarativeContainer):
+class AppStorePersistenceContainer(containers.DeclarativeContainer):
+    config = providers.Configuration()
+
+    db = providers.Singleton(MySQLDatabase, name=config.database.appstore.name)
+
+    appdata_repo = providers.Singleton(AppDataRepo, database=db)
+
+    review_repo = providers.Singleton(ReviewRepo, database=db)
+
+    uow = providers.Singleton(
+        AppStoreUoW,
+        appdata_repository=AppDataRepo,
+        review_repository=ReviewRepo,
+        database=db,
+    )
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                   WEB SESSION CONTAINER                                          #
+# ------------------------------------------------------------------------------------------------ #
+class WebSessionContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     retry = providers.Singleton(
         Retry,
-        total=config.rest.retry.total_retries,
-        backoff_factor=config.rest.retry.backoff_factor,
-        status_forcelist=config.rest.retry.status_forcelist,
-        allowed_methods=config.rest.retry.allowed_methods,
-        raise_on_redirect=config.rest.retry.raise_on_redirect,
-        raise_on_status=config.rest.retry.raise_on_status,
+        total=config.web.session.retry.total_retries,
+        backoff_factor=config.web.session.retrybackoff_factor,
+        status_forcelist=config.web.session.retry.status_forcelist,
+        allowed_methods=config.web.session.retry.allowed_methods,
+        raise_on_redirect=config.web.session.retry.raise_on_redirect,
+        raise_on_status=config.web.session.retry.raise_on_status,
     )
 
     timeout = providers.Resource(
         TimeoutHTTPAdapter,
-        timeout=config.rest.timeout,
+        timeout=config.web.session.timeout,
         max_retries=retry,
     )
 
-    handler = providers.Resource(
+    session = providers.Resource(
         SessionHandler,
         timeout=timeout,
-        session_retries=config.rest.session_retries,
-        delay=tuple([config.rest.delay_min, config.rest.delay_max]),
+        session_retries=config.web.session.session_retries,
+        delay_min=config.web.session.delay_min,
+        delay_max=config.web.session.delay_max,
     )
 
 
 # ------------------------------------------------------------------------------------------------ #
 #                                       FRAMEWORK                                                  #
 # ------------------------------------------------------------------------------------------------ #
-class InfrastructureContainer(containers.DeclarativeContainer):
-    config = providers.Configuration(yaml_files=["aimobile/framework/config.yml"])
+class AIMobileContainer(containers.DeclarativeContainer):
+    config = providers.Configuration(
+        yaml_files=[
+            "config/logging.yml",
+            "config/persistence.yml",
+            "config/web.yml",
+        ]
+    )
 
     logs = providers.Container(LoggingContainer, config=config)
 
-    database = providers.Container(DAOContainer)
+    appstore = providers.Container(AppStorePersistenceContainer, config=config)
 
     io = providers.Container(IOContainer)
 
-    web = providers.Container(WebContainer, config=config.web)
-
-
-# ------------------------------------------------------------------------------------------------ #
-if __name__ == "__main__":
-    container = InfrastructureContainer()
-    container.init_resources()
+    web = providers.Container(WebSessionContainer, config=config)

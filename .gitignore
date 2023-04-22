@@ -9,7 +9,7 @@ __pycache__/
 # Shell scripts with secrets
 **/user.sql
 **/database/management
-
+tests/scripts/*.*
 
 # Logs
 **/logs

@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/infrastructure/web/rest.py                                                #
+# Filename   : /aimobile/infrastructure/web/session.py                                             #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Thursday April 20th 2023 07:26:13 am                                                #
+# Modified   : Saturday April 22nd 2023 10:14:24 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 import requests
 
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
-from aimobile.infrastructure.web.params import PROXY_SERVERS, HEADERS
+from aimobile.infrastructure.web.base import PROXY_SERVERS, HEADERS
 
 load_dotenv()
 
@@ -59,7 +59,7 @@ class SessionHandler:
         self._response = None
         self._status_code = None
 
-        self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
     def status_code(self) -> dict:
@@ -102,7 +102,10 @@ class SessionHandler:
 
             try:
                 self._response = self._session.get(
-                    url=url, headers=self._header, params=params, proxies=self._proxy
+                    url=url,
+                    headers=self._header,
+                    params=params,
+                    proxies=self._proxy,
                 )
                 self._teardown()
                 return self
@@ -111,7 +114,7 @@ class SessionHandler:
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. Retrying with session #{self._sessions}."
                 self._logger.error(msg)
-                self._status_code = e.response.status_code
+                self._status_code = 999
 
         self._logger.error("All retry and session limits have been reached. Exiting.")
         return self

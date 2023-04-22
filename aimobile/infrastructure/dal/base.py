@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Thursday April 20th 2023 04:55:50 am                                                #
+# Modified   : Saturday April 22nd 2023 10:14:24 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,7 +27,8 @@ import pandas as pd
 
 
 # ------------------------------------------------------------------------------------------------ #
-DBNAMES = ["appstore", "googleplay", "test"]
+DBNAMES = ["appstore", "googleplay"]
+ARCHIVE = {"appstore": "data/appstore/archive", "googleplay": "data/googleplay/archive"}
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -40,7 +41,7 @@ class Database(ABC):
         self._connection = None
         self._transaction = None
         self._is_connected = False
-        self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
     def name(self) -> str:
@@ -140,7 +141,9 @@ class Database(ABC):
             self._logger.error(msg)
             raise e
 
-    def insert(self, data: pd.DataFrame, tablename: str, if_exists: str = "append") -> int:
+    def insert(
+        self, data: pd.DataFrame, tablename: str, dtype: dict = None, if_exists: str = "append"
+    ) -> int:
         """Inserts data in pandas DataFrame format into the designated table.
 
         Note: This method uses pandas to_sql method. If not in transaction, inserts are
@@ -151,13 +154,16 @@ class Database(ABC):
             data (pd.DataFrame): DataFrame containing the data to add to the designated table.
             tablename (str): The name of the table in the database. If the table does not
                 exist, it will be created.
+            dtype (dict): Dictionary of data types for columns.
             if_exists (str): Action to take if table already exists. Valid values
                 are ['append', 'replace', 'fail']. Default = 'append'
 
         Returns: Number of rows inserted.
         """
         try:
-            return data.to_sql(tablename, con=self._connection, if_exists=if_exists, index=False)
+            return data.to_sql(
+                tablename, con=self._connection, if_exists=if_exists, dtype=dtype, index=False
+            )
         except SQLAlchemyError as e:  # pragma: no cover
             msg = f"Exception occurred during database insert.\nException type:{type[SQLAlchemyError]}\n{e}"
             self._logger.error(msg)
@@ -220,3 +226,31 @@ class Database(ABC):
 
         """
         return self._connection.execute(statement=sqlalchemy.text(query), parameters=params)
+
+
+# ------------------------------------------------------------------------------------------------ #
+class UoW(ABC):
+    """Unit of Work abstract base class
+
+    Defines the interfaee for a Unit of Work Class, one with the sole responsibility of ensuring
+    that multiple repositories share the same database context. A Unit of Work class
+    is instantiated with a database, and types for each repository. Each repository is instantiated
+    when requested via a property.
+
+    """
+
+    @abstractmethod
+    def begin(self) -> None:
+        """Begin a transaction"""
+
+    @abstractmethod
+    def save(self) -> None:
+        """Saves changes to the underlying context"""
+
+    @abstractmethod
+    def rollback(self) -> None:
+        """Returns state of the last commit."""
+
+    @abstractmethod
+    def close(self) -> None:
+        """Closes the connection."""

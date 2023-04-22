@@ -11,14 +11,14 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:21:04 am                                                 #
-# Modified   : Wednesday April 19th 2023 09:34:33 pm                                               #
+# Modified   : Friday April 21st 2023 10:59:04 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from requests.adapters import HTTPAdapter
 
-from aimobile.infrastructure.web.params import HTTPVars
+from aimobile.infrastructure.web.base import HTTPVars
 
 
 # ------------------------------------------------------------------------------------------------ #

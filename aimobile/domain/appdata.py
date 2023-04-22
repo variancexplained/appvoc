@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 2nd 2023 08:43:21 pm                                                   #
-# Modified   : Thursday April 20th 2023 01:03:53 am                                                #
+# Modified   : Saturday April 22nd 2023 01:47:16 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -38,11 +38,6 @@ class AppData(Entity):
     category: str = None
     price: float = None
     rating: float = None
-    star_1: int = None
-    star_2: int = None
-    star_3: int = None
-    star_4: int = None
-    star_5: int = None
     ratings: int = None
     reviews: int = None
     developer_id: int = None

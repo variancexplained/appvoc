@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 05:02:58 pm                                                 #
-# Modified   : Thursday April 20th 2023 12:02:36 am                                                #
+# Modified   : Thursday April 20th 2023 10:49:31 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -40,6 +40,7 @@ class SQLiteDatabase(Database):
         super().__init__()
         self._name = name
         self._connection_string = self._get_connection_string()
+        self.connect()
 
     def connect(self, autocommit: bool = False) -> None:
         try:

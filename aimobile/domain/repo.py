@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/abc/repo.py                                                               #
+# Filename   : /aimobile/domain/repo.py                                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 19th 2023 11:17:34 am                                               #
-# Modified   : Wednesday April 19th 2023 08:04:21 pm                                               #
+# Modified   : Saturday April 22nd 2023 03:14:32 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,74 +21,123 @@ from typing import Union
 
 import pandas as pd
 
+from aimobile.infrastructure.dal.base import Database
+
 
 # ------------------------------------------------------------------------------------------------ #
-class RepoABC(ABC):
-    """Provides a generic repository interface.
+class Repo(ABC):
+    """Provides base class for all repositories classes.
 
     Args:
+        name (str): Repository name. This will be the name of the underlying database table.
         database(Database): Database containing data to access.
     """
 
+    def __init__(self, name: str, database: Database) -> None:
+        self._name = name
+        self._database = database
+
     @abstractmethod
-    def add(self, data: pd.DataFrame, tablename: str) -> None:
+    def add(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
-            tablename (str): Table to which the data must be added.
         """
 
-    @abstractmethod
-    def get(self, tablename: str, id: Union[str, int]) -> pd.DataFrame:
-        """Returns all data in the designated table in DataFrame format.
+    def get(self, id: Union[str, int]) -> pd.DataFrame:
+        """Returns data for the entity designated by the 'id' parameter.
 
         Args:
-            id (Union[str,int]): App id.
-            tablename (str): The table from which the data is to be obtained.
+            id (Union[str,int]): The entity id.
         """
+        query = f"SELECT * FROM {self._name} WHERE id = :id;"
+        params = {"id": id}
+        return self._database.query(query=query, params=params)
 
-    @abstractmethod
-    def get_by_category(self, category_id: Union[str, int], tablename: str) -> pd.DataFrame:
+    def get_by_category(self, category_id: Union[str, int]) -> pd.DataFrame:
         """Obtains data from the given table by category id
 
         Args:
             category_id (Union[str,int]): The mobile app category.
-            tablename (str): An existing table in the database.
         """
+        query = f"SELECT * FROM {self._name} WHERE category_id = :category_id;"
+        params = {"category_id": category_id}
+        return self._database.query(query=query, params=params)
 
-    @abstractmethod
-    def exists(self, id: Union[str, int], tablename: str = "appdata") -> bool:
-        """Assesses the existence of an app in the database.
+    def getall(self) -> pd.DataFrame:
+        """Returns all data in the repository."""
+        query = f"SELECT * FROM {self._name};"
+        params = None
+        return self._database.query(query=query, params=params)
+
+    def exists(self, id: Union[str, int] = "appdata") -> bool:
+        """Assesses the existence of an entity in the database.
 
         Args:
             id (Union[str,int]): The app id.
-            tablename (str): The 'appdata' table.
         """
+        query = f"SELECT EXISTS(SELECT 1 FROM {self._name} WHERE id = :id);"
+        params = {"id": id}
+        return self._database.exists(query=query, params=params)
 
-    @abstractmethod
-    def count(self, tablename: str, id: Union[str, int] = None) -> int:
-        """Counts the rows matching the criteria. Counts all rows if id is None.
+    def count(self, id: Union[str, int] = None) -> int:
+        """Counts the entities matching the criteria. Counts all entities if id is None.
 
         Args:
-            tablename (str): The name of the table
-            id (Union[str,int]): The app id
+            id (Union[str,int]): Entity id
 
         Returns number of rows matching criteria
         """
+        if id is not None:
+            query = f"SELECT * FROM {self._name} WHERE id = :id;"
+            params = {"id": id}
+        else:
+            query = f"SELECT * FROM {self._name};"
+            params = {}
 
-    @abstractmethod
-    def delete(self, tablename: str, id: Union[str, int] = None) -> int:
-        """Deletes the row designated by the tablename an id. Deletes all rows if id is None
+        df = self._database.query(query=query, params=params)
+        return df.shape[0]
+
+    def delete(self, id: Union[str, int]) -> int:
+        """Deletes the entity designated by the id.
 
         Args:
-            tablename (str): The name of the table
-            id (Union[str,int]): The app id
+            id (Union[str,int]): Entity id
 
         Returns number of rows deleted.
-
         """
+        query = f"DELETE FROM {self._name} WHERE id = :id;"
+        params = {"id": id}
+        self._database.delete(query=query, params=params)
+
+    def delete_all(self) -> int:
+        """Deletes all entities from the repository."""
+
+        query = f"DELETE FROM {self._name};"
+        params = {}
+
+        self._database.delete(query=query, params=params)
+
+    def dedup(self) -> None:
+        """Removes duplicates in the repository"""
+        df = self.getall()
+        before = len(df)
+
+        df.drop_duplicates(keep="first", inplace=True)
+        after = len(df)
+
+        if before > after:
+            self.delete_all()
+            self.add(data=df)
+            duplicates = before - after
+            msg = f"Removed {duplicates} duplicates from the {self._name} repository."
+            self._logger.info(msg)
 
     @abstractmethod
+    def summarize(self) -> pd.DataFrame:
+        """Summarize contents of Repository"""
+
     def save(self) -> None:
-        """Saves changes to the underlying database"""
+        """Saves the repository to file located in the designated directory."""
+        self._database.commit()

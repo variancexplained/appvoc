@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Thursday April 20th 2023 04:54:41 am                                                #
+# Modified   : Friday April 21st 2023 06:06:11 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -34,7 +34,6 @@ class MySQLDatabase(Database):
     """MySQL Database Class
     Args:
         name (str): Name of database in ['appstore','googleplay']
-        mode (str): Mode in ['prod', 'dev', 'test']. Defaults to mode set in environment variable
     """
 
     def __init__(self, name: str) -> None:
@@ -69,5 +68,7 @@ class MySQLDatabase(Database):
 
         u = os.getenv("MYSQL_USERNAME")
         p = os.getenv("MYSQL_PWD")
+        mode = os.getenv("MODE")
+        self._name = f"{self._name}_test" if mode == "test" else self._name
 
         return f"mysql+pymysql://{u}:{p}@localhost/{self._name}"

@@ -11,109 +11,164 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 05:37:06 pm                                                 #
-# Modified   : Thursday April 20th 2023 04:43:14 am                                                #
+# Modified   : Saturday April 22nd 2023 02:17:21 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Data Access Layer Moddule"""
+"""Repository Implementation Module"""
+import os
+from datetime import datetime
 import pandas as pd
-from typing import Union
+from sqlalchemy.dialects.mysql import (
+    MEDIUMTEXT,
+    LONGTEXT,
+    BIGINT,
+    VARCHAR,
+    INTEGER,
+    FLOAT,
+)
+import logging
 
-from aimobile.domain.repo import RepoABC
-from aimobile.infrastructure.dal.base import Database
+from aimobile.domain.repo import Repo
+from aimobile.infrastructure.dal.base import Database, ARCHIVE
+from aimobile.infrastructure.io.local import IOService
 
 
 # ------------------------------------------------------------------------------------------------ #
-class Repo(RepoABC):
-    """Provides a generic data access layer
+class AppDataRepo(Repo):
+    """Repository for App Data
 
     Args:
         database(Database): Database containing data to access.
     """
 
-    def __init__(self, database: Database) -> None:
-        self._database = database
+    __name = "appdata"
 
-    def add(self, data: pd.DataFrame, tablename: str) -> None:
+    def __init__(self, database: Database) -> None:
+        super().__init__(name=self.__name, database=database)
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
+    def add(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
-            tablename (str): Table to which the data must be added.
         """
-        self._database.insert(data=data, tablename=tablename)
+        dtype = {
+            "id": BIGINT,
+            "name": VARCHAR(256),
+            "description": MEDIUMTEXT,
+            "category_id": INTEGER,
+            "category": VARCHAR(128),
+            "price": FLOAT,
+            "developer_id": BIGINT,
+            "developer": VARCHAR(256),
+            "rating": FLOAT,
+            "ratings": BIGINT,
+            "released": VARCHAR(32),
+            "source": VARCHAR(128),
+        }
+        self._database.insert(data=data, tablename=self._name, dtype=dtype, if_exists="append")
+        msg = f"Added {data.shape[0]} rows to the {self._name} repository."
+        self._logger.debug(msg)
 
-    def get(self, tablename: str, id: Union[str, int]) -> pd.DataFrame:
-        """Returns all data in the designated table in DataFrame format.
+    def update_app(self, id: int, keys: list, values: list) -> None:
+        """Updates the keys with the values for the app designated by the id.
 
         Args:
-            id (Union[str,int]): App id.
-            tablename (str): The table from which the data is to be obtained.
+            id (int): The app id
+            keys (str): A list of keys corresponding to columns on the database.
+            values (str): A list of values for the corresponding keys.
         """
-        query = f"SELECT * FROM {tablename} WHERE id = :id;"
-        params = {"id": id}
-        return self._database.query(query=query, params=params)
+        kv = ""
+        for i, key in enumerate(keys):
+            if i == 0:
+                kv += f"appdata.{key} = :{key}"
+            else:
+                kv += f", appdata.{key} = :{key}"
 
-    def get_by_category(self, category_id: Union[str, int], tablename: str) -> pd.DataFrame:
-        """Obtains data from the given table by category id
+        query = f"UPDATE appdata SET {kv} WHERE appdata.id = :id;"
+        params = {k: v for (k, v) in zip(keys, values)}
+        params["id"] = id
+        self._database.execute(query=query, params=params)
+
+    def summarize(self) -> pd.DataFrame:
+        """Summarizes the app data by category"""
+        df = self.getall()
+        counts = df["category"].value_counts().reset_index()
+        total_rating_counts = df[["category", "ratings"]].groupby(by=["category"]).sum()
+        rating_data = df[["category", "rating", "ratings"]].groupby(by=["category"]).mean()
+        summary = counts.join(rating_data, on="category", how="left")
+        summary = summary.join(total_rating_counts, on="category", rsuffix="total", how="left")
+        summary.columns = [
+            "Category",
+            "App Count",
+            "Average Rating",
+            "Average Rating Count",
+            "Total Rating Count",
+        ]
+        return summary
+
+    def export(self, directory: str = ARCHIVE["appstore"]) -> None:
+        os.makedirs(directory, exist_ok=True)
+        filename = "appdata_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
+        filepath = os.path.join(directory, filename)
+        IOService.write(filepath=filepath, data=self.getall())
+
+
+# ------------------------------------------------------------------------------------------------ #
+class ReviewRepo(Repo):
+    """Repository for reviews
+
+    Args:
+        database(Database): Database containing data to access.
+    """
+
+    __name = "review"
+
+    def __init__(self, database: Database) -> None:
+        super().__init__(name=self.__name, database=database)
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
+    def add(self, data: pd.DataFrame) -> None:
+        """Adds the dataframe rows to the designated table.
 
         Args:
-            category_id (Union[str,int]): The mobile app category.
-            tablename (str): An existing table in the database.
+            data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        query = f"SELECT * FROM {tablename} WHERE category_id = :category_id;"
-        params = {"category_id": category_id}
-        return self._database.query(query=query, params=params)
+        dtype = {
+            "id": BIGINT,
+            "app_id": BIGINT,
+            "app_name": VARCHAR(128),
+            "category_id": INTEGER,
+            "category": VARCHAR(128),
+            "author": VARCHAR(128),
+            "rating": FLOAT,
+            "title": VARCHAR(256),
+            "content": LONGTEXT,
+            "vote_sum": BIGINT,
+            "vote_count": BIGINT,
+            "date": VARCHAR(32),
+            "source": VARCHAR(128),
+        }
+        self._database.insert(data=data, tablename=self._name, dtype=dtype, if_exists="append")
+        msg = f"Added {data.shape[0]} rows to the {self._name} repository."
+        self._logger.debug(msg)
 
-    def exists(self, id: Union[str, int], tablename: str = "appdata") -> bool:
-        """Assesses the existence of an app in the database.
+    def summarize(self) -> pd.DataFrame:
+        """Summarizes the app data by category"""
+        df = self.getall()
+        summary = df["category"].value_counts().reset_index()
+        df2 = df.groupby(by="category")["app_id"].nunique().to_frame()
+        df3 = df.groupby(by="category")["rating"].mean().to_frame()
+        summary = summary.join(df2, on="category")
+        summary = summary.join(df3, on="category")
+        summary.columns = ["Category", "Reviews", "Apps", "Average Rating"]
+        return summary
 
-        Args:
-            id (Union[str,int]): The app id.
-            tablename (str): The 'appdata' table.
-        """
-        query = f"SELECT EXISTS(SELECT 1 FROM {tablename} WHERE id = :id);"
-        params = {"id": id}
-        return self._database.exists(query=query, params=params)
-
-    def count(self, tablename: str, id: Union[str, int] = None) -> int:
-        """Counts the rows matching the criteria. Counts all rows if id is None.
-
-        Args:
-            tablename (str): The name of the table
-            id (Union[str,int]): The app id
-
-        Returns number of rows matching criteria
-        """
-        if id is not None:
-            query = f"SELECT * FROM {tablename} WHERE id = :id;"
-            params = {"id": id}
-        else:
-            query = f"SELECT * FROM {tablename};"
-            params = {}
-
-        df = self._database.query(query=query, params=params)
-        return df.shape[0]
-
-    def delete(self, tablename: str, id: Union[str, int] = None) -> int:
-        """Deletes the row designated by the tablename an id. Deletes all rows if id is None
-
-        Args:
-            tablename (str): The name of the table
-            id (Union[str,int]): The app id
-
-        Returns number of rows deleted.
-        """
-        if id is not None:
-            query = f"DELETE FROM {tablename} WHERE id = :id;"
-            params = {"id": id}
-        else:
-            query = f"DELETE FROM {tablename};"
-            params = {}
-
-        self._database.delete(query=query, params=params)
-
-    def save(self) -> None:
-        """Saves changes to the underlying database"""
-        self._database.commit()
+    def export(self, directory: str = ARCHIVE["appstore"]) -> None:
+        os.makedirs(directory, exist_ok=True)
+        filename = "reviews_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
+        filepath = os.path.join(directory, filename)
+        IOService.write(filepath=filepath, data=self.getall())
