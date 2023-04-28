@@ -11,20 +11,21 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Saturday April 22nd 2023 10:14:24 am                                                #
+# Modified   : Thursday April 27th 2023 04:22:03 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
 import random
-import time
+from datetime import datetime
 import logging
 from dotenv import load_dotenv
 import requests
 
+from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
-from aimobile.infrastructure.web.base import PROXY_SERVERS, HEADERS
+from aimobile.infrastructure.web.base import PROXY_SERVERS
 
 load_dotenv()
 
@@ -42,14 +43,13 @@ class SessionHandler:
     def __init__(
         self,
         timeout: TimeoutHTTPAdapter,
+        throttle: AutoThrottleLatency,
         session_retries: int = 3,
-        delay_min: int = 1,
-        delay_max: int = 8,
     ) -> None:
         self._timeout = timeout
+        self._throttle = throttle
+
         self._session_retries = session_retries
-        self._delay_min = delay_min
-        self._delay_max = delay_max
 
         self._proxy = None  # The proxy used for the current request
         self._header = None  # The header used for the current request.
@@ -108,6 +108,7 @@ class SessionHandler:
                     proxies=self._proxy,
                 )
                 self._teardown()
+                self._throttle.delay(latency=self._latency, response=self._response, wait=True)
                 return self
 
             except Exception as e:  # pragma: no cover
@@ -122,7 +123,6 @@ class SessionHandler:
     def _setup(self, header: dict = None) -> None:
         """Conducts pre-request initializations"""
 
-        self._wait()  # Random delay between requests
         self._proxy = self._get_proxy()  # From rotating proxies
         self._header = header or self._get_header()  # From rotating headers
 
@@ -134,17 +134,17 @@ class SessionHandler:
         # Set / reset the response
         self._response = None
 
+        # Capture the time to measure latency
+        self._start = datetime.now()
+
     def _teardown(self) -> None:
         """Conducts post-request housekeeping"""
+        self._end = datetime.now()
+        self._latency = (self._end - self._start).total_seconds()
         self._status_code = int(self._response.status_code)
         self._logger.debug(
             f"\nRequest status code: {self._response.status_code}. Session: {self._sessions}"
         )
-
-    def _wait(self) -> None:
-        """Waits a random number of seconds between delay min and delay max."""
-        sleep = random.randint(self._delay_min, self._delay_max)
-        time.sleep(sleep)
 
     def _get_proxy(self) -> dict:
         """Returns proxy servers"""
@@ -155,11 +155,3 @@ class SessionHandler:
             proxy = {"http": f"http://{username}:{password}@{dns}"}
             if proxy != self._proxy:
                 return proxy
-
-    def _get_header(self) -> dict:
-        """Returns a header to use for the request."""
-
-        while True:
-            header = random.choice(HEADERS)
-            if header != self._header:
-                return header

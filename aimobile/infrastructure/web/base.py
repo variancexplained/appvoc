@@ -11,20 +11,79 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Friday April 21st 2023 11:22:45 pm                                                  #
+# Modified   : Thursday April 27th 2023 04:23:52 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from enum import Enum
+"""Web Infrastructure Base Module"""
+from abc import ABC, abstractmethod
+
+from scipy.stats import expon
+import numpy as np
+from requests import Response
 
 
 # ------------------------------------------------------------------------------------------------ #
-class SessionResponse(Enum):
-    SUCCESS = 0
-    RETRY = 1
-    GRACEFUL_EXIT = 2
-    IGNITE_HAIR = 3
+class AutoThrottle(ABC):
+    """Manages delays between HTTP requests on a website.
+
+    Args:
+        start_delay (int): The initial delay in seconds. Default = 5
+        min_delay (int): Minimum number of seconds between requests. Default = 1
+        max_delay (int): Maximum number of seconds between requests, unless backing off.
+            Default = 30
+        lambda_factor (float): The average rate of requests per second. Default = 0.5.
+        backoff_factor: Factor by which the request delay is increased each invalid response.
+            Default = 2.
+        warmup (int): Number of requests before average latency is computed, and used to
+            compute the delay.
+        concurrency (int): The max number of concurrent requests. Default = 1
+
+    """
+
+    def __init__(
+        self,
+        start_delay: int = 5,
+        min_delay: int = 1,
+        max_delay: int = 30,
+        lambda_factor: float = 0.5,
+        backoff_factor: int = 2,
+        concurrency: int = 1,
+        timeaware: bool = True,
+    ) -> None:
+        self._start_delay = start_delay
+        self._min_delay = min_delay
+        self._max_delay = max_delay
+        self._lambda_factor = lambda_factor
+        self._backoff_factor = backoff_factor
+        self._concurrency = concurrency
+        self._timeaware = timeaware
+
+        self._prior_latency = 0
+        self._prior_delay = start_delay
+
+        self._distribution = expon(scale=1 / self._lambda_factor)
+
+    @abstractmethod
+    def delay(self, latency: float, response: Response) -> float:
+        """Computes and returns a delay in seconds based upon response status and latency
+
+        Args:
+            latency (float): Seconds between request and response
+            response (Response): A requests Response object.
+        """
+
+    def _backoff(self, latency: float) -> float:
+        """Exponential backoff for invalid server responses, up to max delay."""
+        # Apply backoff factor to prior delay
+        new_delay = self._prior_delay * self._backoff_factor
+        # Ensure delay doesn't exceed max delay
+        new_delay = np.min(new_delay, self._max_delay)
+        # Reset state: Backoff delays are not stored in history.
+        self._prior_latency = latency
+        # Viola
+        return new_delay
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -47,146 +106,6 @@ class HTTPVars:
     NO_CONTENT = 204
 
 
-# ------------------------------------------------------------------------------------------------ #
-HEADERS = [
-    {
-        "authority": "www.apple.com",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "no-cache",
-        "cookie": "geo=US; s_fid=06052E4035BD477E-287EA4F0D67179DA; s_cc=true; mk_epub=%7B%22btuid%22%3A%221p309rf%22%2C%22prop57%22%3A%22www.us.itunes%22%7D; s_vi=[CS]v1|32164EB46DD3A424-60001FE203923437[CE]; pt-dm=v1~x~90ni8h34~m~1~n~itunes%20-%20index%20(us)",
-        "pragma": "no-cache",
-        "sec-ch-ua": '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-    },
-    {
-        "authority": "www.apple.com",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "no-cache",
-        "cookie": "geo=US; s_fid=06052E4035BD477E-287EA4F0D67179DA; s_cc=true; mk_epub=%7B%22btuid%22%3A%221p309rf%22%2C%22prop57%22%3A%22www.us.itunes%22%7D; s_vi=[CS]v1|32164EB46DD3A424-60001FE203923437[CE]; pt-dm=v1~x~90ni8h34~m~1~n~itunes%20-%20index%20(us)",
-        "pragma": "no-cache",
-        "sec-ch-ua": '"Google Chrome";v="110", "Not(A:Brand";v="8", "Chromium";v="110"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-    },
-    {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-    },
-    {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-    },
-    {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:111.0) Gecko/20100101 Firefox/111.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-    },
-    {
-        "authority": "www.apple.com",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "max-age=0",
-        "cookie": "geo=US; s_fid=30A04E3CF3D9F051-1CE913ACD3B58514; s_cc=true; mk_epub=%7B%22btuid%22%3A%2262q2jj%22%2C%22prop57%22%3A%22www.us.itunes%22%7D; s_vi=[CS]v1|321651851683436F-40001437604D6F47[CE]; pt-dm=v1~x~za8r1msw~m~1~n~itunes%20-%20index%20(us)",
-        "sec-ch-ua": '"Microsoft Edge";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-    },
-    {
-        "authority": "www.apple.com",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "max-age=0",
-        "cookie": "geo=US; s_fid=30A04E3CF3D9F051-1CE913ACD3B58514; s_cc=true; mk_epub=%7B%22btuid%22%3A%2262q2jj%22%2C%22prop57%22%3A%22www.us.itunes%22%7D; s_vi=[CS]v1|321651851683436F-40001437604D6F47[CE]; pt-dm=v1~x~za8r1msw~m~1~n~itunes%20-%20index%20(us)",
-        "sec-ch-ua": '"Microsoft Edge";v="110", "Not(A:Brand";v="8", "Chromium";v="110"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.63",
-    },
-    {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-    },
-    {
-        "authority": "www.apple.com",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "max-age=0",
-        "cookie": "geo=US; s_fid=037BA24B83F1E75D-00847AB1DC3C8B16; s_cc=true; mk_epub=%7B%22btuid%22%3A%22v2gsww%22%2C%22prop57%22%3A%22www.us.itunes%22%7D; pt-dm=v1~x~es8yixh8~m~1~n~itunes%20-%20index%20(us)",
-        "sec-ch-ua": '"Not?A_Brand";v="99", "Opera";v="97", "Chromium";v="111"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 OPR/97.0.0.0",
-    },
-]
-# ------------------------------------------------------------------------------------------------ #
-STOREFRONTS = [
-    {"country": "us", "headers": {"X-Apple-Store-Front": "143441-1,29"}},
-    {"country": "au", "headers": {"X-Apple-Store-Front": "143460,29"}},
-    {"country": "ca", "headers": {"X-Apple-Store-Front": "143455-6,29"}},
-    {"country": "gb", "headers": {"X-Apple-Store-Front": "143444,29"}},
-]
 # ------------------------------------------------------------------------------------------------ #
 # Servers provided courtesy of Geonode
 PROXY_SERVERS = [

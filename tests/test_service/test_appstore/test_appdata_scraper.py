@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Saturday April 22nd 2023 05:13:16 pm                                                #
+# Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 import numpy as np
 
-from aimobile.service.appstore.appdata import AppStoreAppScraper
+from aimobile.data.acquisition.appstore.appdata import AppStoreAppScraper
 
 
 # ------------------------------------------------------------------------------------------------ #

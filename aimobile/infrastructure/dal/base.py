@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Saturday April 22nd 2023 10:14:24 am                                                #
+# Modified   : Wednesday April 26th 2023 07:30:55 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,10 +25,8 @@ import sqlalchemy
 from sqlalchemy.exc import SQLAlchemyError
 import pandas as pd
 
-
 # ------------------------------------------------------------------------------------------------ #
 DBNAMES = ["appstore", "googleplay"]
-ARCHIVE = {"appstore": "data/appstore/archive", "googleplay": "data/googleplay/archive"}
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -226,31 +224,3 @@ class Database(ABC):
 
         """
         return self._connection.execute(statement=sqlalchemy.text(query), parameters=params)
-
-
-# ------------------------------------------------------------------------------------------------ #
-class UoW(ABC):
-    """Unit of Work abstract base class
-
-    Defines the interfaee for a Unit of Work Class, one with the sole responsibility of ensuring
-    that multiple repositories share the same database context. A Unit of Work class
-    is instantiated with a database, and types for each repository. Each repository is instantiated
-    when requested via a property.
-
-    """
-
-    @abstractmethod
-    def begin(self) -> None:
-        """Begin a transaction"""
-
-    @abstractmethod
-    def save(self) -> None:
-        """Saves changes to the underlying context"""
-
-    @abstractmethod
-    def rollback(self) -> None:
-        """Returns state of the last commit."""
-
-    @abstractmethod
-    def close(self) -> None:
-        """Closes the connection."""

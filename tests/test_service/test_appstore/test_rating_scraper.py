@@ -4,13 +4,13 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /tests/test_service/test_appstore/test_review_scraper.py                            #
+# Filename   : /tests/test_service/test_appstore/test_rating_scraper.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Saturday April 22nd 2023 10:39:34 am                                                #
+# Created    : Monday April 24th 2023 08:26:10 am                                                  #
 # Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
@@ -20,9 +20,10 @@ import inspect
 from datetime import datetime
 import pytest
 import logging
+
 import pandas as pd
 
-from aimobile.data.acquisition.appstore.review import AppStoreReviewScraper
+from aimobile.data.acquisition.appstore.rating import AppStoreRatingScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -30,19 +31,13 @@ logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
 double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
-# ------------------------------------------------------------------------------------------------ #
-ID = 1095999436
-NAME = "RVC Pet Diabetes App"
-CATEGORY_ID = 6020
-CATEGORY = "Health & Fitness"
 
 
-# ------------------------------------------------------------------------------------------------ #
 @pytest.mark.scraper
-@pytest.mark.review_scraper
-class TestReviewScraper:  # pragma: no cover
+@pytest.mark.rating_scraper
+class TestRatingScraper:  # pragma: no cover
     # ============================================================================================ #
-    def test_scraper(self, container, mode, caplog):
+    def test_setup(self, apps, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -54,24 +49,29 @@ class TestReviewScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        scraper = AppStoreReviewScraper(
-            app_id=ID, app_name=NAME, category_id=CATEGORY_ID, category=CATEGORY
-        )
-        for i, scrape in enumerate(scraper, start=1):
-            result = scrape.result
-            assert isinstance(result, pd.DataFrame)
-            assert result.shape[0] > 0
-            assert "author" in result.columns
-            assert "content" in result.columns
-            assert "rating" in result.columns
-            assert scrape.results > 0
-            assert scrape.page == i
-            assert scrape.status_code == 200
-            assert str(ID) in scrape.url
-            assert scrape.host == "itunes.apple.com"
-            logger.debug(f"\n\nThe {i}th page returned {scrape.results} results.")
-            logger.debug(f"\nResult:\n{scrape.result}\n")
+        results = []
+        apps = apps[0:3]
+        scraper = AppStoreRatingScraper(apps=apps)
+        for scrape in scraper:
+            results.append(scrape.result)
+        assert len(results) == 3
+        for result in results:
+            assert isinstance(result["id"], int)
+            assert isinstance(result["name"], str)
+            assert isinstance(result["category_id"], int)
+            assert isinstance(result["category"], str)
+            assert isinstance(result["rating"], (int, float))
+            assert isinstance(result["reviews"], int)
+            assert isinstance(result["ratings"], int)
+            assert isinstance(result["onestar"], int)
+            assert isinstance(result["twostar"], int)
+            assert isinstance(result["threestar"], int)
+            assert isinstance(result["fourstar"], int)
+            assert isinstance(result["fivestar"], int)
+            assert isinstance(result["source"], str)
 
+        results = pd.DataFrame(data=results)
+        logger.debug(results)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

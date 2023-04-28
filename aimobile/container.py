@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Friday April 21st 2023 09:29:48 pm                                                  #
+# Modified   : Friday April 28th 2023 02:11:24 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,10 +24,17 @@ from urllib3.util import Retry
 
 from aimobile.infrastructure.io.local import IOService
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
+from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
 from aimobile.infrastructure.web.session import SessionHandler
 from aimobile.infrastructure.dal.mysql import MySQLDatabase
-from aimobile.infrastructure.dal.uow import AppStoreUoW
-from aimobile.infrastructure.dal.repo import AppDataRepo, ReviewRepo
+from aimobile.data.repo.appstore import (
+    AppStoreAppDataRepo,
+    AppStoreReviewRepo,
+    AppStoreRatingRepo,
+    AppStoreUoW,
+)
+from aimobile.data.acquisition.appstore.headers import BrowserHeader, AppleStoreFrontHeader
+from aimobile.data.acquisition.appstore import HEADERS, STOREFRONTS
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -50,21 +57,23 @@ class IOContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                APPSTORE PERSISTENCE                                              #
+#                                        DATA                                                      #
 # ------------------------------------------------------------------------------------------------ #
-class AppStorePersistenceContainer(containers.DeclarativeContainer):
+class DataStorageContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     db = providers.Singleton(MySQLDatabase, name=config.database.appstore.name)
 
-    appdata_repo = providers.Singleton(AppDataRepo, database=db)
-
-    review_repo = providers.Singleton(ReviewRepo, database=db)
+    # The following three repos are presented for testing as the UoW class takes uninstantiated types
+    appdata_repo = providers.Singleton(AppStoreAppDataRepo, database=db)
+    review_repo = providers.Singleton(AppStoreReviewRepo, database=db)
+    rating_repo = providers.Singleton(AppStoreRatingRepo, database=db)
 
     uow = providers.Singleton(
         AppStoreUoW,
-        appdata_repository=AppDataRepo,
-        review_repository=ReviewRepo,
+        appdata_repository=AppStoreAppDataRepo,
+        review_repository=AppStoreReviewRepo,
+        rating_repository=AppStoreRatingRepo,
         database=db,
     )
 
@@ -91,13 +100,26 @@ class WebSessionContainer(containers.DeclarativeContainer):
         max_retries=retry,
     )
 
+    throttle = providers.Resource(
+        AutoThrottleLatency,
+        start_delay=config.web.session.throttle.start_delay,
+        min_delay=config.web.session.throttle.min_delay,
+        max_delay=config.web.session.throttle.max_delay,
+        lambda_factor=config.web.session.throttle.lambda_factor,
+        backoff_factor=config.web.session.throttle.backoff_factor,
+        concurrency=config.web.session.throttle.concurrency,
+    )
+
     session = providers.Resource(
         SessionHandler,
         timeout=timeout,
+        throttle=throttle,
         session_retries=config.web.session.session_retries,
-        delay_min=config.web.session.delay_min,
-        delay_max=config.web.session.delay_max,
     )
+
+    browser_headers = providers.Resource(BrowserHeader, headers=HEADERS)
+
+    storefront_headers = providers.Resource(AppleStoreFrontHeader, headers=STOREFRONTS)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -114,8 +136,14 @@ class AIMobileContainer(containers.DeclarativeContainer):
 
     logs = providers.Container(LoggingContainer, config=config)
 
-    appstore = providers.Container(AppStorePersistenceContainer, config=config)
+    data = providers.Container(DataStorageContainer, config=config)
 
     io = providers.Container(IOContainer)
 
     web = providers.Container(WebSessionContainer, config=config)
+
+
+# ------------------------------------------------------------------------------------------------ #
+if __name__ == "__main__":
+    container = AIMobileContainer()
+    container.wire(packages=["aimobile.service.appstore"])

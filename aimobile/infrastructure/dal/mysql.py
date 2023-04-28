@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Friday April 21st 2023 06:06:11 pm                                                  #
+# Modified   : Friday April 28th 2023 11:01:57 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,9 +22,13 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.exc import SQLAlchemyError
 import sqlalchemy
+import subprocess
+from time import sleep
 
 from aimobile.infrastructure.dal.base import Database, DBNAMES
 
+# ------------------------------------------------------------------------------------------------ #
+START_SCRIPT_FILEPATH = "scripts/database/management/start.sh"
 # ------------------------------------------------------------------------------------------------ #
 load_dotenv()
 
@@ -48,20 +52,33 @@ class MySQLDatabase(Database):
         self.connect()
 
     def connect(self, autocommit: bool = False) -> None:
-        try:
-            self._engine = sqlalchemy.create_engine(self._connection_string)
-            self._connection = self._engine.connect()
-            if autocommit is True:
-                self._connection.execution_options(isolation_level="AUTOCOMMIT")
-            else:
-                self._connection.execution_options(isolation_level="READ UNCOMMITTED")
-            self._is_connected = True
-            return self
-        except SQLAlchemyError as e:  # pragma: no cover
-            self._is_connected = False
-            msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
-            self._logger.error(msg)
-            raise e
+        attempts = 0
+        max_attempts = 3
+        database_started = False
+        while attempts < max_attempts:
+            attempts += 1
+            try:
+                self._engine = sqlalchemy.create_engine(self._connection_string)
+                self._connection = self._engine.connect()
+                if autocommit is True:
+                    self._connection.execution_options(isolation_level="AUTOCOMMIT")
+                else:
+                    self._connection.execution_options(isolation_level="READ UNCOMMITTED")
+                self._is_connected = True
+                database_started = True
+                return self
+            except SQLAlchemyError as e:  # pragma: no cover
+                self._is_connected = False
+                if not database_started:
+                    msg = "Database is not started. Starting database..."
+                    self._logger.error(msg)
+                    self._start_db()
+                    database_started = True
+                    sleep(3)
+                else:
+                    msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
+                    self._logger.error(msg)
+                    raise e
 
     def _get_connection_string(self) -> str:
         """Returns the connection string for the named database."""
@@ -72,3 +89,6 @@ class MySQLDatabase(Database):
         self._name = f"{self._name}_test" if mode == "test" else self._name
 
         return f"mysql+pymysql://{u}:{p}@localhost/{self._name}"
+
+    def _start_db(self) -> None:
+        subprocess.run([START_SCRIPT_FILEPATH], shell=True)

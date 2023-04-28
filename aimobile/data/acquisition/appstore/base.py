@@ -4,51 +4,31 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /config/web.yml                                                                     #
+# Filename   : /aimobile/service/appstore/base.py                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Thursday April 20th 2023 12:00:43 pm                                                #
-# Modified   : Thursday April 27th 2023 04:26:13 am                                                #
+# Created    : Saturday April 8th 2023 09:57:42 am                                                 #
+# Modified   : Thursday April 27th 2023 03:04:18 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-# ------------------------------------------------------------------------------------------------ #
-#                                        SERVICE CONFIG                                            #
-# ------------------------------------------------------------------------------------------------ #
-web:
-  session:
-    retry:                    # Request module TimeOut HTTP Adapter Config
-      total_retries: 5
-      backoff_factor: 2
-      status_forcelist:
-      - 104
-      - 429
-      - 500
-      - 502
-      - 503
-      - 504
-      allowed_methods:
-      - HEAD
-      - GET
-      - POST
-      - PUT
-      - DELETE
-      - OPTIONS
-      - TRACE
-      raise_on_redirect: True
-      raise_on_status: True
+"""AppStore Service Base Module."""
+from __future__ import annotations
+from abc import ABC, abstractmethod
 
-    timeout: 30
 
-    session_retries: 3        # An external retry loop in addition to the request retry
-    throttle:
-      start_delay: 3
-      min_delay: 1
-      max_delay: 10
-      lambda_factor: 1
-      backoff_factor: 2
-      concurrency: 1
+# ------------------------------------------------------------------------------------------------ #
+class Header(ABC):
+    """Base class for subclasses that provide HTTP Header Rotation"""
+
+    @abstractmethod
+    def __iter__(self) -> Header:
+        """Initializes the iteration and returns an instance of itself."""
+
+    @abstractmethod
+    def __next__(self) -> dict:
+        """Returns a header dictionary on each iteration."""
