@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 26th 2023 09:48:43 pm                                               #
-# Modified   : Thursday April 27th 2023 04:39:16 am                                                #
+# Modified   : Saturday April 29th 2023 12:46:54 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -47,7 +47,7 @@ class AutoThrottleLatency(AutoThrottle):
     #   0 index corresponds to lambda_factor from 12AM-5:59AM, 1 indexes
     #   the 2nd time window from 6AM until 11:59AM, and so on.
     #   the
-    __lambda_factors = [1, 0.75, 0.75, 0.5]
+    __lambda_factors = [1, 0.5, 0.5, 0.5]
     __window_size = 6
 
     def __init__(
@@ -74,15 +74,21 @@ class AutoThrottleLatency(AutoThrottle):
         if self._timeaware:
             self._lambda_factor = self._get_lambda_factor()
 
-    def delay(self, latency: float, response, wait: bool = True) -> Union[float, None]:
+    def delay(self, latency: float, status_code: int, wait: bool = True) -> Union[float, None]:
         """Computes and optionally executes a delay, related to request latency and status code.
 
         This method has two modes: wait and non-wait. In wait mode, the method
         computes and executes a delay that adjusts according to server latency and
         response. In non-wait mode, the delay time is immediately returned.
+
+        Args:
+            latency (float): The time between the last request and its response
+            status_code (int): The HTTP request status code
+            wait (bool): Should the method sleep, or return the delay time.
+
         """
 
-        if response.status_code == 200:
+        if status_code == 200:
             delay = self._delay(latency=latency)
         else:
             delay = self._backoff(latency=latency)

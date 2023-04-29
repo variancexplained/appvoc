@@ -11,17 +11,30 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Thursday April 27th 2023 04:23:52 am                                                #
+# Modified   : Saturday April 29th 2023 03:22:37 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Web Infrastructure Base Module"""
+from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from scipy.stats import expon
-import numpy as np
 from requests import Response
+
+
+# ------------------------------------------------------------------------------------------------ #
+class Header(ABC):
+    """Interface for classes that serve up HTTP Headers."""
+
+    @abstractmethod
+    def __iter__(self):
+        """Initializes the iteration"""
+
+    @abstractmethod
+    def __next__(self):
+        """Returns a randomly selected header."""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -63,7 +76,7 @@ class AutoThrottle(ABC):
         self._prior_latency = 0
         self._prior_delay = start_delay
 
-        self._distribution = expon(scale=1 / self._lambda_factor)
+        self._distribution = expon(scale=self._lambda_factor)
 
     @abstractmethod
     def delay(self, latency: float, response: Response) -> float:
@@ -79,31 +92,12 @@ class AutoThrottle(ABC):
         # Apply backoff factor to prior delay
         new_delay = self._prior_delay * self._backoff_factor
         # Ensure delay doesn't exceed max delay
-        new_delay = np.min(new_delay, self._max_delay)
+        # new_delay = np.min(new_delay, self._max_delay)
         # Reset state: Backoff delays are not stored in history.
         self._prior_latency = latency
+        self._prior_delay = new_delay
         # Viola
         return new_delay
-
-
-# ------------------------------------------------------------------------------------------------ #
-class HTTPVars:
-    TIMEOUT = 30
-    TOTAL_RETRIES = 5
-    SESSIONS = 3
-    MAX_PAGES = 99999
-    LIMIT = 200
-    EPOCH = 40246871
-    DELAY_MIN = 1
-    DELAY_MAX = 8
-    BACKOFF_FACTOR = 2
-    STATUS_FORCELIST = [104, 429, 500, 502, 503, 504]
-    METHOD_WHITELIST = ["HEAD", "GET" "POST", "PUT", "DELETE", "OPTIONS", "TRACE"]
-    RAISE_ON_REDIRECT = False
-    RAISE_ON_STATUS = False
-    ALLOWED_ANOMALIES = 5
-    DONE = 222
-    NO_CONTENT = 204
 
 
 # ------------------------------------------------------------------------------------------------ #

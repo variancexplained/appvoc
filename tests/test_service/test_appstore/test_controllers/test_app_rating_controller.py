@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 24th 2023 10:17:59 am                                                  #
-# Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
+# Modified   : Friday April 28th 2023 11:01:47 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.acquisition.appstore.controller import AppStoreRatingController
+from aimobile.data.acquisition.appstore.Project import AppStoreRatingProject
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -31,8 +31,8 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.rating_controller
-class TestRatingController:  # pragma: no cover
+@pytest.mark.rating_Project
+class TestRatingProject:  # pragma: no cover
     # ============================================================================================ #
     def test_setup(self, container, rating, appdata, caplog):
         start = datetime.now()
@@ -69,7 +69,7 @@ class TestRatingController:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_controller(self, container, caplog):
+    def test_Project(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -81,9 +81,9 @@ class TestRatingController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        controller = AppStoreRatingController()
+        Project = AppStoreRatingProject()
         category_ids = [6012, 6013, 6020]
-        controller.scrape(category_ids=category_ids)
+        Project.scrape(category_ids=category_ids)
 
         repo = container.data.rating_repo()
         df = repo.getall()

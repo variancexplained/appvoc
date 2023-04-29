@@ -11,14 +11,12 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:21:04 am                                                 #
-# Modified   : Friday April 21st 2023 10:59:04 pm                                                  #
+# Modified   : Saturday April 29th 2023 03:18:52 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from requests.adapters import HTTPAdapter
-
-from aimobile.infrastructure.web.base import HTTPVars
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -26,11 +24,8 @@ class TimeoutHTTPAdapter(HTTPAdapter):
     """Wraps an HTTP request with timeout capability"""
 
     def __init__(self, *args, **kwargs):
-        if "timeout" in kwargs:
-            self._timeout = kwargs["timeout"]
-            del kwargs["timeout"]
-        else:
-            self._timeout = HTTPVars.TIMEOUT
+        self._timeout = kwargs["timeout"]
+        del kwargs["timeout"]
 
         super().__init__(*args, **kwargs)
 

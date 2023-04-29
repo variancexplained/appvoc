@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
+# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,8 +26,8 @@ import requests
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.acquisition.appstore import STOREFRONTS
-from aimobile.data.base import ReviewScraper
+from aimobile.data.acquisition.scraper.appstore import STOREFRONTS
+from aimobile.data.base import Scraper
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.session import SessionHandler
 
@@ -202,6 +202,6 @@ class AppStoreReviewScraper(ReviewScraper):
 
     def _paginate_url(self) -> None:
         self._page += 1
-        self._start_index += self._max_results_per_page
+        self._start_index += self._max_results_per_page  # results
         self._end_index += self._max_results_per_page
         self._setup_url()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Thursday April 27th 2023 03:35:59 am                                                #
+# Modified   : Saturday April 29th 2023 07:50:28 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -91,7 +91,7 @@ def mode():
 def container():
     container = AIMobileContainer()
     container.init_resources()
-    container.wire(packages=["aimobile.service.appstore"])
+    container.wire(packages=["aimobile.data.acquisition.scraper"])
 
     return container
 
@@ -112,6 +112,20 @@ def dataframe():
 def appdata():
     df = IOService.read(APPDATA_HEALTH_FILEPATH)
     return df
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      APPDATA REPO                                                #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def project_repo(container):
+    repo = container.data.project_repo()
+    try:
+        repo.delete_all()
+    except Exception:
+        pass
+    repo.save()
+    return repo
 
 
 # ------------------------------------------------------------------------------------------------ #

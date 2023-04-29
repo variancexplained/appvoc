@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Friday April 28th 2023 02:10:04 pm                                                  #
+# Modified   : Saturday April 29th 2023 07:01:35 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,14 +25,14 @@ from datetime import datetime
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
-from aimobile.data.base import AppScraper
-from aimobile.data.acquisition.appstore.base import Header
+from aimobile.data.acquisition.base.scraper import Scraper
+from aimobile.infrastructure.web.headers import Header
 from aimobile.infrastructure.web.session import SessionHandler
 from aimobile.container import AIMobileContainer
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreAppScraper(AppScraper):
+class AppStoreAppScraper(Scraper):
     """App Store App Scraper
 
     Args:
@@ -57,20 +57,17 @@ class AppStoreAppScraper(AppScraper):
         term: str,
         headers: Header = Provide[AIMobileContainer.web.browser_headers],
         session: SessionHandler = Provide[AIMobileContainer.web.session],
-        page: int = 0,
+        start_page: int = 0,
         limit: int = 200,
         max_pages: int = sys.maxsize,
-        lang: str = "en-us",
-        country: str = "us",
     ) -> None:
+        super().__init__()
+        self._page = start_page
         self._term = term
         self._headers = headers
         self._session = session
         self._limit = limit or self.__limit
         self._max_pages = max_pages or self.__max_pages
-        self._page = page
-        self._lang = lang or self.__lang
-        self._country = country or self.__country
 
         self._pages = 0
         self._results = 0
@@ -79,36 +76,6 @@ class AppStoreAppScraper(AppScraper):
         self._url = None
         self._params = None
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    @property
-    def term(self) -> str:
-        """Returns the search term"""
-        return self._term
-
-    @property
-    def status_code(self) -> int:
-        """Returns the length of the response"""
-        return self._status_code
-
-    @property
-    def page(self) -> int:
-        """Returns the current page processed."""
-        return self._page
-
-    @property
-    def pages(self) -> int:
-        """Returns the number of pages processed. May not be the same as page if started at nonzero.."""
-        return self._pages
-
-    @property
-    def results(self) -> int:
-        """Returns the result count returned."""
-        return self._results
-
-    @property
-    def result(self) -> pd.DataFrame:
-        """Returns result in DataFrame format."""
-        return self._result
 
     def __iter__(self) -> AppStoreAppScraper:
         self._setup()
@@ -143,10 +110,6 @@ class AppStoreAppScraper(AppScraper):
             self._teardown()
             return self
 
-    def summarize(self) -> None:
-        """Prints a summary of the appdata scraping project."""
-        print(self._project)
-
     def _setup(self) -> None:
         """Initializes the iterator"""
         self._pages = 0
@@ -158,11 +121,11 @@ class AppStoreAppScraper(AppScraper):
         self._params = {
             "media": self.__media,
             "term": self._term,
-            "country": self._country,
-            "lang": self._lang,
+            "country": self.__country,
+            "lang": self.__lang,
             "explicit": self.__explicit,
             "limit": self._limit,
-            "offset": self._page,
+            "offset": self._page * self._limit,
         }
 
     def _teardown(self) -> None:

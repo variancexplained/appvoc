@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Thursday April 27th 2023 04:22:03 am                                                #
+# Modified   : Saturday April 29th 2023 08:25:10 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,11 +21,15 @@ import random
 from datetime import datetime
 import logging
 from dotenv import load_dotenv
+
 import requests
+from dependency_injector.wiring import inject, Provide
 
 from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.base import PROXY_SERVERS
+from aimobile.infrastructure.web.headers import BrowserHeader
+from aimobile.container import AIMobileContainer
 
 load_dotenv()
 
@@ -40,14 +44,17 @@ class SessionHandler:
         delay (tuple): The lower and upper bound on time between requests.
     """
 
+    @inject
     def __init__(
         self,
-        timeout: TimeoutHTTPAdapter,
-        throttle: AutoThrottleLatency,
+        timeout: TimeoutHTTPAdapter = Provide[AIMobileContainer.web.timeout],
+        throttle: AutoThrottleLatency = Provide[AIMobileContainer.web.throttle],
+        headers: BrowserHeader = Provide[AIMobileContainer.web.browser_headers],
         session_retries: int = 3,
     ) -> None:
         self._timeout = timeout
         self._throttle = throttle
+        self._headers = iter(headers)
 
         self._session_retries = session_retries
 
@@ -108,7 +115,9 @@ class SessionHandler:
                     proxies=self._proxy,
                 )
                 self._teardown()
-                self._throttle.delay(latency=self._latency, response=self._response, wait=True)
+                self._throttle.delay(
+                    latency=self._latency, status_code=self._response.status_code, wait=True
+                )
                 return self
 
             except Exception as e:  # pragma: no cover
@@ -124,7 +133,7 @@ class SessionHandler:
         """Conducts pre-request initializations"""
 
         self._proxy = self._get_proxy()  # From rotating proxies
-        self._header = header or self._get_header()  # From rotating headers
+        self._header = header or next(self._headers)  # From rotating headers
 
         # Construct session object
         self._session = requests.Session()

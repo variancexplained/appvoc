@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Friday April 28th 2023 02:11:24 pm                                                  #
+# Modified   : Saturday April 29th 2023 06:34:47 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,16 +25,15 @@ from urllib3.util import Retry
 from aimobile.infrastructure.io.local import IOService
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
-from aimobile.infrastructure.web.session import SessionHandler
 from aimobile.infrastructure.dal.mysql import MySQLDatabase
+from aimobile.data.repo.task import TaskRepo
 from aimobile.data.repo.appstore import (
     AppStoreAppDataRepo,
     AppStoreReviewRepo,
     AppStoreRatingRepo,
-    AppStoreUoW,
 )
-from aimobile.data.acquisition.appstore.headers import BrowserHeader, AppleStoreFrontHeader
-from aimobile.data.acquisition.appstore import HEADERS, STOREFRONTS
+from aimobile.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
+from aimobile.infrastructure.web.session import SessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -68,14 +67,7 @@ class DataStorageContainer(containers.DeclarativeContainer):
     appdata_repo = providers.Singleton(AppStoreAppDataRepo, database=db)
     review_repo = providers.Singleton(AppStoreReviewRepo, database=db)
     rating_repo = providers.Singleton(AppStoreRatingRepo, database=db)
-
-    uow = providers.Singleton(
-        AppStoreUoW,
-        appdata_repository=AppStoreAppDataRepo,
-        review_repository=AppStoreReviewRepo,
-        rating_repository=AppStoreRatingRepo,
-        database=db,
-    )
+    task_repo = providers.Singleton(TaskRepo, database=db)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -110,16 +102,13 @@ class WebSessionContainer(containers.DeclarativeContainer):
         concurrency=config.web.session.throttle.concurrency,
     )
 
+    browser_headers = providers.Resource(BrowserHeader)
+
+    storefront_headers = providers.Resource(AppleStoreFrontHeader)
+
     session = providers.Resource(
         SessionHandler,
-        timeout=timeout,
-        throttle=throttle,
-        session_retries=config.web.session.session_retries,
     )
-
-    browser_headers = providers.Resource(BrowserHeader, headers=HEADERS)
-
-    storefront_headers = providers.Resource(AppleStoreFrontHeader, headers=STOREFRONTS)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -146,4 +135,4 @@ class AIMobileContainer(containers.DeclarativeContainer):
 # ------------------------------------------------------------------------------------------------ #
 if __name__ == "__main__":
     container = AIMobileContainer()
-    container.wire(packages=["aimobile.service.appstore"])
+    container.wire(packages=["aimobile.data.acquisition.scraper"])

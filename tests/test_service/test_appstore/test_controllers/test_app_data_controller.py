@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 21st 2023 06:37:33 pm                                                  #
-# Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
+# Modified   : Friday April 28th 2023 11:01:47 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,9 +21,9 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.acquisition.appstore.controller import (
-    AppStoreAppController,
-    AppStoreReviewController,
+from aimobile.data.acquisition.appstore.Project import (
+    AppStoreAppProject,
+    AppStoreReviewProject,
 )
 
 
@@ -36,8 +36,8 @@ single_line = f"\n{100 * '-'}"
 
 @pytest.mark.service
 @pytest.mark.appstore
-@pytest.mark.controller
-class TestAppStoreAppController:  # pragma: no cover
+@pytest.mark.Project
+class TestAppStoreAppProject:  # pragma: no cover
     # ============================================================================================ #
     def test_appdata(self, container, caplog):
         start = datetime.now()
@@ -51,8 +51,8 @@ class TestAppStoreAppController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        controller = AppStoreAppController(max_pages=2, verbose=1, max_results_per_page=5)
-        controller.scrape(terms=["health"])
+        Project = AppStoreAppProject(max_pages=2, verbose=1, max_results_per_page=5)
+        Project.scrape(terms=["health"])
         repo = container.data.appdata_repo()
         df = repo.getall()
         assert len(df) != 0
@@ -92,8 +92,8 @@ class TestAppStoreAppController:  # pragma: no cover
         repo = container.data.review_repo()
         repo.delete_all()
         # Process
-        controller = AppStoreReviewController(max_pages=2, verbose=2, max_results_per_page=5)
-        controller.scrape(category_ids=[6013])
+        Project = AppStoreReviewProject(max_pages=2, verbose=2, max_results_per_page=5)
+        Project.scrape(category_ids=[6013])
         repo = container.data.review_repo()
         df = repo.getall()
         assert len(df) != 0

@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/infrastructure/repo/base.py                                               #
+# Filename   : /aimobile/data/repo/base.py                                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Friday April 28th 2023 02:04:37 pm                                                  #
+# Modified   : Saturday April 29th 2023 12:59:27 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,6 @@
 """Module provides basic database interface"""
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import logging
 from typing import Union
 
 import pandas as pd
@@ -42,7 +41,11 @@ class Repo(ABC):
     def __init__(self, name: str, database: Database) -> None:
         self._name = name
         self._database = database
-        self._df = None
+
+    @property
+    @abstractmethod
+    def summary(self) -> pd.DataFrame:
+        """Returns a summary of the repository in DataFrame format"""
 
     @abstractmethod
     def add(self, data: pd.DataFrame) -> None:
@@ -80,11 +83,6 @@ class Repo(ABC):
         info.columns = ["Dtype", "Non-Null Count", "Bytes", "Cardinality"]
         return info
 
-    @property
-    @abstractmethod
-    def summary(self) -> pd.DataFrame:
-        """Returns a summary of the repository in DataFrame format"""
-
     def get(self, id: Union[str, int]) -> pd.DataFrame:
         """Returns data for the entity designated by the 'id' parameter.
 
@@ -107,13 +105,9 @@ class Repo(ABC):
 
     def getall(self) -> pd.DataFrame:
         """Returns all data in the repository."""
-        if self._df is not None:
-            return self._df
-        else:
-            query = f"SELECT * FROM {self._name};"
-            params = None
-            self._df = self._database.query(query=query, params=params)
-            return self._df
+        query = f"SELECT * FROM {self._name};"
+        params = None
+        return self._database.query(query=query, params=params)
 
     def exists(self, id: Union[str, int] = "appdata") -> bool:
         """Assesses the existence of an entity in the database.
@@ -150,7 +144,7 @@ class Repo(ABC):
             id (Union[str,int]): Entity id
 
         """
-        self._df = None
+
         query = f"DELETE FROM {self._name} WHERE id = :id;"
         params = {"id": id}
         self._database.delete(query=query, params=params)
@@ -162,14 +156,13 @@ class Repo(ABC):
             category_id (Union[str,int]): Category identifier.
 
         """
-        self._df = None
+
         query = f"DELETE FROM {self._name} WHERE category_id = :category_id;"
         params = {"category_id": category_id}
         self._database.delete(query=query, params=params)
 
     def delete_all(self) -> int:
         """Deletes all entities from the repository."""
-        self._df = None
 
         query = f"DELETE FROM {self._name};"
         params = {}
@@ -193,7 +186,6 @@ class Repo(ABC):
         rows = df.shape[0]
         nids = df["id"].nunique()
         if rows != nids:
-            self._df = None
             msg = f"\nThere are {rows} rows and {nids} unique ids. Do you want to dedup? (y/n)"
             dedup = input(msg)
             if "y" in dedup.lower():
@@ -218,48 +210,3 @@ class Repo(ABC):
     def save(self) -> None:
         """Saves the repository to file located in the designated directory."""
         self._database.commit()
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                       UNIT OF WORK BASE CLASS                                    #
-# ------------------------------------------------------------------------------------------------ #
-class UoW(ABC):
-    """Unit of Work Base class, defining some basic functionality based upon the IUoW interface.
-
-    This class should not be instantiated directly, instead subclasses should be used which
-    contain the collection of repositories.
-    Args:
-        database (Database): A Database instance from the dependency injector container.
-
-    """
-
-    def __init__(
-        self,
-        database: Database,
-    ) -> None:
-        self._database = database
-        self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    @property
-    def database(self) -> Database:
-        return self._database
-
-    def connect(self) -> None:
-        """Connects the database"""
-        self._database.connect()
-
-    def begin(self) -> None:
-        """Begin a transaction"""
-        self._database.begin()
-
-    def save(self) -> None:
-        """Saves changes to the underlying sqlite context"""
-        self._database.commit()
-
-    def rollback(self) -> None:
-        """Returns state of sqlite to the point of the last commit."""
-        self._database.rollback()
-
-    def close(self) -> None:
-        """Closes the sqlite connection."""
-        self._database.close()

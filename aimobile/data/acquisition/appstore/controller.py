@@ -11,12 +11,12 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Friday April 28th 2023 02:11:24 pm                                                  #
+# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""AppStore Scraper Controller Module"""
+"""AppStore Scraper Project Module"""
 import os
 import sys
 import logging
@@ -25,42 +25,42 @@ import datetime
 from typing import Union
 
 import numpy as np
-from dependency_injector.wiring import inject, Provide
+
 import pandas as pd
 
-from aimobile.data.repo.appstore import AppStoreUoW
-from aimobile.data.acquisition.appstore import AppStoreCategories
+
+from aimobile.data.acquisition.scraper.appstore import AppStoreCategories
 from aimobile.data.acquisition.appstore.appdata import AppStoreAppScraper
 from aimobile.data.acquisition.appstore.review import AppStoreReviewScraper
 from aimobile.data.acquisition.appstore.rating import AppStoreRatingScraper
-from aimobile.container import AIMobileContainer
-from aimobile.data.base import Controller
+
+from aimobile.data.base import Project
 
 
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP DATA CONTROLLER                                          #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreAppController(Controller):
-    """AppStore App Data Controller has overall responsibility for App Store scraping process.
+class AppStoreAppProject(Project):
+    """AppStore App Data Project has overall responsibility for App Store scraping process.
 
     Args:
-        uow (UnitofWork): Unit of Work class containing the appdata repository
         scraper (AppStoreAppScraper): A scraper object that returns data from the target urls.
         max_pages (int): The maximum number of pages to process.
         verbose (int): Indicates progress reporting verbosity in terms of the number of pages
             between progress reports to the log.
+
+    Inherited Member Variables:
+        uow (UoW): Unit of Work Class containing all repositories.
     """
 
-    @inject
     def __init__(
         self,
-        uow: AppStoreUoW = Provide[AIMobileContainer.data.uow],
         scraper: type[AppStoreAppScraper] = AppStoreAppScraper,
         max_pages: int = sys.maxsize,
         max_results_per_page: int = 200,
         verbose: int = 10,
     ) -> None:
-        self._uow = uow
+        super().__init__()
         self._scraper = scraper
         self._verbose = verbose
         self._max_pages = max_pages
@@ -69,8 +69,14 @@ class AppStoreAppController(Controller):
         # Stats
         self._pages = 0
         self._apps = 0
+        self._rate = 0
         self._started = None
         self._duration = None
+
+        self._host = "itunes.apple.com"
+
+        # Management
+        self._project = None
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def scrape(self, terms: Union[str, list]) -> None:
@@ -91,56 +97,66 @@ class AppStoreAppController(Controller):
 
     def summarize(self) -> pd.DataFrame:
         """Returns a DataFrame summarizing the data extracted"""
-        return self._uow.appdata_repository.summarize()
+        return self.uow.appdata_repository.summarize()
 
     def archive(self) -> None:
         """Saves the repository to an archive"""
-        self._uow.appdata_repository.export()
+        self.uow.appdata_repository.export()
 
     def _scrape(self, terms: Union[str, list]) -> None:
-        self._setup()
         terms = [terms] if isinstance(terms, str) else terms
 
         for term in terms:
+            start_page = self._start_project(term)
+
             for scraper in self._scraper(
-                term=term, max_pages=self._max_pages, limit=self._max_results_per_page
+                term=term,
+                page=start_page,
+                max_pages=self._max_pages,
+                limit=self._max_results_per_page,
             ):
-                self._persist(scraper.result)
-                self._update_stats(scraper.result)
+                self._update_project(scraper.result)
                 self._announce(term=term)
 
-    def _setup(self) -> None:
-        self._started = datetime.datetime.now()
+            self._end_project()
+
+    def _start_project(self, term: str) -> None:
+        # Instantiates and persists a project object and returns start page.
+        start_page = self.start_project(term)
         self._pages = 0
         self._apps = 0
+        self._rate = 0
+        return start_page
 
-    def _teardown(self) -> None:
-        self._uow.appdata_repository.export()
-
-    def _persist(self, result: pd.DataFrame) -> None:
-        self._uow.appdata_repository.add(data=result)
-        self._uow.save()
-
-    def _update_stats(self, result: pd.DataFrame) -> None:
+    def _update_project(self, result: pd.DataFrame) -> None:
+        # Update project stats
         self._pages += 1
         self._apps += result.shape[0]
         seconds = (datetime.datetime.now() - self._started).total_seconds()
         self._duration = str(datetime.timedelta(seconds=seconds))
+        self._rate = round(self._apps / seconds, 2)
+        # Persist project and results
+        self.update_project(self._pages)
+        self.uow.appdata_repository.add(data=result)
+        self.uow.save()
+
+    def _end_project(self, pages: int) -> None:
+        self.complete_project()
+        self.uow.appdata_repository.export()
 
     def _announce(self, term: str) -> None:
         if self._pages % self._verbose == 0:
-            msg = f"Term: {term.capitalize()}\tPages: {self._pages}\tApps: {self._apps}\tElapsed Time: {self._duration}"
+            msg = f"Term: {term.capitalize()}\tScrapers: {self._pages}\tApps: {self._apps}\tElapsed Time: {self._duration}\tRate: {self._rate} apps per second."
             self._logger.info(msg)
 
 
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP DATA CONTROLLER                                          #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewController(Controller):
+class AppStoreReviewProject(Project):
     """Controls the App Store Review scraping process
 
     Args:
-    uow (UnitofWork): Unit of Work class containing the appdata repository
         scraper (AppStoreReviewScraper): A scraper object that returns data from the target urls.
         min_ratings (int): Since we want apps with a minimum number of reviews, and we don't
             have the number of reviews per app, we are using the number of ratings as
@@ -149,19 +165,20 @@ class AppStoreReviewController(Controller):
         max_results_per_page (int): This is the limit of results to return on each request.
         verbose (int): An indicator of the level of progress reporting verbosity. Progress
             will be printed to stdout for each 'verbose' number of apps processed.
+
+    Inherited Member Variables:
+        uow (UoW): Unit of Work Class containing all repositories.
     """
 
-    @inject
     def __init__(
         self,
-        uow: AppStoreUoW = Provide[AIMobileContainer.data.uow],
         scraper: type[AppStoreReviewScraper] = AppStoreReviewScraper,
         min_ratings: int = 20,
         max_pages: int = sys.maxsize,
         max_results_per_page: int = 400,
         verbose: int = 10,
     ) -> None:
-        self._uow = uow
+        super().__init__()
         self._scraper = scraper
         self._min_ratings = min_ratings
         self._max_pages = max_pages
@@ -224,11 +241,11 @@ class AppStoreReviewController(Controller):
 
     def summarize(self) -> pd.DataFrame:
         """Returns a DataFrame summarizing the data extracted"""
-        return self._uow.review_repository.summarize()
+        return self.uow.review_repository.summarize()
 
     def archive(self) -> None:
         """Saves the repository to an archive"""
-        self._uow.review_repository.export()
+        self.uow.review_repository.export()
 
     def _scrape(self, category_ids: str) -> None:
         category_ids = [category_ids] if isinstance(category_ids, (str, int)) else category_ids
@@ -282,14 +299,14 @@ class AppStoreReviewController(Controller):
         msg += f"\t{'Categories:'.rjust(width, ' ')} | {self._project_stats['categories']}\n"
         msg += f"\t{'Apps:'.rjust(width, ' ')} | {self._project_stats['apps']}\n"
         msg += f"\t{'Reviews:'.rjust(width, ' ')} | {self._project_stats['reviews']}\n"
-        msg += f"\t{'Pages:'.rjust(width, ' ')} | {self._project_stats['pages']}\n"
+        msg += f"\t{'Scrapers:'.rjust(width, ' ')} | {self._project_stats['pages']}\n"
         msg += f"\t{'Started:'.rjust(width, ' ')} | {self._project_stats['started']}\n"
         msg += f"\t{'Ended:'.rjust(width, ' ')} | {self._project_stats['ended']}\n"
         msg += f"\t{'Duration:'.rjust(width, ' ')} | {self._project_stats['duration']}\n"
         self._logger.info(msg)
 
     def _teardown(self) -> None:
-        self._uow.review_repository.export()
+        self.uow.review_repository.export()
 
     def _start_category(self, category_id: int) -> pd.DataFrame:
         """Obtains apps for the category, removing any apps for which reviews exist."""
@@ -309,7 +326,7 @@ class AppStoreReviewController(Controller):
         self._category_stats["started"] = datetime.datetime.now()
 
         # Obtain all apps for the category from the repository.
-        apps = self._uow.appdata_repository.get_by_category(category_id=category_id)
+        apps = self.uow.appdata_repository.get_by_category(category_id=category_id)
         self._category_stats["apps"] = len(apps)
 
         # Filter the apps that have greater than 'min_ratings'
@@ -317,7 +334,7 @@ class AppStoreReviewController(Controller):
         self._category_stats["apps_with_min_ratings"] = len(apps)
 
         # Obtain apps for which we've already processed the reviews.
-        reviews = self._uow.review_repository.get_by_category(category_id=category_id)
+        reviews = self.uow.review_repository.get_by_category(category_id=category_id)
         apps_with_reviews = reviews["app_id"].unique()
         self._category_stats["apps_with_reviews"] = len(apps_with_reviews)
 
@@ -389,8 +406,8 @@ class AppStoreReviewController(Controller):
         self._category_stats["pages"] += 1
 
     def _save_page(self, result: pd.DataFrame) -> None:
-        self._uow.review_repository.add(data=result)
-        self._uow.save()
+        self.uow.review_repository.add(data=result)
+        self.uow.save()
 
     def _end_page(self, result: pd.DataFrame) -> None:
         """Updates stats and announces progress."""
@@ -425,23 +442,24 @@ class AppStoreReviewController(Controller):
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP RATING CONTROLLER                                        #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingController(Controller):
+class AppStoreRatingProject(Project):
     """Controls the App Store Review scraping process
 
     Args:
         scraper (AppStoreReviewScraper): A scraper object that returns data from the target urls.
         uow (UnitofWork): Unit of Work class containing the appdata repository
         io (IOService): A file IO object.
+
+    Inherited Member Variables:
+        uow (UoW): Unit of Work Class containing all repositories.
     """
 
-    @inject
     def __init__(
         self,
-        uow: AppStoreUoW = Provide[AIMobileContainer.data.uow],
         scraper: type[AppStoreReviewScraper] = AppStoreRatingScraper,
         batchsize: int = 20,
     ) -> None:
-        self._uow = uow
+        super().__init__()
         self._scraper = scraper
         self._batchsize = batchsize
 
@@ -469,11 +487,11 @@ class AppStoreRatingController(Controller):
 
     def summarize(self) -> pd.DataFrame:
         """Returns a DataFrame summarizing the data extracted"""
-        return self._uow.review_repository.summarize()
+        return self.uow.review_repository.summarize()
 
     def archive(self) -> None:
         """Saves the repository to an archive"""
-        self._uow.review_repository.export()
+        self.uow.review_repository.export()
 
     def _scrape(self, category_ids: str) -> None:
         self._setup()
@@ -515,11 +533,11 @@ class AppStoreRatingController(Controller):
         """Obtains apps for the category, removing any apps for which reviews exist."""
 
         # Obtain all apps for the category from the repository.
-        apps = self._uow.appdata_repository.get_by_category(category_id=category_id)
+        apps = self.uow.appdata_repository.get_by_category(category_id=category_id)
         msg = f"\n\nA total of {len(apps)} apps in category {category_id} to process."
 
         # Obtain apps for which reviews exist.
-        ratings = self._uow.rating_repository.get_by_category(category_id=category_id)
+        ratings = self.uow.rating_repository.get_by_category(category_id=category_id)
         apps_processed = ratings["id"].unique()
         msg += f"\nThere are {len(apps_processed)} apps in category {category_id} which have already been processed."
 
@@ -534,8 +552,8 @@ class AppStoreRatingController(Controller):
 
     def _persist(self, results: pd.DataFrame) -> None:
         try:
-            self._uow.rating_repository.add(data=results)
-            self._uow.save()
+            self.uow.rating_repository.add(data=results)
+            self.uow.save()
         except Exception:
             self._insert(batch=results)
 
@@ -548,8 +566,8 @@ class AppStoreRatingController(Controller):
         for _, row in batch.iterrows():
             df = row.to_frame()
             try:
-                self._uow.rating_repository.add(data=df)
-                self._uow.save()
+                self.uow.rating_repository.add(data=df)
+                self.uow.save()
             except Exception:
                 pass
 

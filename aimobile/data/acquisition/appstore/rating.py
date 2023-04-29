@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Friday April 28th 2023 02:10:05 pm                                                  #
+# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,8 +23,7 @@ import requests
 
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.base import RatingScraper
-from aimobile.data.acquisition.appstore import STOREFRONTS
+from aimobile.data.acquisition.scraper.appstore import STOREFRONTS
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.session import SessionHandler
 
@@ -59,23 +58,11 @@ class AppStoreRatingScraper(RatingScraper):
         self._max_invalid_responses = max_invalid_responses
 
         self._invalid_responses = 0
-        self._result = None
-        self._status_code = None
         self._host = "itunes.apple.com"
         self._url = None
         self._header = STOREFRONTS[0]["headers"]
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    @property
-    def status_code(self) -> int:
-        """Returns the length of the response"""
-        return self._status_code
-
-    @property
-    def result(self) -> int:
-        """Returns result in DataFrame format."""
-        return self._result
 
     def __iter__(self) -> AppStoreRatingScraper:
         self._app_idx = 0
