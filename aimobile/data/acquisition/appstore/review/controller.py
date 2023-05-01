@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
+# Controller    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/acquisition/appstore/controller.py                                   #
+# Filename   : /aimobile/data/acquisition/appstore/review/controller.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
+# Modified   : Sunday April 30th 2023 06:51:48 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""AppStore Scraper Project Module"""
+"""AppStore Scraper Controller Module"""
 import os
 import sys
 import logging
@@ -29,131 +29,18 @@ import numpy as np
 import pandas as pd
 
 
-from aimobile.data.acquisition.scraper.appstore import AppStoreCategories
-from aimobile.data.acquisition.appstore.appdata import AppStoreAppScraper
-from aimobile.data.acquisition.appstore.review import AppStoreReviewScraper
-from aimobile.data.acquisition.appstore.rating import AppStoreRatingScraper
+from aimobile.data.acquisition.appstore import AppStoreCategories
+from aimobile.data.acquisition.appstore.appdata.scraper import AppStoreAppDataScraper
+from aimobile.data.acquisition.appstore.review.scraper import AppStoreReviewScraper
+from aimobile.data.acquisition.appstore.rating.scraper import AppStoreRatingScraper
 
-from aimobile.data.base import Project
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                            APPSTORE APP DATA CONTROLLER                                          #
-# ------------------------------------------------------------------------------------------------ #
-class AppStoreAppProject(Project):
-    """AppStore App Data Project has overall responsibility for App Store scraping process.
-
-    Args:
-        scraper (AppStoreAppScraper): A scraper object that returns data from the target urls.
-        max_pages (int): The maximum number of pages to process.
-        verbose (int): Indicates progress reporting verbosity in terms of the number of pages
-            between progress reports to the log.
-
-    Inherited Member Variables:
-        uow (UoW): Unit of Work Class containing all repositories.
-    """
-
-    def __init__(
-        self,
-        scraper: type[AppStoreAppScraper] = AppStoreAppScraper,
-        max_pages: int = sys.maxsize,
-        max_results_per_page: int = 200,
-        verbose: int = 10,
-    ) -> None:
-        super().__init__()
-        self._scraper = scraper
-        self._verbose = verbose
-        self._max_pages = max_pages
-        self._max_results_per_page = max_results_per_page
-
-        # Stats
-        self._pages = 0
-        self._apps = 0
-        self._rate = 0
-        self._started = None
-        self._duration = None
-
-        self._host = "itunes.apple.com"
-
-        # Management
-        self._project = None
-        self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    def scrape(self, terms: Union[str, list]) -> None:
-        """Scrapes app data matching the search term from the target URL.
-
-        Args:
-            terms (Union[str,list]): Search term or a list of search terms.
-        """
-        load_dotenv()
-        status = os.getenv("APPSTORE_DATA_SCRAPED")
-        if status in [True, "True", "true"]:
-            msg = "\n\nAppstore AppData Scraped Status is Complete. Skipping App Store App Data Scraping Operation."
-            self._logger.info(msg)
-        else:
-            self._scrape(terms=terms)
-
-        self._teardown()
-
-    def summarize(self) -> pd.DataFrame:
-        """Returns a DataFrame summarizing the data extracted"""
-        return self.uow.appdata_repository.summarize()
-
-    def archive(self) -> None:
-        """Saves the repository to an archive"""
-        self.uow.appdata_repository.export()
-
-    def _scrape(self, terms: Union[str, list]) -> None:
-        terms = [terms] if isinstance(terms, str) else terms
-
-        for term in terms:
-            start_page = self._start_project(term)
-
-            for scraper in self._scraper(
-                term=term,
-                page=start_page,
-                max_pages=self._max_pages,
-                limit=self._max_results_per_page,
-            ):
-                self._update_project(scraper.result)
-                self._announce(term=term)
-
-            self._end_project()
-
-    def _start_project(self, term: str) -> None:
-        # Instantiates and persists a project object and returns start page.
-        start_page = self.start_project(term)
-        self._pages = 0
-        self._apps = 0
-        self._rate = 0
-        return start_page
-
-    def _update_project(self, result: pd.DataFrame) -> None:
-        # Update project stats
-        self._pages += 1
-        self._apps += result.shape[0]
-        seconds = (datetime.datetime.now() - self._started).total_seconds()
-        self._duration = str(datetime.timedelta(seconds=seconds))
-        self._rate = round(self._apps / seconds, 2)
-        # Persist project and results
-        self.update_project(self._pages)
-        self.uow.appdata_repository.add(data=result)
-        self.uow.save()
-
-    def _end_project(self, pages: int) -> None:
-        self.complete_project()
-        self.uow.appdata_repository.export()
-
-    def _announce(self, term: str) -> None:
-        if self._pages % self._verbose == 0:
-            msg = f"Term: {term.capitalize()}\tScrapers: {self._pages}\tApps: {self._apps}\tElapsed Time: {self._duration}\tRate: {self._rate} apps per second."
-            self._logger.info(msg)
+from aimobile.data.acquisition.base import Controller
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                            APPSTORE APP DATA CONTROLLER                                          #
+#                            APPSTORE REVIEW CONTROLLER                                            #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewProject(Project):
+class AppStoreReviewController(Controller):
     """Controls the App Store Review scraping process
 
     Args:
@@ -279,7 +166,7 @@ class AppStoreReviewProject(Project):
     def _start_project(self, category_ids: list) -> None:
         self._project_stats["categories"] = len(category_ids)
         self._project_stats["started"] = datetime.datetime.now()
-        msg = f"\n\nProject with {self._project_stats['categories']} categories started at {self._project_stats['started'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
+        msg = f"\n\nController with {self._project_stats['categories']} categories started at {self._project_stats['started'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
         self._logger.info(msg)
 
     def _end_project(self) -> None:
@@ -295,7 +182,7 @@ class AppStoreReviewProject(Project):
 
     def _announce_project_end(self) -> None:
         width = 24
-        msg = f"\n\n{'Project Summary'}\n"
+        msg = f"\n\n{'Controller Summary'}\n"
         msg += f"\t{'Categories:'.rjust(width, ' ')} | {self._project_stats['categories']}\n"
         msg += f"\t{'Apps:'.rjust(width, ' ')} | {self._project_stats['apps']}\n"
         msg += f"\t{'Reviews:'.rjust(width, ' ')} | {self._project_stats['reviews']}\n"
@@ -442,7 +329,7 @@ class AppStoreReviewProject(Project):
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP RATING CONTROLLER                                        #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingProject(Project):
+class AppStoreRatingController(Controller):
     """Controls the App Store Review scraping process
 
     Args:

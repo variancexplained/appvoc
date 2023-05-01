@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/acquisition/appstore/appdata.py                                      #
+# Filename   : /aimobile/data/acquisition/appstore/appdata/scraper.py                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Saturday April 29th 2023 07:01:35 pm                                                #
+# Modified   : Sunday April 30th 2023 08:26:58 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,14 +25,17 @@ from datetime import datetime
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
-from aimobile.data.acquisition.base.scraper import Scraper
-from aimobile.infrastructure.web.headers import Header
+
+from aimobile.data.acquisition.base import Scraper
+from aimobile.data.acquisition.base import Result
 from aimobile.infrastructure.web.session import SessionHandler
 from aimobile.container import AIMobileContainer
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreAppScraper(Scraper):
+#                            APPSTORE APP DATA SCRAPER                                             #
+# ------------------------------------------------------------------------------------------------ #
+class AppStoreAppDataScraper(Scraper):
     """App Store App Scraper
 
     Args:
@@ -55,7 +58,6 @@ class AppStoreAppScraper(Scraper):
     def __init__(
         self,
         term: str,
-        headers: Header = Provide[AIMobileContainer.web.browser_headers],
         session: SessionHandler = Provide[AIMobileContainer.web.session],
         start_page: int = 0,
         limit: int = 200,
@@ -64,60 +66,49 @@ class AppStoreAppScraper(Scraper):
         super().__init__()
         self._page = start_page
         self._term = term
-        self._headers = headers
         self._session = session
         self._limit = limit or self.__limit
         self._max_pages = max_pages or self.__max_pages
 
         self._pages = 0
         self._results = 0
-        self._status_code = None
-        self._result = None
         self._url = None
         self._params = None
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def __iter__(self) -> AppStoreAppScraper:
+    def __iter__(self) -> AppStoreAppDataScraper:
         self._setup()
         return self
 
-    def __next__(self) -> None:
+    def __next__(self) -> Result:
         """Formats an itunes request for the next page"""
         if self._pages < self._max_pages:
             self._set_next_url()
-
-            header = next(self._header)
-
-            session = self._session.get(url=self._url, header=header, params=self._params)
+            session = self._session.get(url=self._url, params=self._params)
             try:
-                if session.status_code == 200:
-                    response = self._parse_session(session)
-                    self._result = self._parse_response(response)
+                if self._is_valid_response(session=session):
                     self._page += 1
                     self._pages += 1
-                    return self
-                else:
-                    self._teardown()
-                    return self
+                    return self._parse_response(session.response)
+                else:  # pragma: no cover
+                    raise StopIteration
 
-            except requests.exceptions.JSONDecodeError as e:
+            except requests.exceptions.JSONDecodeError as e:  # pragma: no cover
                 msg = f"Encountered {type[e]} exception. Likely a Nonetype exception on the session. Implying 204. Returning to calling environment. Details\n{e}"
                 self._logger.error(msg)
                 self._status_code = 204
-                self._teardown()
+                raise StopIteration
                 return self
         else:
-            self._teardown()
-            return self
+            raise StopIteration
 
     def _setup(self) -> None:
         """Initializes the iterator"""
         self._pages = 0
         self._results = 0
         self._status_code = None
-        self._result = None
         self._url = f"{self.__scheme}://{self.__host}/{self.__command}"
-        self._header = iter(self._headers)
+
         self._params = {
             "media": self.__media,
             "term": self._term,
@@ -128,13 +119,30 @@ class AppStoreAppScraper(Scraper):
             "offset": self._page * self._limit,
         }
 
-    def _teardown(self) -> None:
-        raise StopIteration
+    def _is_valid_response(self, session: SessionHandler) -> bool:  # pragma: no cover
+        """Returns True if response is valid, False otherwise.
 
-    def _parse_session(self, session: SessionHandler):
-        """Extracts data from the sesion object"""
-        self._status_code = int(session.response.status_code)
-        return session.response
+        Args:
+            session (SessionHandler): Session Handler object
+
+        """
+        valid = True
+        if session.status_code != 200:
+            msg = f"Invalid status code={session.status_code} encountered. Terminating page {self._page}."
+            valid = False
+        try:
+            results = session.response.json()["results"]
+        except KeyError:
+            msg = f"Invalid response encountered. Response has no 'results' key. Terminating page {self._page}."
+            valid = False
+
+        if not isinstance(results, list):
+            msg = f"Invalid response encountered. Result data type not expected. Terminating page {self._page}."
+            valid = False
+
+        if not valid:
+            self._logger.error(msg)
+        return valid
 
     def _parse_response(self, response: requests.Response) -> pd.DataFrame:
         """Accepts a requests Response object and returns a DataFrame
@@ -161,8 +169,19 @@ class AppStoreAppScraper(Scraper):
             appdata["source"] = self.__host
             result_list.append(appdata)
         df = pd.DataFrame(data=result_list)
-        self._results = len(result_list)
-        return df
+
+        result = Result(
+            scraper=type[self],
+            host=self.__host,
+            page=self._page,
+            pages=self._pages,
+            size=response.headers.get("content-length", 0),
+            results=len(df),
+            content=df,
+        )
+        self._results = len(df)
+
+        return result
 
     def _set_next_url(self) -> None:
         """Sets the parameter variable for the next url."""

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:22:06 am                                                 #
-# Modified   : Saturday April 29th 2023 03:22:37 am                                                #
+# Modified   : Sunday April 30th 2023 03:09:31 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,6 +19,7 @@
 """Web Infrastructure Base Module"""
 from __future__ import annotations
 from abc import ABC, abstractmethod
+import logging
 
 from scipy.stats import expon
 from requests import Response
@@ -78,6 +79,8 @@ class AutoThrottle(ABC):
 
         self._distribution = expon(scale=self._lambda_factor)
 
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
     @abstractmethod
     def delay(self, latency: float, response: Response) -> float:
         """Computes and returns a delay in seconds based upon response status and latency
@@ -97,6 +100,8 @@ class AutoThrottle(ABC):
         self._prior_latency = latency
         self._prior_delay = new_delay
         # Viola
+        msg = f"Invalid status code encountered. Backing off {new_delay} seconds."
+        self._logger.info(msg)
         return new_delay
 
 

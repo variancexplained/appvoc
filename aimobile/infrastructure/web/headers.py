@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 09:57:42 am                                                 #
-# Modified   : Saturday April 29th 2023 03:25:39 am                                                #
+# Modified   : Sunday April 30th 2023 07:53:17 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -33,6 +33,7 @@ class BrowserHeader(Header):
 
     def __init__(self) -> None:
         self._headers = HEADERS
+        self._header = None
 
     def __iter__(self):
         """Initializes the iteration"""

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Saturday April 29th 2023 06:34:47 pm                                                #
+# Modified   : Sunday April 30th 2023 06:55:57 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,12 +26,12 @@ from aimobile.infrastructure.io.local import IOService
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
 from aimobile.infrastructure.dal.mysql import MySQLDatabase
-from aimobile.data.repo.task import TaskRepo
-from aimobile.data.repo.appstore import (
-    AppStoreAppDataRepo,
-    AppStoreReviewRepo,
-    AppStoreRatingRepo,
-)
+from aimobile.data.repo.project import ProjectRepo
+from aimobile.data.repo.appstore.appdata import AppStoreAppDataRepo
+from aimobile.data.repo.appstore.review import AppStoreReviewRepo
+from aimobile.data.repo.appstore.rating import AppStoreRatingRepo
+
+from aimobile.data.repo.uow import UoW
 from aimobile.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
 from aimobile.infrastructure.web.session import SessionHandler
 
@@ -67,7 +67,16 @@ class DataStorageContainer(containers.DeclarativeContainer):
     appdata_repo = providers.Singleton(AppStoreAppDataRepo, database=db)
     review_repo = providers.Singleton(AppStoreReviewRepo, database=db)
     rating_repo = providers.Singleton(AppStoreRatingRepo, database=db)
-    task_repo = providers.Singleton(TaskRepo, database=db)
+    project_repo = providers.Singleton(ProjectRepo, database=db)
+
+    uow = providers.Singleton(
+        UoW,
+        database=db,
+        appdata_repo=appdata_repo,
+        review_repo=review_repo,
+        rating_repo=rating_repo,
+        project_repo=project_repo,
+    )
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -107,7 +116,7 @@ class WebSessionContainer(containers.DeclarativeContainer):
     storefront_headers = providers.Resource(AppleStoreFrontHeader)
 
     session = providers.Resource(
-        SessionHandler,
+        SessionHandler, timeout=timeout, throttle=throttle, headers=browser_headers
     )
 
 

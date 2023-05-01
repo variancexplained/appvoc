@@ -11,11 +11,40 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 12:37:58 pm                                                  #
-# Modified   : Saturday April 29th 2023 12:51:52 am                                                #
+# Modified   : Sunday April 30th 2023 05:14:49 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                       COLLECTIONS                                                #
+# ------------------------------------------------------------------------------------------------ #
+
+
+class AppStoreCollections:
+    """
+    App store collection IDs
+
+    Borrowed from https://github.com/facundoolano/app-store-scraper. These are
+    the various collections displayed in the app store, usually on the front
+    page.
+    """
+
+    TOP_MAC = "topmacapps"
+    TOP_FREE_MAC = "topfreemacapps"
+    TOP_GROSSING_MAC = "topgrossingmacapps"
+    TOP_PAID_MAC = "toppaidmacapps"
+    NEW_IOS = "newapplications"
+    NEW_FREE_IOS = "newfreeapplications"
+    NEW_PAID_IOS = "newpaidapplications"
+    TOP_FREE_IOS = "topfreeapplications"
+    TOP_FREE_IPAD = "topfreeipadapplications"
+    TOP_GROSSING_IOS = "topgrossingapplications"
+    TOP_GROSSING_IPAD = "topgrossingipadapplications"
+    TOP_PAID_IOS = "toppaidapplications"
+    TOP_PAID_IPAD = "toppaidipadapplications"
 
 
 # ------------------------------------------------------------------------------------------------ #

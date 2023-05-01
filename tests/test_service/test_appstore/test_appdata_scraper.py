@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
+# Modified   : Sunday April 30th 2023 08:24:19 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 import numpy as np
 
-from aimobile.data.acquisition.appstore.appdata import AppStoreAppScraper
+from aimobile.data.acquisition.appstore.appdata.scraper import AppStoreAppDataScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -56,9 +56,9 @@ class TestAppDataScraper:  # pragma: no cover
         MAX_PAGES = 2
         LIMIT = 5
         a1 = pd.DataFrame()
-        scraper = AppStoreAppScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
+        scraper = AppStoreAppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
         for i, scrape in enumerate(scraper, start=1):
-            result = scrape.result
+            result = scrape.content
             pd.concat([a1, result], axis=0)
             assert isinstance(result, pd.DataFrame)
             assert result.shape[0] == LIMIT
@@ -72,22 +72,20 @@ class TestAppDataScraper:  # pragma: no cover
             assert isinstance(result["developer"][0], str)
             assert isinstance(result["rating"][0], float)
             assert isinstance(result["ratings"][0], np.int64)
-            assert isinstance(result["reviews"][0], np.int64)
             assert isinstance(result["released"][0], datetime)
             assert isinstance(result["source"][0], str)
-            assert scrape.page == i
-            assert scrape.status_code == 200
+            assert scrape.pages == i
             logger.debug(f"\n\nThe {i}th page returned {scrape.results} results.")
-            logger.debug(f"\nResult:\n{scrape.result}\n")
+            logger.debug(f"\nResult:\n{scrape.content}\n")
 
         # ---------------------------------------------------------------------------------------- #
         TERM = "health"
         MAX_PAGES = 1
         LIMIT = 10
         a2 = pd.DataFrame()
-        scraper = AppStoreAppScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
+        scraper = AppStoreAppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
         for i, scrape in enumerate(scraper, start=1):
-            result = scrape.result
+            result = scrape.content
             pd.concat([a2, result], axis=0)
             assert isinstance(result, pd.DataFrame)
             assert result.shape[0] == LIMIT
@@ -101,13 +99,11 @@ class TestAppDataScraper:  # pragma: no cover
             assert isinstance(result["developer"][0], str)
             assert isinstance(result["rating"][0], float)
             assert isinstance(result["ratings"][0], np.int64)
-            assert isinstance(result["reviews"][0], np.int64)
             assert isinstance(result["released"][0], datetime)
             assert isinstance(result["source"][0], str)
-            assert scrape.page == i
-            assert scrape.status_code == 200
+            assert scrape.pages == i
             logger.debug(f"\n\nThe {i}th page returned {scrape.results} results.")
-            logger.debug(f"\nResult:\n{scrape.result}\n")
+            logger.debug(f"\nResult:\n{scrape.content}\n")
 
         assert a1.equals(a2)
 

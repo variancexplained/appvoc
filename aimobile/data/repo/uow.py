@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Saturday April 29th 2023 06:02:38 am                                                #
+# Modified   : Sunday April 30th 2023 05:01:01 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -35,12 +35,20 @@ class UoW:
 
     """
 
-    def __init__(self, database: Database, project_repo: Repo, task_repo: Repo) -> None:
+    def __init__(
+        self,
+        database: Database,
+        appdata_repo: Repo,
+        rating_repo: Repo,
+        review_repo: Repo,
+        project_repo: Repo,
+    ) -> None:
         self._database = database
-        self._source_repo = None
-        self._target_repo = None
+        self._appdata_repo = appdata_repo
+        self._review_repo = review_repo
+        self._rating_repo = rating_repo
         self._project_repo = project_repo
-        self._task_repo = task_repo
+
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
@@ -48,28 +56,20 @@ class UoW:
         return self._database
 
     @property
+    def appdata_repo(self) -> Repo:
+        return self._appdata_repo
+
+    @property
+    def review_repo(self) -> Repo:
+        return self._review_repo
+
+    @property
+    def rating_repo(self) -> Repo:
+        return self._rating_repo
+
+    @property
     def project_repo(self) -> Repo:
         return self._project_repo
-
-    @property
-    def task_repo(self) -> Repo:
-        return self._task_repo
-
-    @property
-    def source_repo(self) -> Repo:
-        return self._source_repo
-
-    @source_repo.setter
-    def source_repo(self, source_repo: Repo) -> None:
-        self._source_repo = source_repo
-
-    @property
-    def target_repo(self) -> Repo:
-        return self._target_repo
-
-    @target_repo.setter
-    def target_repo(self, target_repo: Repo) -> None:
-        self._target_repo = target_repo
 
     def connect(self) -> None:
         """Connects the database"""

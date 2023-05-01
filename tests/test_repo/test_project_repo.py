@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 04:40:41 pm                                                  #
-# Modified   : Friday April 28th 2023 11:07:38 pm                                                  #
+# Modified   : Sunday April 30th 2023 07:42:27 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,10 +22,16 @@ import pytest
 import logging
 import pandas as pd
 
-from aimobile.data.repo.task import Project
+from aimobile.data.repo.project import Project
 
 # ------------------------------------------------------------------------------------------------ #
-PROJECT = Project(id="test_project", host="me.com", Project="SomeProject", searchagory="finance")
+PROJECT = Project.start(
+    host="itunes.apple.com",
+    controller="TestController",
+    term="social",
+    start_page=10,
+    results_per_page=100,
+)
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -36,7 +42,7 @@ single_line = f"\n{100 * '-'}"
 @pytest.mark.proj
 class TestProject:  # pragma: no cover
     # ============================================================================================ #
-    def test_instantiation(self, project_repo, caplog):
+    def test_instantiation(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -48,15 +54,15 @@ class TestProject:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        assert PROJECT.id == "test_project"
-        assert PROJECT.host == "me.com"
-        assert PROJECT.Project == "SomeProject"
-        assert PROJECT.searchagory == "finance"
-        assert PROJECT.state == "ready"
-        assert PROJECT.started is None
-        assert PROJECT.updated is None
-        assert PROJECT.ended is None
-        assert PROJECT.pages == 0
+        assert isinstance(PROJECT.id, int)
+        assert PROJECT.host == "itunes.apple.com"
+        assert PROJECT.controller == "TestController"
+        assert PROJECT.term == "social"
+        assert PROJECT.status == "running"
+        assert PROJECT.start_page == 10
+        assert PROJECT.end_page == 0
+        assert PROJECT.results_per_page == 100
+        assert isinstance(PROJECT.started, datetime)
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -74,7 +80,7 @@ class TestProject:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_from_df(self, project_repo, caplog):
+    def test_from_df(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -87,64 +93,31 @@ class TestProject:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         d = {
-            "id": "test_from_df",
             "host": "dfhost.com",
-            "Project": "IGotControl",
-            "searchagory": "music",
-            "state": "running",
-            "pages": 22,
+            "controller": "FromDFController",
+            "term": "life",
+            "status": "complete",
+            "start_page": 100,
+            "end_page": 200,
+            "pages": 100,
+            "results_per_page": 200,
             "started": datetime.now(),
             "updated": datetime.now(),
-            "ended": datetime.now(),
+            "completed": datetime.now(),
         }
         df = pd.DataFrame(data=d, index=[0])
         project = Project.from_df(df=df)
-        assert project.id == "test_from_df"
-        assert project.host == "dfhost.com"
-        assert project.Project == "IGotControl"
-        assert project.searchagory == "music"
-        assert project.state == "running"
-        assert project.pages == 22
+        assert project.controller == "FromDFController"
+        assert project.term == "life"
+        assert project.status == "complete"
+        assert project.start_page == 100
+        assert project.end_page == 200
+        assert project.pages == 100
+        assert project.results_per_page == 200
+
         assert isinstance(project.started, datetime)
         assert isinstance(project.updated, datetime)
-        assert isinstance(project.ended, datetime)
-        # ---------------------------------------------------------------------------------------- #
-        end = datetime.now()
-        duration = round((end - start).total_seconds(), 1)
-
-        logger.info(
-            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                duration,
-                end.strftime("%I:%M:%S %p"),
-                end.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(single_line)
-
-    # ============================================================================================ #
-    def test_start(self, project_repo, caplog):
-        start = datetime.now()
-        logger.info(
-            "\n\nStarted {} {} at {} on {}".format(
-                self.__class__.__name__,
-                inspect.stack()[0][3],
-                start.strftime("%I:%M:%S %p"),
-                start.strftime("%m/%d/%Y"),
-            )
-        )
-        logger.info(double_line)
-        # ---------------------------------------------------------------------------------------- #
-        PROJECT.start()
-        assert isinstance(PROJECT.started, datetime)
-        assert PROJECT.id == "test_project"
-        assert PROJECT.host == "me.com"
-        assert PROJECT.Project == "SomeProject"
-        assert PROJECT.searchagory == "finance"
-        assert PROJECT.state == "in-progress"
-        assert isinstance(PROJECT.started, datetime)
-        assert PROJECT.ended is None
+        assert isinstance(project.completed, datetime)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -177,8 +150,9 @@ class TestProject:  # pragma: no cover
         dt = None
         for i in range(10):
             PROJECT.update(i)
-            pages += i
+            pages = i
             assert PROJECT.pages == pages
+            assert isinstance(PROJECT.updated, datetime)
             assert dt != PROJECT.updated
             dt = PROJECT.updated
 
@@ -212,7 +186,40 @@ class TestProject:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         PROJECT.complete()
         assert PROJECT.state == "complete"
-        assert PROJECT.started < PROJECT.ended
+        assert PROJECT.started < PROJECT.completed
+
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_as_dict(self, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        d = PROJECT.as_dict()
+        assert isinstance(d, dict)
+        assert d["controller"] == "TestController"
+        assert d["term"] == "social"
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -232,7 +239,7 @@ class TestProject:  # pragma: no cover
 
 @pytest.mark.proj
 @pytest.mark.repo
-class TestTaskRepo:  # pragma: no cover
+class TestProjectRepo:  # pragma: no cover
     # ============================================================================================ #
     def test_setup(self, project_repo, caplog):
         start = datetime.now()
@@ -246,11 +253,6 @@ class TestTaskRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        PROJECT.pages = 0
-        PROJECT.started = None
-        PROJECT.ended = None
-        PROJECT.updated = None
-        PROJECT.state = "ready"
         repo = project_repo
         df = repo.getall()
         assert df.shape[0] == 0
@@ -283,10 +285,45 @@ class TestTaskRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         repo = project_repo
-        PROJECT.start()
         repo.add(data=PROJECT)
         repo.save()
         assert repo.count() == 1
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_replace(self, project_repo, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        repo = project_repo
+        PROJECT.controller = "ReplacedController"
+        repo.replace(data=PROJECT)
+        repo.save()
+        df = repo.getall()
+        assert df.shape[0] == 1
+        assert df["controller"][0] == "ReplacedController"
+
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -316,18 +353,51 @@ class TestTaskRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         repo = project_repo
+        PROJECT_COPY = PROJECT
         project = repo.get(id=PROJECT.id)
         logger.debug(project)
-        assert isinstance(project, Project)
-        assert project.id == "test_project"
-        assert project.host == "me.com"
-        assert project.Project == "SomeProject"
-        assert project.searchagory == "finance"
-        assert project.state == "in-progress"
-        assert isinstance(project.started, datetime)
-        assert project.updated is None
-        assert project.ended is None
-        assert project.pages == 0
+        assert PROJECT_COPY == PROJECT
+
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_get_project(self, project_repo, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        repo = project_repo
+        project = repo.get_project(controller=PROJECT.controller, term=PROJECT.term)
+        assert project.controller == PROJECT.controller
+        assert project.term == PROJECT.term
+        assert project.status == PROJECT.status
+        assert project.start_page == PROJECT.start_page
+        assert project.end_page == PROJECT.end_page
+        assert project.pages == PROJECT.pages
+        assert project.results_per_page == PROJECT.results_per_page
+
+        project = repo.get_project(controller=PROJECT.controller, term="someterm")
+        assert PROJECT != project
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -360,7 +430,7 @@ class TestTaskRepo:  # pragma: no cover
         repo = project_repo
         pages = 0
         for i in range(10):
-            pages += i
+            pages = i
             PROJECT.update(i)
             repo.update(data=PROJECT)
             repo.save()
@@ -368,6 +438,7 @@ class TestTaskRepo:  # pragma: no cover
             assert project.pages == pages
         project = repo.get(id=PROJECT.id)
         logger.debug(project)
+        assert project.pages == pages
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -385,7 +456,7 @@ class TestTaskRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_complete(self, project_repo, caplog):
+    def test_add_get_project(self, project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -398,13 +469,17 @@ class TestTaskRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         repo = project_repo
-        PROJECT.complete()
-        repo.update(data=PROJECT)
-        repo.save()
+        pages = 0
+        for i in range(2, 10):
+            pages = i
+            PROJECT.update(i)
+            repo.add(data=PROJECT)
+            repo.save()
+            project = repo.get_project(controller=PROJECT.controller, term=PROJECT.term)
+            assert len(project) == i
         project = repo.get(id=PROJECT.id)
         logger.debug(project)
-        assert isinstance(project.ended, datetime)
-        assert project.state == "complete"
+        assert project.pages == pages
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -437,7 +512,7 @@ class TestTaskRepo:  # pragma: no cover
         repo = project_repo
         df = repo.summary
         assert isinstance(df, pd.DataFrame)
-        assert df.shape[0] == 1
+
         logger.debug(df)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Saturday April 29th 2023 08:25:10 am                                                #
+# Modified   : Sunday April 30th 2023 06:56:11 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,13 +23,11 @@ import logging
 from dotenv import load_dotenv
 
 import requests
-from dependency_injector.wiring import inject, Provide
 
 from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.base import PROXY_SERVERS
 from aimobile.infrastructure.web.headers import BrowserHeader
-from aimobile.container import AIMobileContainer
 
 load_dotenv()
 
@@ -44,12 +42,11 @@ class SessionHandler:
         delay (tuple): The lower and upper bound on time between requests.
     """
 
-    @inject
     def __init__(
         self,
-        timeout: TimeoutHTTPAdapter = Provide[AIMobileContainer.web.timeout],
-        throttle: AutoThrottleLatency = Provide[AIMobileContainer.web.throttle],
-        headers: BrowserHeader = Provide[AIMobileContainer.web.browser_headers],
+        timeout: TimeoutHTTPAdapter,
+        throttle: AutoThrottleLatency,
+        headers: BrowserHeader,
         session_retries: int = 3,
     ) -> None:
         self._timeout = timeout

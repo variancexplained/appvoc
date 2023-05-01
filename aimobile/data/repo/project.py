@@ -1,39 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Task    : AI-Enabled Voice of the Mobile Technology Customer                                  #
+# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/repo/task.py                                                         #
+# Filename   : /aimobile/data/repo/project.py                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Friday April 28th 2023 10:58:49 pm                                                  #
+# Modified   : Sunday April 30th 2023 07:32:56 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Task Repository Module"""
+"""Project Repository Module"""
 from __future__ import annotations
-from dataclasses import dataclass
-from datetime import datetime
 import logging
+from typing import Union
 
 import pandas as pd
 
-from aimobile.data.base import Task
+from aimobile.data.acquisition.project import Project
 from aimobile.data.repo.base import Repo
 from aimobile.infrastructure.dal.base import Database
 
 
-
-
 # ------------------------------------------------------------------------------------------------ #
-class TaskRepo(Repo):
-    """Task Repository
+class ProjectRepo(Repo):
+    """Project Repository
 
     Args:
         database(Database): Database containing data to access.
@@ -43,56 +40,80 @@ class TaskRepo(Repo):
 
     def __init__(self, database: Database) -> None:
         super().__init__(name=self.__name, database=database)
-        self._logger = logging.getLogger(f"{self.__class__.__naProject
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
     def summary(self) -> pd.DataFrame:
         return self.getall()
 
-    def get(self, id: str) -> Task:
-        """Returns a Task instance for the designated id
+    def get(self, id: str) -> Project:
+        """Returns a Project instance for the designated id
 
         Args:
             id (str): The project identifier.
         """
         df = super().get(id=id)
-        return Task.from_df(df=df)
+        return Project.from_df(df=df)
 
-    def add(self, data: Task) -> None:
+    def get_project(self, controller: str, term: str) -> Union[pd.DataFrame, Project, None]:
+        """Obtains a project or projects matching the parameters
+
+        Args:
+            controller (str): The class name for the controller
+            term (str): The search term
+
+        """
+        query = f"SELECT * FROM {self._name} WHERE controller = :controller AND term = :term;"
+        params = {"controller": controller, "term": term}
+        result = self._database.query(query=query, params=params)
+        if len(result) == 0:
+            return None
+        elif len(result) == 1:
+            return Project.from_df(result)
+        else:
+            return result
+
+    def add(self, data: Project) -> None:
         """Adds a project to the repository.
 
         Args:
-            data (Task): Adds a project to the repository.
+            data (Project): Adds a project to the repository.
         """
-        data = data.to_df()
+        data = data.as_df()
         self._database.insert(data=data, tablename=self._name, if_exists="append")
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
 
-    def replace(self, data: Task) -> None:  # pragma: no cover
+    def replace(self, data: Project) -> None:  # pragma: no cover
         """Replaces the data in a repository with that of the data parameter.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        data = data.to_df()
+        data = data.as_df()
         self._database.insert(data=data, tablename=self._name, if_exists="replace")
         msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
 
-    def update(self, data: Task) -> None:
+    def update(self, data: Project) -> None:
         """Updates the project in the repo.
 
         Args:
-            data (Task): Task instance.
+            data (Project): Project instance.
 
         """
-        query = f"UPDATE {self._name} SET project.state = :state, project.pages = :pages, project.updated = :updated, project.ended = :ended WHERE id =:id"
+        query = f"UPDATE {self._name} SET {self._name}.controller = :controller, {self._name}.term = :term, {self._name}.status = :status, {self._name}.start_page = :start_page, {self._name}.end_page = :end_page, {self._name}.pages = :pages, {self._name}.results_per_page = :results_per_page, {self._name}.started = :started, {self._name}.updated = :updated, {self._name}.completed = :completed WHERE {self._name}.id = :id;"
         params = {
-            "state": data.state,
+            "controller": data.controller,
+            "term": data.term,
+            "status": data.status,
+            "start_page": data.start_page,
+            "end_page": data.end_page,
             "pages": data.pages,
+            "results_per_page": data.results_per_page,
+            "started": data.started,
             "updated": data.updated,
-            "ended": data.ended,
+            "completed": data.completed,
             "id": data.id,
         }
         self._database.update(query=query, params=params)

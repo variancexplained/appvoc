@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Fileapp_name   : /aimobile/scraper/appstore/http/review.py                                          #
+# Filename   : /aimobile/data/acquisition/appstore/review/scraper.py                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Saturday April 29th 2023 06:56:05 pm                                                #
+# Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
+# Modified   : Sunday April 30th 2023 07:09:00 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,14 +26,14 @@ import requests
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.acquisition.scraper.appstore import STOREFRONTS
-from aimobile.data.base import Scraper
+from aimobile.infrastructure.web.headers import STOREFRONT
+from aimobile.data.acquisition.base import Scraper
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.session import SessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewScraper(ReviewScraper):
+class AppStoreReviewScraper(Scraper):
     """App Store Review Scraper"""
 
     @inject
@@ -66,7 +66,7 @@ class AppStoreReviewScraper(ReviewScraper):
         self._end_index = start + max_results_per_page
         self._host = "itunes.apple.com"
         self._url = None
-        self._header = STOREFRONTS[0]["headers"]
+        self._header = STOREFRONT["headers"]
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 

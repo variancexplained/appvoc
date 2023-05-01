@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Saturday April 29th 2023 07:50:28 am                                                #
+# Modified   : Sunday April 30th 2023 07:09:54 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,7 @@ import subprocess
 
 from aimobile.infrastructure.io.local import IOService
 from aimobile.container import AIMobileContainer
+from aimobile.infrastructure.web.headers import STOREFRONT
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -47,12 +48,6 @@ APPS = [
     {"id": "310633997", "name": "whatsapp", "category_id": 6002, "category": "UTILITIES"},
 ]
 
-STOREFRONTS = [
-    {"country": "us", "headers": {"X-Apple-Store-Front": "143441-1,29"}},
-    {"country": "au", "headers": {"X-Apple-Store-Front": "143460,29"}},
-    {"country": "ca", "headers": {"X-Apple-Store-Front": "143455-6,29"}},
-    {"country": "gb", "headers": {"X-Apple-Store-Front": "143444,29"}},
-]
 
 collect_ignore = ["test_database*.*"]
 
@@ -91,7 +86,7 @@ def mode():
 def container():
     container = AIMobileContainer()
     container.init_resources()
-    container.wire(packages=["aimobile.data.acquisition.scraper"])
+    container.wire(packages=["aimobile.data.acquisition.appstore"])
 
     return container
 
@@ -195,9 +190,8 @@ def request_appdata():
 @pytest.fixture(scope="function", autouse=False)
 def request_ratings():
     # Note: Taking '/json' of the end of the url. Want actual response object returned.
-    storefront = random.choice(STOREFRONTS)
     d = {
-        "url": f"https://itunes.apple.com/{storefront['country']}/customer-reviews/id{random.choice(APP_IDS)}?displayable-kind=11",
-        "headers": storefront["headers"],
+        "url": f"https://itunes.apple.com/{STOREFRONT['country']}/customer-reviews/id{random.choice(APP_IDS)}?displayable-kind=11",
+        "headers": STOREFRONT["headers"],
     }
     return d
