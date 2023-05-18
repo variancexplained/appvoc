@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Sunday April 30th 2023 08:23:16 pm                                                  #
+# Modified   : Sunday May 7th 2023 09:20:58 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,9 +19,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-import requests
-
-import pandas as pd
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -38,20 +35,8 @@ class Controller(ABC):
         """Entry point for scraping operations."""
 
     @abstractmethod
-    def _start_project(self) -> None:
-        """Creates and persists a Project object"""
-
-    @abstractmethod
-    def _update_project(self) -> None:
+    def _persist(self) -> None:
         """Updates the project"""
-
-    @abstractmethod
-    def _complete_project(self) -> None:
-        """Sets project status to 'complete'"""
-
-    @abstractmethod
-    def _create_task(self) -> None:
-        """Creates a Task object and persists it to the repository."""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -59,11 +44,6 @@ class Controller(ABC):
 class Result:
     scraper: type[Scraper]  # The class type of the Scraper
     host: str  # The base url from which the data were obtained.
-    page: int  # The result page
-    pages: int  # The number of pages cumulatively processed up to this result
-    size: int  # Size of result in bytes
-    results: int  # The number of records returned
-    content: pd.DataFrame  # The content of the response.
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -77,11 +57,3 @@ class Scraper(ABC):
     @abstractmethod
     def __next__(self) -> Result:
         """Generates the next Request object and returns a Result object."""
-
-    @abstractmethod
-    def _is_valid_response(self, response: requests.Response) -> bool:
-        """Evaluates the response and returns its validity."""
-
-    @abstractmethod
-    def _parse_response(self, response: requests.Response) -> Result:
-        """Parses the response and returns a Result object."""

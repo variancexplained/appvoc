@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Sunday April 30th 2023 06:43:46 pm                                                  #
+# Modified   : Sunday May 7th 2023 08:19:48 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import shutil
 
 import pandas as pd
 
-from aimobile.data.repo.appstore.rating import AppStoreRatingRepo
+from aimobile.data.repo.rating import AppStoreRatingRepo
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

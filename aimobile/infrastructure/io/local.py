@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.8                                                                              #
-# Filename   : /aimobile/data/scraper/utils/io.py                                                  #
+# Filename   : /aimobile/infrastructure/io/local.py                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 4th 2023 08:46:04 pm                                                  #
-# Modified   : Wednesday April 5th 2023 02:29:06 am                                                #
+# Modified   : Tuesday May 16th 2023 10:18:54 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,6 +19,7 @@
 from abc import ABC, abstractmethod
 import os
 import logging
+import codecs
 import yaml
 import pickle
 import pandas as pd
@@ -32,7 +33,6 @@ from typing import Any, Union, List
 
 
 class IO(ABC):  # pragma: no cover
-
     _logger = logging.getLogger(
         f"{__module__}.{__name__}",
     )
@@ -75,7 +75,6 @@ class ExcelIO(IO):  # pragma: no cover
         usecols: List[str] = None,
         **kwargs,
     ) -> pd.DataFrame:
-
         return pd.read_excel(
             filepath,
             sheet_name=sheet_name,
@@ -124,7 +123,6 @@ class CSVIO(IO):  # pragma: no cover
         encoding: str = "utf-8",
         **kwargs,
     ) -> pd.DataFrame:
-
         return pd.read_csv(
             filepath,
             sep=sep,
@@ -157,7 +155,6 @@ class CSVIO(IO):  # pragma: no cover
 class YamlIO(IO):  # pragma: no cover
     @classmethod
     def _read(cls, filepath: str, **kwargs) -> dict:
-
         with open(filepath, "r") as f:
             try:
                 return yaml.safe_load(f)
@@ -187,7 +184,6 @@ class YamlIO(IO):  # pragma: no cover
 class PickleIO(IO):  # pragma: no cover
     @classmethod
     def _read(cls, filepath: str, **kwargs) -> Any:
-
         with open(filepath, "rb") as f:
             try:
                 return pickle.load(f)
@@ -231,6 +227,24 @@ class ParquetIO(IO):  # pragma: no cover
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                                           HTML                                                   #
+# ------------------------------------------------------------------------------------------------ #
+
+
+class HtmlIO(IO):  # pragma: no cover
+    @classmethod
+    def _read(cls, filepath: str, **kwargs) -> Any:
+        """Read the raw html."""
+        file = codecs.open(filename=filepath, encoding="utf-8")
+        return file.read()
+
+    @classmethod
+    def _write(cls, filepath: str, data: pd.DataFrame, **kwargs) -> None:
+        """Converts Pandas DataFrame to a pyarrow table, then persists."""
+        raise NotImplementedError
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                          JSON                                                    #
 # ------------------------------------------------------------------------------------------------ #
 
@@ -266,8 +280,8 @@ class JsonIO(IO):  # pragma: no cover
 #                                       IO SERVICE                                                 #
 # ------------------------------------------------------------------------------------------------ #
 class IOService:  # pragma: no cover
-
     __io = {
+        "html": HtmlIO,
         "dat": CSVIO,
         "csv": CSVIO,
         "yaml": YamlIO,

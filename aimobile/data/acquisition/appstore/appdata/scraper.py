@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Sunday April 30th 2023 08:26:58 pm                                                  #
+# Modified   : Wednesday May 3rd 2023 02:33:20 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,8 +26,7 @@ from datetime import datetime
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.acquisition.base import Scraper
-from aimobile.data.acquisition.base import Result
+from aimobile.data.acquisition.base import Scraper, Result
 from aimobile.infrastructure.web.session import SessionHandler
 from aimobile.container import AIMobileContainer
 
@@ -87,9 +86,10 @@ class AppStoreAppDataScraper(Scraper):
             session = self._session.get(url=self._url, params=self._params)
             try:
                 if self._is_valid_response(session=session):
+                    self._pages += 1  # Increment page count prior to result and page after.
+                    result = self._parse_response(session.response)
                     self._page += 1
-                    self._pages += 1
-                    return self._parse_response(session.response)
+                    return result
                 else:  # pragma: no cover
                     raise StopIteration
 

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Sunday April 30th 2023 06:56:11 pm                                                  #
+# Modified   : Sunday May 7th 2023 01:55:07 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 
 import requests
 
-from aimobile.infrastructure.web.autothrottle import AutoThrottleLatency
+from aimobile.infrastructure.web.throttle import LatencyThrottle
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.base import PROXY_SERVERS
 from aimobile.infrastructure.web.headers import BrowserHeader
@@ -45,7 +45,7 @@ class SessionHandler:
     def __init__(
         self,
         timeout: TimeoutHTTPAdapter,
-        throttle: AutoThrottleLatency,
+        throttle: LatencyThrottle,
         headers: BrowserHeader,
         session_retries: int = 3,
     ) -> None:
@@ -110,11 +110,10 @@ class SessionHandler:
                     headers=self._header,
                     params=params,
                     proxies=self._proxy,
+                    timeout=self._timeout,
                 )
                 self._teardown()
-                self._throttle.delay(
-                    latency=self._latency, status_code=self._response.status_code, wait=True
-                )
+                self._throttle.delay(latency=self._latency, wait=True)
                 return self
 
             except Exception as e:  # pragma: no cover

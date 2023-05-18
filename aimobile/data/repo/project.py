@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Sunday April 30th 2023 07:32:56 pm                                                  #
+# Modified   : Sunday May 7th 2023 07:18:11 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -55,8 +55,8 @@ class ProjectRepo(Repo):
         df = super().get(id=id)
         return Project.from_df(df=df)
 
-    def get_project(self, controller: str, term: str) -> Union[pd.DataFrame, Project, None]:
-        """Obtains a project or projects matching the parameters
+    def get_project(self, controller: str, term: str) -> Union[Project, None]:
+        """Obtain the project matching the parameters.
 
         Args:
             controller (str): The class name for the controller
@@ -68,10 +68,8 @@ class ProjectRepo(Repo):
         result = self._database.query(query=query, params=params)
         if len(result) == 0:
             return None
-        elif len(result) == 1:
-            return Project.from_df(result)
         else:
-            return result
+            return Project.from_df(result)
 
     def add(self, data: Project) -> None:
         """Adds a project to the repository.
@@ -102,18 +100,77 @@ class ProjectRepo(Repo):
             data (Project): Project instance.
 
         """
-        query = f"UPDATE {self._name} SET {self._name}.controller = :controller, {self._name}.term = :term, {self._name}.status = :status, {self._name}.start_page = :start_page, {self._name}.end_page = :end_page, {self._name}.pages = :pages, {self._name}.results_per_page = :results_per_page, {self._name}.started = :started, {self._name}.updated = :updated, {self._name}.completed = :completed WHERE {self._name}.id = :id;"
+        query = f"UPDATE {self._name} SET {self._name}.status = :status, {self._name}.pages = :pages, {self._name}.vpages = :vpages, {self._name}.apps = :apps, {self._name}.updated = :updated, {self._name}.completed = :completed WHERE {self._name}.id = :id;"
         params = {
             "controller": data.controller,
             "term": data.term,
             "status": data.status,
-            "start_page": data.start_page,
-            "end_page": data.end_page,
             "pages": data.pages,
-            "results_per_page": data.results_per_page,
+            "vpages": data.vpages,
+            "apps": data.apps,
             "started": data.started,
             "updated": data.updated,
             "completed": data.completed,
             "id": data.id,
         }
         self._database.update(query=query, params=params)
+
+
+# ------------------------------------------------------------------------------------------------ #
+class RatingProjectRepo(Repo):
+    """Rating Project Repository
+
+    Args:
+        database(Database): Database containing data to access.
+    """
+
+    __name = "rating_project"
+
+    def __init__(self, database: Database) -> None:
+        super().__init__(name=self.__name, database=database)
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
+    @property
+    def summary(self) -> pd.DataFrame:
+        projects = self.getall()
+        summary = projects["category"].value_counts().reset_index()
+        summary.columns = ["Category", "Apps"]
+        return summary
+
+    def get(self, id: str) -> Project:
+        """Returns a Project instance for the designated id
+
+        Args:
+            id (str): The project identifier.
+        """
+        return super().get(id=id)
+
+    def add(self, data: pd.DataFrame) -> None:
+        """Adds a project to the repository.
+
+        Args:
+            data (pd.DataFrame): DataFrame containing rows to add to the table.
+        """
+        self._database.insert(data=data, tablename=self._name, if_exists="append")
+        msg = f"Added {data.shape[0]} rows to the {self._name} repository."
+        self._logger.debug(msg)
+
+    def replace(self, data: Project) -> None:  # pragma: no cover
+        """Replaces the data in a repository with that of the data parameter.
+
+        Args:
+            data (pd.DataFrame): DataFrame containing rows to add to the table.
+        """
+        self._database.insert(data=data, tablename=self._name, if_exists="replace")
+        msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
+        self._logger.debug(msg)
+
+    def update(self, data: Project) -> None:
+        """Updates the project in the repo.
+
+        Args:
+            data (Project): Project instance.
+
+        """
+        msg = f"No update method for the {self.__class__.__name} respository."
+        raise NotImplementedError(msg)

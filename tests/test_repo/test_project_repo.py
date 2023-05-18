@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
+# AppDataProject    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
 # Filename   : /tests/test_repo/test_project_repo.py                                               #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 04:40:41 pm                                                  #
-# Modified   : Sunday April 30th 2023 07:42:27 pm                                                  #
+# Modified   : Sunday May 7th 2023 01:48:43 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,15 +22,13 @@ import pytest
 import logging
 import pandas as pd
 
-from aimobile.data.repo.project import Project
+from aimobile.data.acquisition.appstore.appdata.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
-PROJECT = Project.start(
+PROJECT = AppDataProject(
     host="itunes.apple.com",
     controller="TestController",
     term="social",
-    start_page=10,
-    results_per_page=100,
 )
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -40,7 +38,7 @@ single_line = f"\n{100 * '-'}"
 
 
 @pytest.mark.proj
-class TestProject:  # pragma: no cover
+class TestAppDataProject:  # pragma: no cover
     # ============================================================================================ #
     def test_instantiation(self, caplog):
         start = datetime.now()
@@ -59,9 +57,6 @@ class TestProject:  # pragma: no cover
         assert PROJECT.controller == "TestController"
         assert PROJECT.term == "social"
         assert PROJECT.status == "running"
-        assert PROJECT.start_page == 10
-        assert PROJECT.end_page == 0
-        assert PROJECT.results_per_page == 100
         assert isinstance(PROJECT.started, datetime)
 
         # ---------------------------------------------------------------------------------------- #
@@ -97,23 +92,19 @@ class TestProject:  # pragma: no cover
             "controller": "FromDFController",
             "term": "life",
             "status": "complete",
-            "start_page": 100,
-            "end_page": 200,
             "pages": 100,
-            "results_per_page": 200,
+            "apps": 200,
             "started": datetime.now(),
             "updated": datetime.now(),
             "completed": datetime.now(),
         }
         df = pd.DataFrame(data=d, index=[0])
-        project = Project.from_df(df=df)
+        project = AppDataProject.from_df(df=df)
         assert project.controller == "FromDFController"
         assert project.term == "life"
         assert project.status == "complete"
-        assert project.start_page == 100
-        assert project.end_page == 200
+        assert project.apps == 200
         assert project.pages == 100
-        assert project.results_per_page == 200
 
         assert isinstance(project.started, datetime)
         assert isinstance(project.updated, datetime)
@@ -239,7 +230,7 @@ class TestProject:  # pragma: no cover
 
 @pytest.mark.proj
 @pytest.mark.repo
-class TestProjectRepo:  # pragma: no cover
+class TestAppDataProjectRepo:  # pragma: no cover
     # ============================================================================================ #
     def test_setup(self, project_repo, caplog):
         start = datetime.now()
@@ -391,10 +382,7 @@ class TestProjectRepo:  # pragma: no cover
         assert project.controller == PROJECT.controller
         assert project.term == PROJECT.term
         assert project.status == PROJECT.status
-        assert project.start_page == PROJECT.start_page
-        assert project.end_page == PROJECT.end_page
         assert project.pages == PROJECT.pages
-        assert project.results_per_page == PROJECT.results_per_page
 
         project = repo.get_project(controller=PROJECT.controller, term="someterm")
         assert PROJECT != project

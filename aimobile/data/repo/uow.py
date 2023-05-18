@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Sunday April 30th 2023 05:01:01 pm                                                  #
+# Modified   : Sunday May 7th 2023 01:04:47 pm                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -42,12 +42,14 @@ class UoW:
         rating_repo: Repo,
         review_repo: Repo,
         project_repo: Repo,
+        rating_project_repo: Repo,
     ) -> None:
         self._database = database
         self._appdata_repo = appdata_repo
         self._review_repo = review_repo
         self._rating_repo = rating_repo
         self._project_repo = project_repo
+        self._rating_project_repo = rating_project_repo
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -57,19 +59,23 @@ class UoW:
 
     @property
     def appdata_repo(self) -> Repo:
-        return self._appdata_repo
+        return self._appdata_repo(database=self._database)
 
     @property
     def review_repo(self) -> Repo:
-        return self._review_repo
+        return self._review_repo(database=self._database)
 
     @property
     def rating_repo(self) -> Repo:
-        return self._rating_repo
+        return self._rating_repo(database=self._database)
 
     @property
     def project_repo(self) -> Repo:
-        return self._project_repo
+        return self._project_repo(database=self._database)
+
+    @property
+    def rating_project_repo(self) -> Repo:
+        return self._rating_project_repo(database=self._database)
 
     def connect(self) -> None:
         """Connects the database"""

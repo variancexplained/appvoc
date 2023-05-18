@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /tests/test_service/test_appstore/test_rating_scraper.py                            #
+# Filename   : /tests/test_infrastructure/test_web/test_asession.py                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday April 24th 2023 08:26:10 am                                                  #
-# Modified   : Sunday April 30th 2023 06:58:11 pm                                                  #
+# Created    : Sunday May 7th 2023 02:22:49 am                                                     #
+# Modified   : Sunday May 7th 2023 05:21:47 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,12 +19,9 @@
 import inspect
 from datetime import datetime
 import pytest
+import asyncio
 import logging
-
-import pandas as pd
-
-from aimobile.data.acquisition.appstore.rating.scraper import AppStoreRatingScraper
-
+from aimobile.infrastructure.web.headers import STOREFRONT
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -33,11 +30,10 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.scraper
-@pytest.mark.rating_scraper
-class TestRatingScraper:  # pragma: no cover
+@pytest.mark.asession
+class TestASession:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, apps, caplog):
+    def test_asession(self, container, urls, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -49,29 +45,13 @@ class TestRatingScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        results = []
-        apps = apps[0:3]
-        scraper = AppStoreRatingScraper(apps=apps)
-        for scrape in scraper:
-            results.append(scrape.result)
-        assert len(results) == 3
-        for result in results:
-            assert isinstance(result["id"], int)
-            assert isinstance(result["name"], str)
-            assert isinstance(result["category_id"], int)
-            assert isinstance(result["category"], str)
-            assert isinstance(result["rating"], (int, float))
-            assert isinstance(result["reviews"], int)
-            assert isinstance(result["ratings"], int)
-            assert isinstance(result["onestar"], int)
-            assert isinstance(result["twostar"], int)
-            assert isinstance(result["threestar"], int)
-            assert isinstance(result["fourstar"], int)
-            assert isinstance(result["fivestar"], int)
-            assert isinstance(result["source"], str)
+        session = container.web.asession()
+        asyncio.run(session.get(urls, headers=STOREFRONT["headers"]))
+        responses = session.responses
+        assert len(responses) == len(urls)
+        for response in responses:
+            logger.debug(response)
 
-        results = pd.DataFrame(data=results)
-        logger.debug(results)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

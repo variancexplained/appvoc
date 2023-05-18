@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 12:00:43 pm                                                #
-# Modified   : Sunday April 30th 2023 02:58:55 pm                                                  #
+# Modified   : Sunday May 7th 2023 05:47:58 pm                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -51,4 +51,21 @@ web:
       max_delay: 10
       lambda_factor: 0.5
       backoff_factor: 2
-      concurrency: 1
+      verbose: 100
+
+  async_session:
+    concurrency: 100
+    retries: 5
+    athrottle:
+      burnin_period: 25
+      burnin_reset: 1000
+      burnin_rate: 5
+      burnin_threshold_factor: 2
+      rolling_window_size: 25
+      cooldown_factor: 2
+      cooldown_phase: 10
+      tolerance: 0.8
+      rate: 10
+      verbose: 100
+
+

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Sunday April 30th 2023 07:09:54 pm                                                  #
+# Modified   : Tuesday May 16th 2023 10:33:09 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,6 +25,7 @@ import subprocess
 from aimobile.infrastructure.io.local import IOService
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.headers import STOREFRONT
+from aimobile.data.analysis.eda import EDA
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -32,7 +33,7 @@ collect_ignore = [""]
 # ================================================================================================ #
 #                                FRAMEWORK TEST FIXTURES                                           #
 # ================================================================================================ #
-
+APPDATA_RATINGS_FILEPATH = "tests/data/appdata/rating/appdata.pkl"
 DATAFRAME_FILEPATH = "tests/data/test.csv"
 APPDATA_FILEPATH = "tests/data/appdata.csv"
 APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"
@@ -58,6 +59,19 @@ collect_ignore = ["test_database*.*"]
 @pytest.fixture(scope="module", autouse=False)
 def apps():
     return APPS
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                        URLS                                                      #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def urls():
+    urls = []
+    for id in APP_IDS:
+        url = f"https://itunes.apple.com/us/customer-reviews/id{id}?displayable-kind=11"
+        urls.append(url)
+
+    return urls
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -124,14 +138,27 @@ def project_repo(container):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                      APPDATA REPO                                                #
+#                                    APPDATA REPO ZERO                                             #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appstore_appdata_repo(container):
+def appdata_repo(container):
     repo = container.data.appdata_repo()
     repo.delete_all()
     repo.save()
     return repo
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                               APPDATA REPO RATINGS UOW                                           #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def uow(container):
+    df = IOService.read(APPDATA_RATINGS_FILEPATH)
+    uow = container.data.uow()
+    uow.rollback()
+    uow.appdata_repo.replace(data=df)
+    uow.save()
+    return uow
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -165,6 +192,15 @@ def review():
 def rating():
     df = IOService.read(RATINGS_FILEPATH)
     return df
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                          EDA                                                     #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def eda():
+    df = IOService.read(RATINGS_FILEPATH)
+    return EDA(data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #

@@ -11,26 +11,27 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Sunday April 30th 2023 07:03:23 pm                                                  #
+# Modified   : Sunday May 7th 2023 05:42:48 pm                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Review Request Module"""
 from __future__ import annotations
+from datetime import datetime
 import logging
-import requests
 
+import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.acquisition.base import Scraper
+from aimobile.data.acquisition.appstore.rating.result import RatingResult
 from aimobile.infrastructure.web.headers import STOREFRONT
 from aimobile.container import AIMobileContainer
-from aimobile.infrastructure.web.session import SessionHandler
+from aimobile.infrastructure.web.asession import ASessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingScraper(Scraper):
+class AppStoreRatingScraper:
     """App Store Rating Scraper
 
     Extracts review and rating count data by app_id
@@ -49,14 +50,15 @@ class AppStoreRatingScraper(Scraper):
     @inject
     def __init__(
         self,
-        apps=list,
-        session: SessionHandler = Provide[AIMobileContainer.web.session],
-        max_invalid_responses: int = 5,
+        apps=pd.DataFrame,
+        session: ASessionHandler = Provide[AIMobileContainer.web.asession],
+        batch_size: int = 5,
     ) -> None:
         self._apps = apps
         self._session = session
-        self._app_idx = 0
-        self._max_invalid_responses = max_invalid_responses
+        self._batch_size = batch_size
+        self._batch = 0
+        self._batches = []
 
         self._invalid_responses = 0
         self._host = "itunes.apple.com"
@@ -65,103 +67,129 @@ class AppStoreRatingScraper(Scraper):
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def __iter__(self) -> AppStoreRatingScraper:
-        self._app_idx = 0
+    def __aiter__(self) -> AppStoreRatingScraper:
+        self._batch = 0
+        self._batches = self._create_batches()
         return self
 
-    def __next__(self) -> None:
-        """Formats an itunes request for the next page.
+    async def __anext__(self) -> RatingResult:
+        """Sends the next batch of urls to the session handler and parses the response.
 
-        If we have an invalid response, we move on to the next app.
-        If there are max_invalid_responses in a row, we terminate.
+        Return: RatingResult object, containing projects and results in DataFrame format.
         """
 
-        if self._invalid_responses < self._max_invalid_responses and self._app_idx < len(
-            self._apps
-        ):
-            self._setup()
-
-            session = self._session.get(url=self._url, header=self._header)
-
-            if self._is_valid_response(session):
-                response = self._parse_session(session)
-                self._result = self._parse_response(response)
-                self._app_idx += 1
-                self._invalid_responses = 0
-                return self
-            else:
-                self._app_idx += 1
-                self._invalid_responses += 1
-                return self
-        else:  # pragma: no cover
+        if self._batch == len(self._batches):
             raise StopIteration
 
-    def _setup(self) -> None:
-        """Sets the request url"""
-        app = self._apps[self._app_idx]
-        self._url = (
-            f"https://itunes.apple.com/us/customer-reviews/id{app['id']}?displayable-kind=11"
+        responses = await self._session.get(
+            urls=self._batches[self._batch]["urls"], headers=self._header
         )
 
-    def _is_valid_response(self, session: SessionHandler) -> bool:
-        """Evaluates response status code and content"""
-        valid = True
+        result = self._parse_responses(responses=responses)
+        self._batch += 1
+        return result
 
-        try:
-            if session.status_code != 200:
-                msg = f"Invalid Response: Status code = {session.status_code}."
-                valid = False
-            elif not isinstance(session.response, requests.Response):
-                msg = f"Invalid Response: Response is of type {type(session.response)}."
-                valid = False
-            elif not isinstance(session.response.json(), dict):
-                msg = f"Invalid Response: Response json is of type {type(session.response.json())}."
-                valid = False
-            elif len(session.response.json()) == 0:
-                msg = "Invalid Response: Response json has zero length."
-                valid = False
+    def _create_batches(self) -> list:
+        """Creates batches of URLs from a list of app ids"""
+        batches = []
+        apps = []
+        urls = []
+        app_dict = self._apps.to_dict(orient="index")
 
-        except Exception as e:
-            valid = False
-            msg = f"Invalid Response. A {type(e)} exception occurred. \n{e}"
+        for idx, app in enumerate(app_dict.values(), start=1):
+            url = f"https://itunes.apple.com/us/customer-reviews/id{app['id']}?displayable-kind=11"
+            apps.append(app)
+            urls.append(url)
+            if idx % self._batch_size == 0:
+                batch = {"apps": apps, "urls": urls}
+                batches.append(batch)
+                apps = []
+                urls = []
+        return batches
 
-        if not valid:
-            self._logger.debug(msg)
-        return valid
-
-    def _parse_response(self, response: requests.Response) -> dict:
-        """Accepts a requests Response object and returns a Dictionary
+    def _parse_responses(self, responses: list) -> list:
+        """Accepts responses in list format and returns a list of parsed responses.
 
         Args:
-            response (requests.Response): A requests Response object.
+            responses (list): A list of Response objects.
 
         """
-        response = response.json()
-        name = self._apps[self._app_idx]["name"]
-        category_id = self._apps[self._app_idx]["category_id"]
-        category = self._apps[self._app_idx]["category"]
-        result = {}
-        try:
-            result["id"] = response["adamId"]
-            result["name"] = name
-            result["category_id"] = category_id
-            result["category"] = category
-            result["rating"] = response["ratingAverage"]
-            result["reviews"] = response["totalNumberOfReviews"]
-            result["ratings"] = response["ratingCount"]
-            result["onestar"] = response["ratingCountList"][0]
-            result["twostar"] = response["ratingCountList"][1]
-            result["threestar"] = response["ratingCountList"][2]
-            result["fourstar"] = response["ratingCountList"][3]
-            result["fivestar"] = response["ratingCountList"][4]
-            result["source"] = self._host
-            return result
-        except KeyError as e:
-            msg = f"KeyError: {e}\nResponse:\n{response}"
-            self._logger.error(msg)
-            return None
+        apps = self._batches[self._batch]["apps"]
 
-    def _parse_session(self, session: SessionHandler) -> requests.Response:
-        """Extracts data from the sesion object"""
-        self._status_code = int(session.response.status_code)
-        return session.response
+        ids_found = []
+        results = []
+        projects = []
+        for response in responses:
+            try:
+                id = [app["id"] for app in apps if app["id"] == response["adamId"]][0]
+                name = [app["name"] for app in apps if app["id"] == response["adamId"]][0]
+                category_id = [
+                    app["category_id"] for app in apps if app["id"] == response["adamId"]
+                ][0]
+                category = [app["category"] for app in apps if app["id"] == response["adamId"]][0]
+                ids_found.append(id)
+            except Exception as e:
+                msg = f"\nInvalid response. Encountered {type(e)} exception. No project or result created.\n{e}"
+                self._logger.error(msg)
+                break
+
+            result = {}
+            project = {}
+            try:
+                project["id"] = self._batch
+                project["app_id"] = response["adamId"]
+                project["app_name"] = name
+                project["category_id"] = category_id
+                project["category"] = category
+                project["host"] = self._host
+                project["created"] = datetime.now()
+                project["status"] = "success"
+                projects.append(project)
+
+            except Exception as e:
+                msg = f"\nInvalid response. Encountered {type(e)} exception. No project or result created.\n{e}"
+                self._logger.error(msg)
+                break
+            try:
+                result["id"] = response["adamId"]
+                result["name"] = name
+                result["category_id"] = category_id
+                result["category"] = category
+                result["rating"] = response["ratingAverage"]
+                result["reviews"] = response["totalNumberOfReviews"]
+                result["ratings"] = response["ratingCount"]
+                result["onestar"] = response["ratingCountList"][0]
+                result["twostar"] = response["ratingCountList"][1]
+                result["threestar"] = response["ratingCountList"][2]
+                result["fourstar"] = response["ratingCountList"][3]
+                result["fivestar"] = response["ratingCountList"][4]
+                result["source"] = self._host
+                results.append(result)
+
+            except Exception as e:
+                msg = (
+                    f"\nInvalid response. Encountered {type(e)} exception. No result created.\n{e}"
+                )
+                self._logger.error(msg)
+
+        for app in apps:
+            if app["id"] not in ids_found:
+                project = {}
+                project["id"] = self._batch
+                project["app_id"] = app["id"]
+                project["app_name"] = app["name"]
+                project["category_id"] = app["category_id"]
+                project["category"] = app["category"]
+                project["host"] = self._host
+                project["created"] = datetime.now()
+                project["status"] = "fail"
+                projects.append(project)
+                msg = f"Request failed on app {app['id']}-{app['name']} of {app['category_id']}-{app['category']}. Adding to Projects."
+                self._logger.error(msg)
+
+        projects = pd.DataFrame(data=projects)
+        results = pd.DataFrame(data=results)
+        result = RatingResult(
+            scraper=self.__class__.__name__, projects=projects, results=results, host=self._host
+        )
+        return result

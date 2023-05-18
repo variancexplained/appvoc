@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 09:57:42 am                                                 #
-# Modified   : Sunday April 30th 2023 07:53:17 pm                                                  #
+# Modified   : Sunday May 7th 2023 04:28:21 am                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ from aimobile.infrastructure.web.base import Header
 
 
 # ------------------------------------------------------------------------------------------------ #
-class BrowserHeader(Header):
+class BrowserHeader:
     """Iteratively and randomly returns HTTP Browser headers
 
     Args:
@@ -72,7 +72,10 @@ class AppleStoreFrontHeader(Header):
 # ------------------------------------------------------------------------------------------------ #
 #                               APPSTORE STOREFRONT HEADER                                         #
 # ------------------------------------------------------------------------------------------------ #
-STOREFRONT = {"country": "us", "headers": {"X-Apple-Store-Front": "143441-1,29"}}
+STOREFRONT = {
+    "country": "us",
+    "headers": {"X-Apple-Store-Front": "143441-1,29"},
+}
 
 
 # ------------------------------------------------------------------------------------------------ #

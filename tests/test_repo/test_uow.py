@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 21st 2023 04:25:43 pm                                                  #
-# Modified   : Friday April 28th 2023 06:10:59 pm                                                  #
+# Modified   : Sunday May 7th 2023 12:58:23 pm                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -39,7 +39,7 @@ ID = 9071358839
 @pytest.mark.uow
 class TestUoW:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, container, appstore_appdata_repo, caplog):
+    def test_setup(self, container, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Sunday April 30th 2023 06:43:40 pm                                                  #
+# Modified   : Sunday May 7th 2023 12:58:24 pm                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import shutil
 
 import pandas as pd
 
-from aimobile.data.repo.appstore.appdata import AppStoreAppDataRepo
+from aimobile.data.repo.appdata import AppStoreAppDataRepo
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ ID = 1208224953
 @pytest.mark.repo
 class TestAppStoreAppDataRepo:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, container, appstore_appdata_repo, caplog):
+    def test_setup(self, container, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -58,7 +58,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         # Gets an empty repo every time
-        assert appstore_appdata_repo.count() == 0
+        assert appdata_repo.count() == 0
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -75,7 +75,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_add(self, appstore_appdata_repo, appdata, caplog):
+    def test_add(self, appdata_repo, appdata, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -87,7 +87,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.add(data=appdata)
         assert repo.count() == 10
         logger.debug(repo.getall())
@@ -109,7 +109,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_replace(self, appstore_appdata_repo, appdata, caplog):
+    def test_replace(self, appdata_repo, appdata, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -121,7 +121,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.replace(data=appdata)
         assert repo.count() == 10
 
@@ -141,7 +141,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_info(self, appstore_appdata_repo, caplog):
+    def test_info(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -153,7 +153,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         info = repo.info()
         assert isinstance(info, pd.DataFrame)
         logger.debug(info)
@@ -174,7 +174,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get(self, appstore_appdata_repo, caplog):
+    def test_get(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -186,7 +186,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         logger.debug(repo.getall())
         df = repo.get(id=ID)
         logger.debug(f"\nResult for {ID}:\n{df}")
@@ -207,7 +207,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_getall(self, appstore_appdata_repo, caplog):
+    def test_getall(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -219,7 +219,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         df = repo.getall()
         assert df.shape[0] == 10
         # ---------------------------------------------------------------------------------------- #
@@ -238,7 +238,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get_by_category(self, appstore_appdata_repo, caplog):
+    def test_get_by_category(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -250,7 +250,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         df = repo.get_by_category(category_id=CATEGORY_ID)
         assert df.shape[0] == 3
         # ---------------------------------------------------------------------------------------- #
@@ -269,7 +269,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_exists(self, appstore_appdata_repo, caplog):
+    def test_exists(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -281,7 +281,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         exists = repo.exists(id=ID)
         assert exists is True
         exists = repo.exists(id="846")
@@ -338,7 +338,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_count(self, appstore_appdata_repo, caplog):
+    def test_count(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -350,7 +350,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         assert repo.count(id=ID) == 1
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -369,7 +369,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
 
     # ============================================================================================ #
     @pytest.mark.skip()
-    def test_dedup_y_n(self, appstore_appdata_repo, appdata, caplog):
+    def test_dedup_y_n(self, appdata_repo, appdata, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -383,7 +383,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         # You will be prompted to approve dedup, enter yes at this first prompt
         # Enter no at the second prompt
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.add(data=appdata)
         assert repo.count() == 20
         repo.dedup()
@@ -405,7 +405,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
 
     # ============================================================================================ #
     @pytest.mark.skip()
-    def test_dedup_n_n(self, appstore_appdata_repo, appdata, caplog):
+    def test_dedup_n_n(self, appdata_repo, appdata, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -418,7 +418,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         # Enter no at both prompts
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         assert repo.count() == 20
         repo.dedup()
         assert repo.count() == 20
@@ -439,7 +439,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
 
     # ============================================================================================ #
     @pytest.mark.skip()
-    def test_dedup_y_y(self, appstore_appdata_repo, appdata, caplog):
+    def test_dedup_y_y(self, appdata_repo, appdata, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -452,7 +452,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         # Enter yes at both prompts
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         assert repo.count() == 20
         repo.dedup()
         assert repo.count() == 10
@@ -472,7 +472,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_update(self, appstore_appdata_repo, caplog):
+    def test_update(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -486,7 +486,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         KEYS = ["rating", "source"]
         VALUES = [5.5, "J2"]
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.update(id=ID, keys=KEYS, values=VALUES)
         repo.save()
         df = repo.get(id=ID)
@@ -517,7 +517,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_summary_appdata(self, appstore_appdata_repo, caplog):
+    def test_summary_appdata(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -529,7 +529,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         summary = repo.summary
         assert isinstance(summary, pd.DataFrame)
         logger.debug(summary)
@@ -550,7 +550,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_export_appdata(self, appstore_appdata_repo, caplog):
+    def test_export_appdata(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -564,7 +564,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         DIRECTORY = "tests/data/repo/export/"
         shutil.rmtree(DIRECTORY, ignore_errors=True)
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.export(directory=DIRECTORY)
         assert len(os.listdir(DIRECTORY)) == 1
         # ---------------------------------------------------------------------------------------- #
@@ -583,7 +583,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_delete(self, appstore_appdata_repo, caplog):
+    def test_delete(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -595,7 +595,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.delete(id=ID)
         df = repo.get(id=ID)
         assert len(df) == 0
@@ -617,7 +617,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_delete_all(self, appstore_appdata_repo, caplog):
+    def test_delete_all(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -629,7 +629,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appstore_appdata_repo
+        repo = appdata_repo
         repo.delete_all()
         assert repo.count() == 0
 
