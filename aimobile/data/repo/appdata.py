@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Sunday May 7th 2023 07:22:39 am                                                     #
+# Modified   : Sunday May 21st 2023 05:12:05 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,18 +19,44 @@
 """Repository Implementation Module"""
 import os
 from datetime import datetime
-import pandas as pd
-
 import logging
+from functools import cache
+
+import numpy as np
+import pandas as pd
 
 from aimobile.data.repo import APPSTORE_APPDATA_DTYPES
 from aimobile.data.repo.base import ARCHIVE, Repo
 from aimobile.infrastructure.dal.base import Database
 from aimobile.infrastructure.io.local import IOService
 
+# ------------------------------------------------------------------------------------------------ #
+#                                    PANDAS DATA TYPES                                             #
+# ------------------------------------------------------------------------------------------------ #
+DTYPES = {
+    "id": np.int64,
+    "name": "string",
+    "description": "string",
+    "category_id": "category",
+    "category": "category",
+    "price": np.float64,
+    "developer_id": np.int64,
+    "developer": "string",
+    "rating": np.float64,
+    "ratings": np.int64,
+    "rating_current_version": np.float64,
+    "ratings_current_version": np.int64,
+    "version": "string",
+}
+
+PARSE_DATES = {
+    "released": {"errors": "ignore", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    "released_current": {"errors": "ignore", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+}
+
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreAppDataRepo(Repo):
+class AppDataRepo(Repo):
     """Repository for App Data
 
     Args:
@@ -54,6 +80,11 @@ class AppStoreAppDataRepo(Repo):
         )
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
+
+    @cache
+    def getall(self) -> pd.DataFrame:
+        """Returns all data in the repository."""
+        return super().getall(dtypes=DTYPES, parse_dates=PARSE_DATES)
 
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.
@@ -86,28 +117,6 @@ class AppStoreAppDataRepo(Repo):
         params = {k: v for (k, v) in zip(keys, values)}
         params["id"] = id
         self._database.execute(query=query, params=params)
-
-    @property
-    def summary(self) -> None:
-        """Prints a summary of the repository"""
-        df = self.getall()
-        width = 24
-        name = self._name.capitalize()
-        msg = f"\n\n{name} Repository Summary\n"
-        msg += f"\t{'Examples:'.rjust(width, ' ')} | {df.shape[0]}\n"
-        msg += f"\t{'Variables:'.rjust(width, ' ')} | {df.shape[1]}\n"
-        msg += f"\t{'Size (Bytes):'.rjust(width, ' ')} | {df.memory_usage(deep=True).sum()}\n"
-        print(msg)
-
-        summary = df["category"].value_counts().reset_index()
-        df2 = df.groupby(by="category")["id"].nunique().to_frame()
-        df3 = df.groupby(by="category")["rating"].mean().to_frame()
-        df4 = df.groupby(by="category")["ratings"].sum().to_frame()
-        summary = summary.join(df2, on="category")
-        summary = summary.join(df3, on="category")
-        summary = summary.join(df4, on="category")
-        summary.columns = ["Category", "Examples", "Apps", "Average Rating", "Rating Count"]
-        return summary
 
     def export(self, directory: str = ARCHIVE["appstore"]) -> None:
         os.makedirs(directory, exist_ok=True)

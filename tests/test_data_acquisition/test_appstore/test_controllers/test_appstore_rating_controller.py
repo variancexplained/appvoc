@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 02:39:32 pm                                                  #
-# Modified   : Sunday May 7th 2023 04:47:02 pm                                                     #
+# Modified   : Thursday May 18th 2023 08:22:59 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.acquisition.appstore.rating.controller import AppStoreRatingController
+from aimobile.data.acquisition.rating.controller import AppStoreRatingController
 
 
 # ------------------------------------------------------------------------------------------------ #

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Sunday May 7th 2023 01:04:19 pm                                                     #
+# Modified   : Sunday May 21st 2023 03:57:16 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,8 +26,8 @@ from aimobile.infrastructure.io.local import IOService
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
 from aimobile.infrastructure.web.throttle import LatencyThrottle, AThrottle
 from aimobile.infrastructure.dal.mysql import MySQLDatabase
-from aimobile.data.repo.project import ProjectRepo, RatingProjectRepo
-from aimobile.data.repo.appdata import AppStoreAppDataRepo
+from aimobile.data.repo.project import AppDataProjectRepo
+from aimobile.data.repo.appdata import AppDataRepo
 from aimobile.data.repo.review import AppStoreReviewRepo
 from aimobile.data.repo.rating import AppStoreRatingRepo
 from aimobile.infrastructure.web.base import PROXY_SERVERS
@@ -59,19 +59,22 @@ class IOContainer(containers.DeclarativeContainer):
 # ------------------------------------------------------------------------------------------------ #
 #                                        DATA                                                      #
 # ------------------------------------------------------------------------------------------------ #
-class DataStorageContainer(containers.DeclarativeContainer):
+class PersistenceContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     db = providers.Singleton(MySQLDatabase, name=config.database.appstore.name)
 
+    appdata_repo = providers.Singleton(AppDataRepo, database=db)
+    review_repo = providers.Singleton(AppStoreReviewRepo, database=db)
+    rating_repo = providers.Singleton(AppStoreRatingRepo, database=db)
+
     uow = providers.Singleton(
         UoW,
         database=db,
-        appdata_repo=AppStoreAppDataRepo,
+        appdata_repo=AppDataRepo,
         review_repo=AppStoreReviewRepo,
         rating_repo=AppStoreRatingRepo,
-        project_repo=ProjectRepo,
-        rating_project_repo=RatingProjectRepo,
+        appdata_project_repo=AppDataProjectRepo,
     )
 
 
@@ -150,7 +153,7 @@ class AIMobileContainer(containers.DeclarativeContainer):
 
     logs = providers.Container(LoggingContainer, config=config)
 
-    data = providers.Container(DataStorageContainer, config=config)
+    data = providers.Container(PersistenceContainer, config=config)
 
     io = providers.Container(IOContainer)
 
@@ -160,4 +163,4 @@ class AIMobileContainer(containers.DeclarativeContainer):
 # ------------------------------------------------------------------------------------------------ #
 if __name__ == "__main__":
     container = AIMobileContainer()
-    container.wire(packages=["aimobile.data.acquisition.scraper"])
+    container.wire(packages=["aimobile.data.acquisition.scraper", "aimobile.data.dataset"])

@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.8                                                                              #
-# Filename   : /aimobile/infrastructure/repo/__init__.py                                           #
+# Filename   : /aimobile/data/repo/__init__.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 12:37:58 pm                                                  #
-# Modified   : Wednesday April 26th 2023 07:17:15 am                                               #
+# Modified   : Thursday May 18th 2023 11:37:03 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -34,7 +34,7 @@ from sqlalchemy.dialects.mysql import (
 APPSTORE_APPDATA_DTYPES = {
     "id": BIGINT,
     "name": VARCHAR(256),
-    "description": MEDIUMTEXT,
+    "description": LONGTEXT,
     "category_id": INTEGER,
     "category": VARCHAR(128),
     "price": FLOAT,
@@ -42,8 +42,11 @@ APPSTORE_APPDATA_DTYPES = {
     "developer": VARCHAR(256),
     "rating": FLOAT,
     "ratings": BIGINT,
+    "rating_current_version": FLOAT,
+    "ratings_current_version": BIGINT,
     "released": VARCHAR(32),
-    "source": VARCHAR(128),
+    "released_current": VARCHAR(32),
+    "version": VARCHAR(128),
 }
 
 APPSTORE_APPDATA_VTYPES = {
@@ -58,7 +61,6 @@ APPSTORE_APPDATA_VTYPES = {
     "rating": "continuous",
     "ratings": "discrete",
     "released": "discrete",
-    "source": "nominal",
 }
 # ------------------------------------------------------------------------------------------------ #
 #                                            REVIEW                                                #
@@ -76,7 +78,6 @@ APPSTORE_REVIEW_DTYPES = {
     "vote_sum": BIGINT,
     "vote_count": BIGINT,
     "date": VARCHAR(32),
-    "source": VARCHAR(128),
 }
 
 APPSTORE_REVIEW_VTYPES = {
@@ -92,7 +93,6 @@ APPSTORE_REVIEW_VTYPES = {
     "vote_sum": "discrete",
     "vote_count": "discrete",
     "date": "discrete",
-    "source": "nominal",
 }
 
 # ------------------------------------------------------------------------------------------------ #
@@ -111,7 +111,6 @@ APPSTORE_RATING_DTYPES = {
     "threestar": BIGINT,
     "fourstar": BIGINT,
     "fivestar": BIGINT,
-    "source": VARCHAR(128),
 }
 
 APPSTORE_RATING_VTYPES = {
@@ -127,5 +126,4 @@ APPSTORE_RATING_VTYPES = {
     "threestar": "discrete",
     "fourstar": "discrete",
     "fivestar": "discrete",
-    "source": "nominal",
 }

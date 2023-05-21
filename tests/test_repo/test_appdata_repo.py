@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Sunday May 7th 2023 12:58:24 pm                                                     #
+# Modified   : Thursday May 18th 2023 07:27:31 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import shutil
 
 import pandas as pd
 
-from aimobile.data.repo.appdata import AppStoreAppDataRepo
+from aimobile.data.repo.appdata import AppDataRepo
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ ID = 1208224953
 @pytest.mark.appdata
 @pytest.mark.appdata_repo
 @pytest.mark.repo
-class TestAppStoreAppDataRepo:  # pragma: no cover
+class TestAppDataRepo:  # pragma: no cover
     # ============================================================================================ #
     def test_setup(self, container, appdata_repo, caplog):
         start = datetime.now()
@@ -315,7 +315,7 @@ class TestAppStoreAppDataRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         db = container.data.db()
-        repo = AppStoreAppDataRepo(database=db)
+        repo = AppDataRepo(database=db)
         db.begin()
         repo.add(data=appdata)
         assert repo.count() == 20

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday May 16th 2023 10:29:09 pm                                                   #
-# Modified   : Wednesday May 17th 2023 03:40:55 am                                                 #
+# Modified   : Thursday May 18th 2023 07:16:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,6 +22,7 @@ import pytest
 import logging
 
 import pandas as pd
+import numpy as np
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -115,8 +116,9 @@ class TestEDA:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         assert isinstance(eda.describe(x="rating"), pd.core.frame.DataFrame)
+        assert isinstance(eda.describe(include=[np.number]), pd.core.frame.DataFrame)
         logger.debug(eda.describe(x="rating"))
-        logger.debug(eda.describe(x="category"))
+        logger.debug(eda.describe(include=[np.number]))
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Wednesday April 26th 2023 07:30:55 am                                               #
+# Modified   : Sunday May 21st 2023 02:15:33 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -191,16 +191,26 @@ class Database(ABC):
         result = self.execute(query=query, params=params)
         return result.rowcount
 
-    def query(self, query: str, params: tuple = ()) -> pd.DataFrame:
+    def query(
+        self, query: str, params: tuple = (), dtypes: dict = None, parse_dates: dict = None
+    ) -> pd.DataFrame:
         """Fetches the next row of a query result set, returning a single sequence, or None if no more data
         Args:
             query (str): The SQL command
             params (tuple): Parameters for the SQL command
+            dtypes (dict): Dictionary mapping of column to data types
+            parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
 
         Returns: Pandas DataFrame
 
         """
-        return pd.read_sql(sql=sqlalchemy.text(query), con=self._connection, params=params)
+        return pd.read_sql(
+            sql=sqlalchemy.text(query),
+            con=self._connection,
+            params=params,
+            dtype=dtypes,
+            parse_dates=parse_dates,
+        )
 
     def exists(self, query: str, params: tuple = None) -> bool:
         """Returns True if a row matching the query and parameters exists. Returns False otherwise.

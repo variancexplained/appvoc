@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Sunday May 7th 2023 05:42:48 pm                                                     #
+# Modified   : Thursday May 18th 2023 03:27:37 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from aimobile.data.acquisition.appstore.rating.result import RatingResult
+from aimobile.data.acquisition.rating.result import RatingResult
 from aimobile.infrastructure.web.headers import STOREFRONT
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.asession import ASessionHandler
@@ -61,7 +61,6 @@ class AppStoreRatingScraper:
         self._batches = []
 
         self._invalid_responses = 0
-        self._host = "itunes.apple.com"
         self._url = None
         self._header = STOREFRONT["headers"]
 
@@ -141,7 +140,6 @@ class AppStoreRatingScraper:
                 project["app_name"] = name
                 project["category_id"] = category_id
                 project["category"] = category
-                project["host"] = self._host
                 project["created"] = datetime.now()
                 project["status"] = "success"
                 projects.append(project)
@@ -163,7 +161,6 @@ class AppStoreRatingScraper:
                 result["threestar"] = response["ratingCountList"][2]
                 result["fourstar"] = response["ratingCountList"][3]
                 result["fivestar"] = response["ratingCountList"][4]
-                result["source"] = self._host
                 results.append(result)
 
             except Exception as e:
@@ -180,7 +177,6 @@ class AppStoreRatingScraper:
                 project["app_name"] = app["name"]
                 project["category_id"] = app["category_id"]
                 project["category"] = app["category"]
-                project["host"] = self._host
                 project["created"] = datetime.now()
                 project["status"] = "fail"
                 projects.append(project)
@@ -190,6 +186,8 @@ class AppStoreRatingScraper:
         projects = pd.DataFrame(data=projects)
         results = pd.DataFrame(data=results)
         result = RatingResult(
-            scraper=self.__class__.__name__, projects=projects, results=results, host=self._host
+            scraper=self.__class__.__name__,
+            projects=projects,
+            results=results,
         )
         return result

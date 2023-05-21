@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /tests/test_service/test_appstore/test_appdata_scraper.py                           #
+# Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_appdata_scraper.py    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Sunday April 30th 2023 08:24:19 pm                                                  #
+# Modified   : Thursday May 18th 2023 07:27:31 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 import numpy as np
 
-from aimobile.data.acquisition.appstore.appdata.scraper import AppStoreAppDataScraper
+from aimobile.data.acquisition.appdata.scraper import AppDataScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -56,7 +56,7 @@ class TestAppDataScraper:  # pragma: no cover
         MAX_PAGES = 2
         LIMIT = 5
         a1 = pd.DataFrame()
-        scraper = AppStoreAppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
+        scraper = AppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
         for i, scrape in enumerate(scraper, start=1):
             result = scrape.content
             pd.concat([a1, result], axis=0)
@@ -83,7 +83,7 @@ class TestAppDataScraper:  # pragma: no cover
         MAX_PAGES = 1
         LIMIT = 10
         a2 = pd.DataFrame()
-        scraper = AppStoreAppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
+        scraper = AppDataScraper(term=TERM, limit=LIMIT, max_pages=MAX_PAGES)
         for i, scrape in enumerate(scraper, start=1):
             result = scrape.content
             pd.concat([a2, result], axis=0)

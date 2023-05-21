@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Tuesday May 16th 2023 10:33:09 pm                                                   #
+# Modified   : Sunday May 21st 2023 03:58:08 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,11 +21,13 @@ import pytest
 import random
 import dotenv
 import subprocess
+from datetime import datetime
 
 from aimobile.infrastructure.io.local import IOService
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.headers import STOREFRONT
 from aimobile.data.analysis.eda import EDA
+from aimobile.data.acquisition.appdata.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -100,7 +102,7 @@ def mode():
 def container():
     container = AIMobileContainer()
     container.init_resources()
-    container.wire(packages=["aimobile.data.acquisition.appstore"])
+    container.wire(packages=["aimobile.data.acquisition", "aimobile.data.dataset"])
 
     return container
 
@@ -121,20 +123,6 @@ def dataframe():
 def appdata():
     df = IOService.read(APPDATA_HEALTH_FILEPATH)
     return df
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                      APPDATA REPO                                                #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def project_repo(container):
-    repo = container.data.project_repo()
-    try:
-        repo.delete_all()
-    except Exception:
-        pass
-    repo.save()
-    return repo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -159,6 +147,33 @@ def uow(container):
     uow.appdata_repo.replace(data=df)
     uow.save()
     return uow
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                        APPDATA PROJECT                                           #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def appdata_project():
+    return AppDataProject(
+        controller="AppDataController",
+        term="weather",
+        status="in_progress",
+        page_size=200,
+        pages=5,
+        vpages=5,
+        apps=1000,
+        started=datetime.now(),
+        updated=datetime.now(),
+    )
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      APPDATA PROJECT REPO                                        #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def appdata_project_repo(container, appdata_project):
+    uow = container.data.uow()
+    return uow.appdata_project_repo
 
 
 # ------------------------------------------------------------------------------------------------ #

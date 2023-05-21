@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /tests/test_service/test_appstore/test_review_scraper.py                            #
+# Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_review_scraper.py     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Sunday April 30th 2023 06:47:01 pm                                                  #
+# Modified   : Thursday May 18th 2023 03:28:48 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,7 @@ import pytest
 import logging
 import pandas as pd
 
-from aimobile.data.acquisition.appstore.review.scraper import AppStoreReviewScraper
+from aimobile.data.acquisition.review.scraper import AppStoreReviewScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -68,7 +68,6 @@ class TestReviewScraper:  # pragma: no cover
             assert scrape.page == i
             assert scrape.status_code == 200
             assert str(ID) in scrape.url
-            assert scrape.host == "itunes.apple.com"
             logger.debug(f"\n\nThe {i}th page returned {scrape.results} results.")
             logger.debug(f"\nResult:\n{scrape.result}\n")
 

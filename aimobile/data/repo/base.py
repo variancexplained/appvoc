@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Saturday April 29th 2023 12:59:27 am                                                #
+# Modified   : Sunday May 21st 2023 05:13:03 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -42,11 +42,6 @@ class Repo(ABC):
         self._name = name
         self._database = database
 
-    @property
-    @abstractmethod
-    def summary(self) -> pd.DataFrame:
-        """Returns a summary of the repository in DataFrame format"""
-
     @abstractmethod
     def add(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
@@ -63,51 +58,75 @@ class Repo(ABC):
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
 
-    def info(self) -> pd.DataFrame:
-        """Returns a DataFrame containing a basic summary of the data.
+    def reset(self) -> None:
+        """Resets the repository by dropping the underlying table."""
+        x = input(
+            "This will delete the underlying table and commit the database. Type 'YES' to proceed."
+        )
+        if x == "YES":
+            query = f"DROP TABLE IF EXISTS {self._name};"
+            params = None
+            self._database.execute(query=query, params=params)
+            self.save()
+            msg = f"Repository {self.__class__.__name__} reset."
+            self._logger.info(msg)
 
-        Returns a DataFrame containing:
-            - column names
-            - data types
-            - size (Bytes)
-            - variable type
-            - cardinality
+    def sample(self, n: int = 5, frac: float = None, random_state: int = None) -> pd.DataFrame:
+        """Returns a random sample from the underlying dataset.
+
+        Args:
+            n (int): Number of samples to return.
+            frac (float): Proportion of the data to return. n is ignored
+                if this variable is non-null.
+            random_state (int): Seed for pseudo random generation.
         """
         df = self.getall()
+        return df.sample(n=n, frac=frac).T
 
-        df1 = df.dtypes.to_frame()
-        df2 = df.count().to_frame()
-        df3 = df.memory_usage(index=False, deep=True).to_frame()
-        df4 = df.nunique().to_frame()
-        info = pd.concat([df1, df2, df3, df4], axis=1)
-        info.columns = ["Dtype", "Non-Null Count", "Bytes", "Cardinality"]
-        return info
-
-    def get(self, id: Union[str, int]) -> pd.DataFrame:
+    def get(
+        self, id: Union[str, int], dtypes: dict = None, parse_dates: dict = None
+    ) -> pd.DataFrame:
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
             id (Union[str,int]): The entity id.
+            dtypes (dict): Dictionary mapping of column to data types
+            parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
         """
         query = f"SELECT * FROM {self._name} WHERE id = :id;"
         params = {"id": id}
-        return self._database.query(query=query, params=params)
+        return self._database.query(
+            query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
+        )
 
-    def get_by_category(self, category_id: Union[str, int]) -> pd.DataFrame:
+    def get_by_category(
+        self, category_id: Union[str, int], dtypes: dict = None, parse_dates: dict = None
+    ) -> pd.DataFrame:
         """Obtains data from the given table by category id
 
         Args:
             category_id (Union[str,int]): The mobile app category.
+            dtypes (dict): Dictionary mapping of column to data types
+            parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
         """
         query = f"SELECT * FROM {self._name} WHERE category_id = :category_id;"
         params = {"category_id": category_id}
-        return self._database.query(query=query, params=params)
+        return self._database.query(
+            query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
+        )
 
-    def getall(self) -> pd.DataFrame:
-        """Returns all data in the repository."""
+    def getall(self, dtypes: dict = None, parse_dates: dict = None) -> pd.DataFrame:
+        """Returns all data in the repository.
+
+        Args:
+            dtypes (dict): Dictionary mapping of column to data types
+            parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
+        """
         query = f"SELECT * FROM {self._name};"
         params = None
-        return self._database.query(query=query, params=params)
+        return self._database.query(
+            query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
+        )
 
     def exists(self, id: Union[str, int] = "appdata") -> bool:
         """Assesses the existence of an entity in the database.
@@ -179,7 +198,7 @@ class Repo(ABC):
         counts = df[by].value_counts(sort=True, ascending=False, normalize=False).reset_index()
         counts
 
-    def dedup(self) -> None:
+    def dedup(self, keep: str = "last") -> None:
         """Removes duplicates in the repository"""
 
         df = self.getall()
@@ -189,7 +208,7 @@ class Repo(ABC):
             msg = f"\nThere are {rows} rows and {nids} unique ids. Do you want to dedup? (y/n)"
             dedup = input(msg)
             if "y" in dedup.lower():
-                df2 = df.drop_duplicates()
+                df2 = df.drop_duplicates(keep=keep)
                 rows2 = df2.shape[0]
                 nids2 = df2["id"].nunique()
                 if rows == rows2:

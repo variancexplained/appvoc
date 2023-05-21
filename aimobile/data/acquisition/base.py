@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Sunday May 7th 2023 09:20:58 am                                                     #
+# Modified   : Thursday May 18th 2023 03:25:46 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -43,7 +43,6 @@ class Controller(ABC):
 @dataclass
 class Result:
     scraper: type[Scraper]  # The class type of the Scraper
-    host: str  # The base url from which the data were obtained.
 
 
 # ------------------------------------------------------------------------------------------------ #

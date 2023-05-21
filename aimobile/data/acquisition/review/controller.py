@@ -4,14 +4,14 @@
 # Controller    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/acquisition/appstore/review/controller.py                            #
+# Filename   : /aimobile/data/acquisition/review/controller.py                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Sunday May 7th 2023 12:58:23 pm                                                     #
+# Modified   : Thursday May 18th 2023 08:23:25 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,17 +22,15 @@ import sys
 import logging
 from dotenv import load_dotenv
 import datetime
-from typing import Union
 
 import numpy as np
 
 import pandas as pd
 
 
-from aimobile.data.acquisition.appstore import AppStoreCategories
-from aimobile.data.acquisition.appstore.appdata.scraper import AppStoreAppDataScraper
-from aimobile.data.acquisition.appstore.review.scraper import AppStoreReviewScraper
-from aimobile.data.acquisition.appstore.rating.scraper import AppStoreRatingScraper
+from aimobile.data.acquisition import AppStoreCategories
+from aimobile.data.acquisition.review.scraper import AppStoreReviewScraper
+from aimobile.data.acquisition.rating.scraper import AppStoreRatingScraper
 
 from aimobile.data.acquisition.base import Controller
 

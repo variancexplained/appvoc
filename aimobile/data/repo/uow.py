@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Sunday May 7th 2023 01:04:47 pm                                                     #
+# Modified   : Thursday May 18th 2023 10:00:51 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -41,15 +41,13 @@ class UoW:
         appdata_repo: Repo,
         rating_repo: Repo,
         review_repo: Repo,
-        project_repo: Repo,
-        rating_project_repo: Repo,
+        appdata_project_repo: Repo,
     ) -> None:
         self._database = database
         self._appdata_repo = appdata_repo
         self._review_repo = review_repo
         self._rating_repo = rating_repo
-        self._project_repo = project_repo
-        self._rating_project_repo = rating_project_repo
+        self._appdata_project_repo = appdata_project_repo
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -70,12 +68,8 @@ class UoW:
         return self._rating_repo(database=self._database)
 
     @property
-    def project_repo(self) -> Repo:
-        return self._project_repo(database=self._database)
-
-    @property
-    def rating_project_repo(self) -> Repo:
-        return self._rating_project_repo(database=self._database)
+    def appdata_project_repo(self) -> Repo:
+        return self._appdata_project_repo(database=self._database)
 
     def connect(self) -> None:
         """Connects the database"""

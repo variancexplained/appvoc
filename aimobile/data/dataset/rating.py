@@ -4,15 +4,34 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/prep/review.py                                                       #
+# Filename   : /aimobile/data/dataset/rating.py                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday May 17th 2023 04:31:51 pm                                                 #
-# Modified   : Wednesday May 17th 2023 04:31:52 pm                                                 #
+# Created    : Sunday May 21st 2023 03:53:33 am                                                    #
+# Modified   : Sunday May 21st 2023 04:00:06 am                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+
+from dependency_injector.wiring import Provide, inject
+
+from aimobile.data.repo.base import Repo
+from aimobile.data.dataset.base import Dataset
+from aimobile.container import AIMobileContainer
+
+
+# ------------------------------------------------------------------------------------------------ #
+class RatingDataset(Dataset):
+    """An in-memory dataset containing app data
+
+    Args:
+        repo (Repo): The dataset repository
+    """
+
+    @inject
+    def __init__(self, repo: Repo = Provide[AIMobileContainer.data.review_repo]) -> None:
+        super().__init__(repo=repo)

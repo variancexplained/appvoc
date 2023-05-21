@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/acquisition/appstore/appdata/project.py                              #
+# Filename   : /aimobile/data/acquisition/appdata/project.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 03:47:36 pm                                                  #
-# Modified   : Thursday May 4th 2023 10:47:20 pm                                                   #
+# Modified   : Thursday May 18th 2023 02:12:32 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,12 +29,13 @@ IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None))
 SEQUENCE_TYPES: tuple = (list, tuple)
 # ------------------------------------------------------------------------------------------------ #
 counter = itertools.count()
+
+
 # ------------------------------------------------------------------------------------------------ #
-
-
+#                                       APP DATA PROJECT                                           #
+# ------------------------------------------------------------------------------------------------ #
 @dataclass
 class AppDataProject(Project):
-    host: str
     controller: str
     term: str
     status: str = "ready"
@@ -51,7 +52,6 @@ class AppDataProject(Project):
         width = 32
         msg = f"{self.__class__.__name__}:\n:"
         msg += f"\t{'Id:'.rjust(width,' ')} | {self.id}\n"
-        msg += f"\t{'Host:'.rjust(width,' ')} | {self.host}\n"
         msg += f"\t{'Controller:'.rjust(width,' ')} | {self.controller}\n"
         msg += f"\t{'Term:'.rjust(width,' ')} | {self.term}\n"
         msg += f"\t{'Status:'.rjust(width,' ')} | {self.status}\n"
@@ -72,7 +72,6 @@ class AppDataProject(Project):
         cls,
         controller: str,
         term: str,
-        host: str = "itunes.apple.com",
         page_size: int = 200,
     ) -> None:
         """Creates a Project object
@@ -80,10 +79,9 @@ class AppDataProject(Project):
         Args:
             controller (str): The name of the controller object.
             term (str): The term or category used as search term.
-            host (str): The base url for the website.
+            page_size (int): Number of results to return per page.
         """
         return cls(
-            host=host,
             controller=controller,
             term=term,
             page_size=page_size,
@@ -115,7 +113,6 @@ class AppDataProject(Project):
         """Takes a DataFrame and creates a Project object."""
         return cls(
             id=df["id"][0],
-            host=df["host"][0],
             controller=df["controller"][0],
             term=df["term"][0],
             status=df["status"][0],

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 09:11:00 pm                                                  #
-# Modified   : Sunday May 7th 2023 12:58:24 pm                                                     #
+# Modified   : Thursday May 18th 2023 08:22:48 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,9 +22,9 @@ import pytest
 import logging
 
 from aimobile.data.acquisition.project import Project
-from aimobile.data.acquisition.appstore.appdata.controller import AppStoreAppDataController
+from aimobile.data.acquisition.appdata.controller import AppDataController
 
-
+TERMS = ["social", "weather", "productivity"]
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -34,9 +34,9 @@ single_line = f"\n{100 * '-'}"
 
 @pytest.mark.ctrl
 @pytest.mark.appdata_ctrl
-class TestAppStoreAppDataController:  # pragma: no cover
+class TestAppDataController:  # pragma: no cover
     # ============================================================================================ #
-    def test_no_project_exists(self, project_repo, appdata_repo, caplog):
+    def test_setup(self, appdata_project, appdata_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -48,24 +48,8 @@ class TestAppStoreAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        MAX_PAGES = 2
-        MAX_RESULTS_PER_PAGE = 5
-        VERBOSE = 2
-        CONTROLLER = "AppStoreAppDataController"
-        TERM = "health"
-        controller = AppStoreAppDataController(
-            max_pages=MAX_PAGES, max_results_per_page=MAX_RESULTS_PER_PAGE, verbose=VERBOSE
-        )
-        controller.scrape(terms="health")
-        df = project_repo.getall()
-        assert df.shape[0] == 1
-        project = project_repo.get_project(controller=CONTROLLER, term=TERM)
-        assert isinstance(project, Project)
-        project.controller == CONTROLLER
-        project.term == TERM
-        project.pages == 2
-        project.apps = 10
-        project.status == "complete"
+        appdata_project_repo.delete_all()
+        appdata_project_repo.add(appdata_project)
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -83,7 +67,7 @@ class TestAppStoreAppDataController:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_project_complete(self, caplog):
+    def test_new_project(self, appdata_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -95,14 +79,13 @@ class TestAppStoreAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        MAX_PAGES = 2
-        MAX_RESULTS_PER_PAGE = 5
-        VERBOSE = 2
-        controller = AppStoreAppDataController(
-            max_pages=MAX_PAGES, max_results_per_page=MAX_RESULTS_PER_PAGE, verbose=VERBOSE
-        )
-        controller.scrape(terms="health")
-        # Observe log: should skip, job complete.
+        ctrl = AppDataController(max_pages=5, max_results_per_page=5, backup_to_file=False)
+        ctrl.scrape(terms="social")
+        repo = appdata_project_repo
+        project = repo.get_project(controller="AppDataController", term="social")
+        assert isinstance(project, Project)
+        assert project.status == "complete"
+        logger.debug(project)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -119,7 +102,7 @@ class TestAppStoreAppDataController:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_incomplete(self, project_repo, caplog):
+    def test_existing_new_project(self, appdata_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -131,31 +114,13 @@ class TestAppStoreAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        MAX_PAGES = 2
-        MAX_RESULTS_PER_PAGE = 5
-        VERBOSE = 2
-        CONTROLLER = "AppStoreAppDataController"
-        TERM = "health"
-        # Get current project
-        project = project_repo.get_project(controller=CONTROLLER, term=TERM)
-        assert project.status == "complete"
-        assert isinstance(project, Project)
-
-        # Update status to in-process and update the repository
-        project.status = "in-process"
-        project_repo.update(data=project)
-        project_repo.save()
-
-        # Rerun the project, should start on page 2
-        controller = AppStoreAppDataController(
-            max_pages=MAX_PAGES, max_results_per_page=MAX_RESULTS_PER_PAGE, verbose=VERBOSE
-        )
-        controller.scrape(terms="health")
-
-        # Get project and confirm additional pages added.
-        project = project_repo.get_project(controller=CONTROLLER, term=TERM)
-        assert project.pages == 4
-        assert project.apps == 20
+        ctrl = AppDataController(max_pages=5, max_results_per_page=5, backup_to_file=False)
+        ctrl.scrape(terms=TERMS)
+        repo = appdata_project_repo
+        for term in TERMS:
+            project = repo.get_project(controller="AppDataController", term=term)
+            assert isinstance(project, Project)
+            logger.debug(project)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

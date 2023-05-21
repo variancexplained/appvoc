@@ -11,13 +11,12 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Sunday May 7th 2023 01:55:07 am                                                     #
+# Modified   : Thursday May 18th 2023 09:33:43 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
-import random
 from datetime import datetime
 import logging
 from dotenv import load_dotenv
@@ -26,7 +25,6 @@ import requests
 
 from aimobile.infrastructure.web.throttle import LatencyThrottle
 from aimobile.infrastructure.web.adapter import TimeoutHTTPAdapter
-from aimobile.infrastructure.web.base import PROXY_SERVERS
 from aimobile.infrastructure.web.headers import BrowserHeader
 
 load_dotenv()
@@ -110,7 +108,6 @@ class SessionHandler:
                     headers=self._header,
                     params=params,
                     proxies=self._proxy,
-                    timeout=self._timeout,
                 )
                 self._teardown()
                 self._throttle.delay(latency=self._latency, wait=True)
@@ -118,7 +115,7 @@ class SessionHandler:
 
             except Exception as e:  # pragma: no cover
                 self._sessions += 1
-                msg = f"A {type(e)} exception occurred. Retrying with session #{self._sessions}."
+                msg = f"A {type(e)} exception occurred. \n{e}\nRetrying with session #{self._sessions}."
                 self._logger.error(msg)
                 self._status_code = 999
 
@@ -155,8 +152,5 @@ class SessionHandler:
         """Returns proxy servers"""
         username = os.getenv("GEONODE_USERNAME")
         password = os.getenv("GEONODE_PWD")
-        while True:
-            dns = random.choice(PROXY_SERVERS)
-            proxy = {"http": f"http://{username}:{password}@{dns}"}
-            if proxy != self._proxy:
-                return proxy
+        dns = os.getenv("GEONODE_DNS")
+        return {"http": "http://{}:{}@{}".format(username, password, dns)}
