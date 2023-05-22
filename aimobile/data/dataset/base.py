@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:00:19 am                                                    #
-# Modified   : Sunday May 21st 2023 04:19:27 am                                                    #
+# Modified   : Sunday May 21st 2023 09:57:13 pm                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -44,50 +44,49 @@ class Dataset(ABC):
     def __init__(self, repo: Repo) -> None:
         self._repo = repo
         self._df = self._repo.getall()
+
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     # -------------------------------------------------------------------------------------------- #
     @property
-    def overview(self) -> pd.DataFrame:
-        """Provides an overview at the dataset level."""
+    def structure(self) -> pd.DataFrame:
+        """Describes dataset structure, in terms of shape, size, and data type."""
 
         nvars = self._df.shape[1]
         nrows = self._df.shape[0]
         ncells = nvars * nrows
-        nmissing = self._df.isna().sum().sum()
-        pmissing = nmissing / ncells * 100
-        ndups = nrows - self._df.drop_duplicates().shape[0]
-        pdups = ndups / nrows * 100
         size = self._df.memory_usage(deep=True).sum().sum()
         d = {
             "Number of Observations": nrows,
             "Number of Variables": nvars,
             "Number of Cells": ncells,
-            "Missing Cells": nmissing,
-            "Missing Cells (%)": round(pmissing, 2),
-            "Duplicate Rows": ndups,
-            "Duplicate Rows (%)": round(pdups, 2),
             "Size (Bytes)": size,
         }
         overview = pd.DataFrame.from_dict(data=d, orient="index").reset_index()
         overview.columns = ["Characteristic", "Total"]
         return overview
 
+    # -------------------------------------------------------------------------------------------- #
+    @property
+    @abstractmethod
+    def dtypes(self) -> pd.DataFrame:
+        """Summarizes the data types in the dataset."""
+
     # ------------------------------------------------------------------------------------------------ #
     @property
-    def info(self) -> pd.DataFrame:
+    def quality(self) -> pd.DataFrame:
         """Returns a DataFrame with basic dataset statistics"""
 
-        info = self._df.dtypes.to_frame().reset_index()
-        info.columns = ["Column", "Dtype"]
-        info["Valid"] = self._df.count().values
-        info["Null"] = self._df.isna().sum().values
-        info["Validity"] = info["Valid"] / self._df.shape[0]
-        info["Unique"] = self._df.nunique().values
-        info["Cardinality"] = info["Unique"] / self._df.shape[0]
-        info["Size"] = self._df.memory_usage(deep=True, index=False).to_frame().reset_index()[0]
-        info = round(info, 2)
-        return info
+        quality = self._df.dtypes.to_frame().reset_index()
+        quality.columns = ["Column", "Format"]
+        quality["Valid"] = self._df.count().values
+        quality["Null"] = self._df.isna().sum().values
+        quality["Validity"] = quality["Valid"] / self._df.shape[0]
+        quality["Cardinality"] = self._df.nunique().values
+        quality["Percent Unique"] = self._df.nunique().values / self._df.shape[0]
+        quality["Size"] = self._df.memory_usage(deep=True, index=False).to_frame().reset_index()[0]
+        quality = round(quality, 2)
+        return quality
 
     # ------------------------------------------------------------------------------------------------ #
     @property
@@ -114,24 +113,44 @@ class Dataset(ABC):
         return self._df.sample(n=n, frac=frac, replace=replace, random_state=random_state)
 
     # ------------------------------------------------------------------------------------------------ #
-    def describe(self, column: str = None, groupby: str = None) -> pd.DataFrame:
+    def unique(self, columns: list = None) -> pd.DataFrame:
+        """Returns a DataFrame containing the unique values for all or the designated columns.
+
+        Args:
+            columns (list): List of columns for which unique values are to be returned.
+        """
+        if columns is not None:
+            return self._df[columns].drop_duplicates().reset_index()
+        else:
+            return self._df.drop_duplicates().reset_index()
+
+    # ------------------------------------------------------------------------------------------------ #
+    def describe(
+        self, column: str = None, groupby: str = None, include: list = None, exclude: list = None
+    ) -> pd.DataFrame:
         """Produces descriptive statistics
 
         Args:
             column (str): Optional column upon which descriptive statistics will be computed.
             groupby (str): Name of a column by which descriptive statistics will be grouped.
+            include (list): List of data types to include in the analysis.
+            exclude (list): List of data types to exclude from the analysis.
 
         """
         if column is None:
             if groupby is None:
-                return self._df.describe().T
+                return self._df.describe(include=include, exclude=exclude).T
             else:
-                return self._df.groupby(by=groupby).describe().T
+                return self._df.groupby(by=groupby).describe(include=include, exclude=exclude).T
         else:
             if groupby is None:
-                return self._df[column].describe().to_frame().T
+                return self._df[column].describe(include=include, exclude=exclude).to_frame().T
             else:
-                return self._df.groupby(by=groupby)[column].describe()
+                return (
+                    self._df.groupby(by=groupby)[column]
+                    .describe(include=include, exclude=exclude)
+                    .T
+                )
 
     # ------------------------------------------------------------------------------------------------ #
     #                                    VISUALIZATION METHODS                                         #

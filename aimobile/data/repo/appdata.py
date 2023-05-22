@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Sunday May 21st 2023 05:12:05 am                                                    #
+# Modified   : Sunday May 21st 2023 09:29:43 pm                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -34,13 +34,13 @@ from aimobile.infrastructure.io.local import IOService
 #                                    PANDAS DATA TYPES                                             #
 # ------------------------------------------------------------------------------------------------ #
 DTYPES = {
-    "id": np.int64,
+    "id": "string",
     "name": "string",
     "description": "string",
     "category_id": "category",
     "category": "category",
     "price": np.float64,
-    "developer_id": np.int64,
+    "developer_id": "string",
     "developer": "string",
     "rating": np.float64,
     "ratings": np.int64,

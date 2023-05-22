@@ -4,15 +4,40 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/__init__.py                                                               #
+# Filename   : /jbook/_toc.yml                                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday March 27th 2023 12:28:06 pm                                                  #
-# Modified   : Sunday May 21st 2023 12:33:34 pm                                                    #
+# Created    : Sunday May 21st 2023 12:45:30 pm                                                    #
+# Modified   : Sunday May 21st 2023 02:01:06 pm                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+options:
+  numbered: 3
+parts:
+  - caption: 1. Introduction
+    numbered: 3
+    chapters:
+      - file: 1_introduction/1_introduction
+  - caption: 2. Background
+    numbered: 3
+    chapters:
+      - file: 2_background/1_digital_advertising
+      - file: 2_background/2_deep_learning_sota
+      - file: 2_background/3_neural_architecture_search
+  - caption: 3. Data
+    numbered: 3
+    chapters:
+      - file: 3_data/1_alibaba/1_alibaba_overview
+  - caption: References
+    chapters:
+      - file: 99_references

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday May 20th 2023 06:27:45 pm                                                  #
-# Modified   : Sunday May 21st 2023 04:10:17 am                                                    #
+# Modified   : Sunday May 21st 2023 01:02:39 pm                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -36,6 +36,7 @@ class Palette:
     dark_blue_reversed: str = "dark:b_r"
     heatmap: str = "mako"
     bluegreen: str = "crest"
+    link: str = "https://colorhunt.co/palette/002b5b2b4865256d858fe3cf"
 
 
 # ------------------------------------------------------------------------------------------------ #
