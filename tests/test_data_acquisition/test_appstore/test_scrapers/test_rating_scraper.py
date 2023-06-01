@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_rating_scraper.py     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 24th 2023 08:26:10 am                                                  #
-# Modified   : Thursday May 18th 2023 08:22:59 am                                                  #
+# Modified   : Thursday June 1st 2023 11:15:55 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import pandas as pd
 
-from aimobile.data.acquisition.rating.scraper import AppStoreRatingScraper
+from aimobile.data.acquisition.rating.scraper import RatingScraper
 from aimobile.data.acquisition.rating.result import RatingResult
 
 CATEGORIES = [6000, 6012, 6013]
@@ -56,7 +56,7 @@ class TestRatingScraper:  # pragma: no cover
         projects = pd.DataFrame()
         results = pd.DataFrame()
 
-        for result in AppStoreRatingScraper(apps=apps):
+        for result in RatingScraper(apps=apps):
             assert isinstance(result, RatingResult)
             assert isinstance(result.projects, pd.DataFrame)
             assert isinstance(result.results, pd.DataFrame)

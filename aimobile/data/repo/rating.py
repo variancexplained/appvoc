@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/data/repo/rating.py                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:56:28 am                                                #
-# Modified   : Sunday May 7th 2023 07:22:19 am                                                     #
+# Modified   : Thursday June 1st 2023 11:16:22 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ from aimobile.infrastructure.io.local import IOService
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingRepo(Repo):
+class RatingRepo(Repo):
     """Repository for rating data
 
     Args:
@@ -82,6 +82,6 @@ class AppStoreRatingRepo(Repo):
 
     def export(self, directory: str = ARCHIVE["appstore"]) -> None:
         os.makedirs(directory, exist_ok=True)
-        filename = "reviews_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
+        filename = "ratings_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
         filepath = os.path.join(directory, filename)
         IOService.write(filepath=filepath, data=self.getall())

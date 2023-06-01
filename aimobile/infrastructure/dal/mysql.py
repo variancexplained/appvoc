@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/infrastructure/dal/mysql.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Friday April 28th 2023 11:01:57 am                                                  #
+# Modified   : Thursday June 1st 2023 11:16:37 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #

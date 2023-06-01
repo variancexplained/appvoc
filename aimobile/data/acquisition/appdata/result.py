@@ -3,15 +3,15 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
-# Filename   : /aimobile/data/acquisition/appstore/appdata/result.py                               #
+# Python     : 3.10.11                                                                             #
+# Filename   : /aimobile/data/acquisition/appdata/result.py                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Thursday May 4th 2023 11:37:14 pm                                                   #
+# Modified   : Thursday June 1st 2023 11:16:30 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #

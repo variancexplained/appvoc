@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_data_acquisition/test_appstore/test_controllers/test_appstore_rating_controller.py #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 02:39:32 pm                                                  #
-# Modified   : Thursday May 18th 2023 08:22:59 am                                                  #
+# Modified   : Thursday June 1st 2023 11:15:53 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.acquisition.rating.controller import AppStoreRatingController
+from aimobile.data.acquisition.rating.controller import RatingController
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -50,7 +50,7 @@ class TestRatingController:  # pragma: no cover
         project_repo.delete_all()
         rating_repo = uow.rating_repo
         rating_repo.delete_all()
-        controller = AppStoreRatingController(batchsize=5)
+        controller = RatingController(batchsize=5)
         controller.scrape(category_ids=[6000, 6012, 6013])
 
         projects = project_repo.getall()

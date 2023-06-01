@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Fileapp_name   : /aimobile/scraper/appstore/http/review.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Thursday May 18th 2023 03:27:37 pm                                                  #
+# Modified   : Thursday June 1st 2023 11:16:26 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -31,7 +31,7 @@ from aimobile.infrastructure.web.asession import ASessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingScraper:
+class RatingScraper:
     """App Store Rating Scraper
 
     Extracts review and rating count data by app_id
@@ -66,7 +66,7 @@ class AppStoreRatingScraper:
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def __aiter__(self) -> AppStoreRatingScraper:
+    def __aiter__(self) -> RatingScraper:
         self._batch = 0
         self._batches = self._create_batches()
         return self
@@ -78,7 +78,7 @@ class AppStoreRatingScraper:
         """
 
         if self._batch == len(self._batches):
-            raise StopIteration
+            return False
 
         responses = await self._session.get(
             urls=self._batches[self._batch]["urls"], headers=self._header

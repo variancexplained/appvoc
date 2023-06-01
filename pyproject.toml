@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 packages = [
-    { include = "aimobile", from = "src" }
+    { include = "aimobile" }
 ]
 
 [tool.poetry.dependencies]

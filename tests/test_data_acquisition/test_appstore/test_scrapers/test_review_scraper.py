@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_review_scraper.py     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Thursday May 18th 2023 03:28:48 pm                                                  #
+# Modified   : Thursday June 1st 2023 11:15:56 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,7 @@ import pytest
 import logging
 import pandas as pd
 
-from aimobile.data.acquisition.review.scraper import AppStoreReviewScraper
+from aimobile.data.acquisition.review.scraper import ReviewScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -54,7 +54,7 @@ class TestReviewScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        scraper = AppStoreReviewScraper(
+        scraper = ReviewScraper(
             app_id=ID, app_name=NAME, category_id=CATEGORY_ID, category=CATEGORY
         )
         for i, scrape in enumerate(scraper, start=1):

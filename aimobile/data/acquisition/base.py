@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/data/acquisition/base.py                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,12 +11,14 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Thursday May 18th 2023 03:25:46 pm                                                  #
+# Modified   : Thursday June 1st 2023 11:16:36 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
+import os
+from dotenv import load_dotenv
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -33,6 +35,8 @@ class Controller(ABC):
     @abstractmethod
     def scrape(self, *args, **kwargs) -> None:
         """Entry point for scraping operations."""
+        load_dotenv()
+        return os.getenv(self.__class__.__name__, False) in (True, "true", "True")
 
     @abstractmethod
     def _persist(self) -> None:

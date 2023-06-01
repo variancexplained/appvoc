@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/container.py                                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Sunday May 21st 2023 06:18:36 am                                                    #
+# Modified   : Thursday June 1st 2023 11:16:54 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,8 +28,8 @@ from aimobile.infrastructure.web.throttle import LatencyThrottle, AThrottle
 from aimobile.infrastructure.dal.mysql import MySQLDatabase
 from aimobile.data.repo.project import AppDataProjectRepo
 from aimobile.data.repo.appdata import AppDataRepo
-from aimobile.data.repo.review import AppStoreReviewRepo
-from aimobile.data.repo.rating import AppStoreRatingRepo
+from aimobile.data.repo.review import ReviewRepo
+from aimobile.data.repo.rating import RatingRepo
 from aimobile.infrastructure.web.base import PROXY_SERVERS
 from aimobile.data.repo.uow import UoW
 from aimobile.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
@@ -65,15 +65,15 @@ class PersistenceContainer(containers.DeclarativeContainer):
     db = providers.Singleton(MySQLDatabase, name=config.database.appstore.name)
 
     appdata_repo = providers.Singleton(AppDataRepo, database=db)
-    review_repo = providers.Singleton(AppStoreReviewRepo, database=db)
-    rating_repo = providers.Singleton(AppStoreRatingRepo, database=db)
+    review_repo = providers.Singleton(ReviewRepo, database=db)
+    rating_repo = providers.Singleton(RatingRepo, database=db)
 
     uow = providers.Singleton(
         UoW,
         database=db,
         appdata_repo=AppDataRepo,
-        review_repo=AppStoreReviewRepo,
-        rating_repo=AppStoreRatingRepo,
+        review_repo=ReviewRepo,
+        rating_repo=RatingRepo,
         appdata_project_repo=AppDataProjectRepo,
     )
 

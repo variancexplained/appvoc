@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_rating_repo.py                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Sunday May 7th 2023 08:19:48 am                                                     #
+# Modified   : Thursday June 1st 2023 11:16:09 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import shutil
 
 import pandas as pd
 
-from aimobile.data.repo.rating import AppStoreRatingRepo
+from aimobile.data.repo.rating import RatingRepo
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             repo.replace(data=rating)
             assert repo.count() == 10
 
@@ -94,7 +94,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             info = repo.info()
             assert isinstance(info, dict)
             assert isinstance(info["summary"], dict)
@@ -135,7 +135,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             df = repo.get(id=ID)
             assert df.shape[0] == 1
         # ---------------------------------------------------------------------------------------- #
@@ -167,7 +167,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             df = repo.getall()
             assert df.shape[0] == 10
 
@@ -200,7 +200,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             df = repo.get_by_category(category_id=CATEGORY_ID)
             assert df.shape[0] == 2
         # ---------------------------------------------------------------------------------------- #
@@ -232,7 +232,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             exists = repo.exists(id=ID)
             assert exists is True
             exists = repo.exists(id="846")
@@ -266,7 +266,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         db = container.data.db()
-        repo = AppStoreRatingRepo(database=db)
+        repo = RatingRepo(database=db)
         db.begin()
         repo.add(data=rating)
         assert repo.count() == 20
@@ -302,7 +302,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         db = container.data.db()
-        repo = AppStoreRatingRepo(database=db)
+        repo = RatingRepo(database=db)
         assert repo.count(id=ID) == 1
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -333,7 +333,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             summary = repo.summarize()
             assert isinstance(summary, pd.DataFrame)
             assert "Category" in summary.columns
@@ -372,7 +372,7 @@ class TestReviewRepo:  # pragma: no cover
         DIRECTORY = "tests/data/repo/export/"
         shutil.rmtree(DIRECTORY, ignore_errors=True)
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             repo.export(directory=DIRECTORY)
             assert len(os.listdir(DIRECTORY)) == 1
         # ---------------------------------------------------------------------------------------- #
@@ -404,7 +404,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             repo.delete(id=ID)
             df = repo.get(id=ID)
             assert len(df) == 0
@@ -439,7 +439,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
-            repo = AppStoreRatingRepo(database=db)
+            repo = RatingRepo(database=db)
             repo.delete_all()
             assert repo.count() == 0
 

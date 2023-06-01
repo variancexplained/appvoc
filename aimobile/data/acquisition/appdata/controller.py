@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # AppDataProject    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/data/acquisition/appdata/controller.py                                    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,18 +11,16 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:23:40 pm                                                  #
-# Modified   : Sunday May 21st 2023 05:09:40 am                                                    #
+# Modified   : Thursday June 1st 2023 11:16:27 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Scraper AppDataProject Module"""
-import os
 import sys
 import logging
 import datetime
 from typing import Union
-from dotenv import load_dotenv
 
 from dependency_injector.wiring import Provide, inject
 
@@ -77,10 +75,6 @@ class AppDataController(Controller):
         self._started = None
         self._duration = None
 
-        # Lock
-        load_dotenv()
-        self._authorized = os.getenv("APPDATACONTROLLER", False) in (True, "true", "True")
-
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def archive(self) -> None:
@@ -89,7 +83,7 @@ class AppDataController(Controller):
 
     def scrape(self, terms: Union[str, list]) -> None:
         """Implementation of the Scrape AppDataProject"""
-        if self._authorized:
+        if super().scrape():
             terms = [terms] if isinstance(terms, str) else terms
 
             for term in terms:

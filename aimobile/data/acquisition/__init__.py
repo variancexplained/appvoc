@@ -4,14 +4,14 @@
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.8                                                                              #
-# Filename   : /aimobile/data/acquisition/appstore/__init__.py                                     #
+# Filename   : /aimobile/data/acquisition/__init__.py                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 12:37:58 pm                                                  #
-# Modified   : Thursday May 4th 2023 10:34:05 pm                                                   #
+# Modified   : Wednesday May 24th 2023 02:35:49 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -131,20 +131,20 @@ class AppStoreCategories:
 class AppStoreTargetCategories:
     IDS = [
         # 6018,
-        6000,
-        6017,
-        6016,
-        6015,
-        6023,
-        6013,
-        6012,
-        6020,
-        6011,
-        6008,
-        6007,
-        6006,
-        6024,
-        6005,
-        6003,
+        # 6000,
+        # 6017,
+        # 6016,
+        # 6015,
+        # 6023,
+        # 6013,
+        # 6012,
+        # 6020,
+        # 6011,
+        # 6008,
+        # 6007,
+        # 6006,
+        # 6024,
+        # 6005,
+        # 6003,
         6002,
     ]

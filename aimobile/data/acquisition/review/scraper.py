@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/data/acquisition/review/scraper.py                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Thursday May 18th 2023 03:28:16 pm                                                  #
+# Modified   : Thursday June 1st 2023 11:16:33 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -33,7 +33,7 @@ from aimobile.infrastructure.web.session import SessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewScraper(Scraper):
+class ReviewScraper(Scraper):
     """App Store Review Scraper"""
 
     @inject
@@ -94,7 +94,7 @@ class AppStoreReviewScraper(Scraper):
         """Returns result in DataFrame format."""
         return self._result
 
-    def __iter__(self) -> AppStoreReviewScraper:
+    def __iter__(self) -> ReviewScraper:
         return self
 
     def __next__(self) -> None:

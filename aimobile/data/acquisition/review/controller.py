@@ -3,7 +3,7 @@
 # ================================================================================================ #
 # Controller    : AI-Enabled Voice of the Mobile Technology Customer                                  #
 # Version    : 0.1.0                                                                               #
-# Python     : 3.10.10                                                                             #
+# Python     : 3.10.11                                                                             #
 # Filename   : /aimobile/data/acquisition/review/controller.py                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Thursday May 18th 2023 08:23:25 am                                                  #
+# Modified   : Thursday June 1st 2023 11:16:32 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,8 +29,8 @@ import pandas as pd
 
 
 from aimobile.data.acquisition import AppStoreCategories
-from aimobile.data.acquisition.review.scraper import AppStoreReviewScraper
-from aimobile.data.acquisition.rating.scraper import AppStoreRatingScraper
+from aimobile.data.acquisition.review.scraper import ReviewScraper
+from aimobile.data.acquisition.rating.scraper import RatingScraper
 
 from aimobile.data.acquisition.base import Controller
 
@@ -38,11 +38,11 @@ from aimobile.data.acquisition.base import Controller
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE REVIEW CONTROLLER                                            #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreReviewController(Controller):
+class ReviewController(Controller):
     """Controls the App Store Review scraping process
 
     Args:
-        scraper (AppStoreReviewScraper): A scraper object that returns data from the target urls.
+        scraper (ReviewScraper): A scraper object that returns data from the target urls.
         min_ratings (int): Since we want apps with a minimum number of reviews, and we don't
             have the number of reviews per app, we are using the number of ratings as
             a proxy for the number of reviews. The default is 20
@@ -57,7 +57,7 @@ class AppStoreReviewController(Controller):
 
     def __init__(
         self,
-        scraper: type[AppStoreReviewScraper] = AppStoreReviewScraper,
+        scraper: type[ReviewScraper] = ReviewScraper,
         min_ratings: int = 20,
         max_pages: int = sys.maxsize,
         max_results_per_page: int = 400,
@@ -327,11 +327,11 @@ class AppStoreReviewController(Controller):
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP RATING CONTROLLER                                        #
 # ------------------------------------------------------------------------------------------------ #
-class AppStoreRatingController(Controller):
+class RatingController(Controller):
     """Controls the App Store Review scraping process
 
     Args:
-        scraper (AppStoreReviewScraper): A scraper object that returns data from the target urls.
+        scraper (ReviewScraper): A scraper object that returns data from the target urls.
         uow (UnitofWork): Unit of Work class containing the appdata repository
         io (IOService): A file IO object.
 
@@ -341,7 +341,7 @@ class AppStoreRatingController(Controller):
 
     def __init__(
         self,
-        scraper: type[AppStoreReviewScraper] = AppStoreRatingScraper,
+        scraper: type[ReviewScraper] = RatingScraper,
         batchsize: int = 20,
     ) -> None:
         super().__init__()
