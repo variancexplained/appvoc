@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:11 am                                                  #
+# Modified   : Thursday June 1st 2023 12:46:04 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,7 +26,6 @@ from datetime import datetime
 from aimobile.infrastructure.io.local import IOService
 from aimobile.container import AIMobileContainer
 from aimobile.infrastructure.web.headers import STOREFRONT
-from aimobile.data.analysis.eda import EDA
 from aimobile.data.acquisition.appdata.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
@@ -207,15 +206,6 @@ def review():
 def rating():
     df = IOService.read(RATINGS_FILEPATH)
     return df
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                          EDA                                                     #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def eda():
-    df = IOService.read(RATINGS_FILEPATH)
-    return EDA(data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #

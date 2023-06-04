@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Thursday June 1st 2023 11:16:32 am                                                  #
+# Modified   : Thursday June 1st 2023 02:17:54 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,15 +24,15 @@ from dotenv import load_dotenv
 import datetime
 
 import numpy as np
-
 import pandas as pd
+from dependency_injector.wiring import inject, Provide
 
 
 from aimobile.data.acquisition import AppStoreCategories
 from aimobile.data.acquisition.review.scraper import ReviewScraper
-from aimobile.data.acquisition.rating.scraper import RatingScraper
-
+from aimobile.data.repo.uow import UoW
 from aimobile.data.acquisition.base import Controller
+from aimobile.container import AIMobileContainer
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -43,6 +43,7 @@ class ReviewController(Controller):
 
     Args:
         scraper (ReviewScraper): A scraper object that returns data from the target urls.
+        uow (UoW): Unit of Work containing the repositories.
         min_ratings (int): Since we want apps with a minimum number of reviews, and we don't
             have the number of reviews per app, we are using the number of ratings as
             a proxy for the number of reviews. The default is 20
@@ -51,13 +52,13 @@ class ReviewController(Controller):
         verbose (int): An indicator of the level of progress reporting verbosity. Progress
             will be printed to stdout for each 'verbose' number of apps processed.
 
-    Inherited Member Variables:
-        uow (UoW): Unit of Work Class containing all repositories.
     """
 
+    @inject
     def __init__(
         self,
         scraper: type[ReviewScraper] = ReviewScraper,
+        uow: UoW = Provide[AIMobileContainer.data.uow],
         min_ratings: int = 20,
         max_pages: int = sys.maxsize,
         max_results_per_page: int = 400,
@@ -65,6 +66,7 @@ class ReviewController(Controller):
     ) -> None:
         super().__init__()
         self._scraper = scraper
+        self._uow = uow
         self._min_ratings = min_ratings
         self._max_pages = max_pages
         self._max_results_per_page = max_results_per_page
@@ -126,11 +128,11 @@ class ReviewController(Controller):
 
     def summarize(self) -> pd.DataFrame:
         """Returns a DataFrame summarizing the data extracted"""
-        return self.uow.review_repository.summarize()
+        return self._uow.review_repo.summarize()
 
     def archive(self) -> None:
         """Saves the repository to an archive"""
-        self.uow.review_repository.export()
+        self._uow.review_repo.export()
 
     def _scrape(self, category_ids: str) -> None:
         category_ids = [category_ids] if isinstance(category_ids, (str, int)) else category_ids
@@ -191,7 +193,7 @@ class ReviewController(Controller):
         self._logger.info(msg)
 
     def _teardown(self) -> None:
-        self.uow.review_repository.export()
+        self._uow.review_repo.export()
 
     def _start_category(self, category_id: int) -> pd.DataFrame:
         """Obtains apps for the category, removing any apps for which reviews exist."""
@@ -211,7 +213,7 @@ class ReviewController(Controller):
         self._category_stats["started"] = datetime.datetime.now()
 
         # Obtain all apps for the category from the repository.
-        apps = self.uow.appdata_repository.get_by_category(category_id=category_id)
+        apps = self._uow.appdata_repo.get_by_category(category_id=category_id)
         self._category_stats["apps"] = len(apps)
 
         # Filter the apps that have greater than 'min_ratings'
@@ -219,7 +221,7 @@ class ReviewController(Controller):
         self._category_stats["apps_with_min_ratings"] = len(apps)
 
         # Obtain apps for which we've already processed the reviews.
-        reviews = self.uow.review_repository.get_by_category(category_id=category_id)
+        reviews = self._uow.review_repo.get_by_category(category_id=category_id)
         apps_with_reviews = reviews["app_id"].unique()
         self._category_stats["apps_with_reviews"] = len(apps_with_reviews)
 
@@ -291,8 +293,8 @@ class ReviewController(Controller):
         self._category_stats["pages"] += 1
 
     def _save_page(self, result: pd.DataFrame) -> None:
-        self.uow.review_repository.add(data=result)
-        self.uow.save()
+        self._uow.review_repo.add(data=result)
+        self._uow.save()
 
     def _end_page(self, result: pd.DataFrame) -> None:
         """Updates stats and announces progress."""
@@ -321,148 +323,4 @@ class ReviewController(Controller):
             \tApps: {self._category_stats['app_count']}\tReviews: {self._category_stats['reviews']}\
             \tElapsed Time: {self._category_stats['duration']}\
             \tRate: {self._project_stats['reviews_per_second']} reviews/second."
-        self._logger.info(msg)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                            APPSTORE APP RATING CONTROLLER                                        #
-# ------------------------------------------------------------------------------------------------ #
-class RatingController(Controller):
-    """Controls the App Store Review scraping process
-
-    Args:
-        scraper (ReviewScraper): A scraper object that returns data from the target urls.
-        uow (UnitofWork): Unit of Work class containing the appdata repository
-        io (IOService): A file IO object.
-
-    Inherited Member Variables:
-        uow (UoW): Unit of Work Class containing all repositories.
-    """
-
-    def __init__(
-        self,
-        scraper: type[ReviewScraper] = RatingScraper,
-        batchsize: int = 20,
-    ) -> None:
-        super().__init__()
-        self._scraper = scraper
-        self._batchsize = batchsize
-
-        # Stats
-        self._apps = 0
-        self._started = None
-        self._duration = None
-        self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    def scrape(self, category_ids: str) -> None:
-        """Scrapes app data matching the search term from the target URL.
-
-        Args:
-            category_ids (str): Category id or a list of category ids from AppStoreCategories
-        """
-        load_dotenv()
-        status = os.getenv("APPSTORE_RATINGS_SCRAPED")
-        if status in [True, "True", "true"]:
-            msg = "\n\nAppstore Review Scraped Status is Complete. Skipping App Store Review Scraping Operation."
-            self._logger.info(msg)
-        else:
-            self._scrape(category_ids=category_ids)
-
-        self._teardown()
-
-    def summarize(self) -> pd.DataFrame:
-        """Returns a DataFrame summarizing the data extracted"""
-        return self.uow.review_repository.summarize()
-
-    def archive(self) -> None:
-        """Saves the repository to an archive"""
-        self.uow.review_repository.export()
-
-    def _scrape(self, category_ids: str) -> None:
-        self._setup()
-
-        category_ids = [category_ids] if isinstance(category_ids, (str, int)) else category_ids
-
-        for category_id in category_ids:
-            self._current_category_id = category_id
-            # Grab a dataframe containing apps for which rating data is to be obtained
-            apps = self._get_apps(category_id=category_id)
-            # Convert the dataframe to list a dictionaries.
-            apps = apps.to_dict("records")
-
-            batch = []
-            # Iterate over list of apps, returning a dictionary for each app in the category
-            for scraper in self._scraper(apps=apps):
-                self._apps += 1
-                if scraper.result is not None:
-                    batch.append(scraper.result)
-                    # Persist, update and report stats each batchsize iterations.
-                    if self._apps % self._batchsize == 0:
-                        if len(batch) > 0:
-                            # Convert the batch, i.e. list of dicts to a dataframe
-                            results = pd.DataFrame(data=batch)
-                            self._persist(results)
-                            self._update_stats()
-                            self._announce()
-                            batch = []
-
-    def _setup(self) -> None:
-        self._started = datetime.datetime.now()
-        self._apps = 0
-
-    def _teardown(self) -> None:
-        self._update_stats()
-        self._announce()
-
-    def _get_apps(self, category_id: int) -> pd.DataFrame:
-        """Obtains apps for the category, removing any apps for which reviews exist."""
-
-        # Obtain all apps for the category from the repository.
-        apps = self.uow.appdata_repository.get_by_category(category_id=category_id)
-        msg = f"\n\nA total of {len(apps)} apps in category {category_id} to process."
-
-        # Obtain apps for which reviews exist.
-        ratings = self.uow.rating_repository.get_by_category(category_id=category_id)
-        apps_processed = ratings["id"].unique()
-        msg += f"\nThere are {len(apps_processed)} apps in category {category_id} which have already been processed."
-
-        # Remove apps for which reviews exist from the list of apps to process.
-        if len(apps_processed) > 0:
-            apps = apps.loc[~apps["id"].isin(apps_processed)]
-            msg += f"\nApps remaining: {len(apps)}"
-
-        self._logger.info(msg)
-
-        return apps
-
-    def _persist(self, results: pd.DataFrame) -> None:
-        try:
-            self.uow.rating_repository.add(data=results)
-            self.uow.save()
-        except Exception:
-            self._insert(batch=results)
-
-    def _insert(self, batch: pd.DataFrame) -> None:
-        """Inserts DataFrame row by row
-
-        Args:
-            batch (pd.DataFrame): Data which failed initial insert.
-        """
-        for _, row in batch.iterrows():
-            df = row.to_frame()
-            try:
-                self.uow.rating_repository.add(data=df)
-                self.uow.save()
-            except Exception:
-                pass
-
-    def _update_stats(self) -> None:
-        seconds = (datetime.datetime.now() - self._started).total_seconds()
-        self._apps_per_second = round(self._apps / seconds, 2)
-        self._duration = str(datetime.timedelta(seconds=seconds))
-
-    def _announce(self) -> None:
-        # Report progress in terms of the number of apps processed and time.
-        category = AppStoreCategories.NAMES[self._current_category_id]
-        msg = f"Category: {self._current_category_id}-{category}\tApps: {self._apps}\tElapsed Time: {self._duration}\tRate: {self._apps_per_second} apps per second."
         self._logger.info(msg)

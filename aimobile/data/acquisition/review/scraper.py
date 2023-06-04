@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:33 am                                                  #
+# Modified   : Thursday June 1st 2023 02:46:28 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -101,7 +101,7 @@ class ReviewScraper(Scraper):
         """Formats an itunes request for the next page"""
 
         if self._page < self._max_pages:
-            self._setup()
+            self._setup_url()
 
             session = self._session.get(url=self._url, header=self._header)
 
@@ -115,7 +115,7 @@ class ReviewScraper(Scraper):
         else:  # pragma: no cover
             raise StopIteration
 
-    def _setup(self) -> None:
+    def _setup_url(self) -> None:
         """Sets the header iterable and request url"""
         msg = f"\nSetting URL for App: {self._app_id}-{self._app_name}  URL: Start Index: {self._start_index} End Index: {self._end_index}."
         self._logger.debug(msg)
@@ -150,7 +150,7 @@ class ReviewScraper(Scraper):
             msg = f"Invalid Response. A {type(e)} exception occurred. \n{e}"
 
         if not valid:
-            self._logger.debug(msg)
+            self._logger.error(msg)
         return valid
 
     def _parse_response(self, response: requests.Response) -> pd.DataFrame:

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:56:28 am                                                #
-# Modified   : Thursday June 1st 2023 11:16:22 am                                                  #
+# Modified   : Thursday June 1st 2023 01:03:13 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -48,7 +48,6 @@ class RatingRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=APPSTORE_RATING_DTYPES, if_exists="append"
         )
@@ -61,7 +60,6 @@ class RatingRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=APPSTORE_RATING_DTYPES, if_exists="replace"
         )

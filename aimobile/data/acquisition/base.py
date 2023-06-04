@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:36 am                                                  #
+# Modified   : Thursday June 1st 2023 01:57:33 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -37,10 +37,6 @@ class Controller(ABC):
         """Entry point for scraping operations."""
         load_dotenv()
         return os.getenv(self.__class__.__name__, False) in (True, "true", "True")
-
-    @abstractmethod
-    def _persist(self) -> None:
-        """Updates the project"""
 
 
 # ------------------------------------------------------------------------------------------------ #

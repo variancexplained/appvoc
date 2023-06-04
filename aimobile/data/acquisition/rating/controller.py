@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:24 am                                                  #
+# Modified   : Thursday June 1st 2023 02:02:01 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -43,8 +43,6 @@ class RatingController(Controller):
         uow (UnitofWork): Unit of Work class containing the appdata repo
         io (IOService): A file IO object.
 
-    Inherited Member Variables:
-        uow (UoW): Unit of Work Class containing all repositories.
     """
 
     @inject

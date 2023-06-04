@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Thursday June 1st 2023 11:16:41 am                                                  #
+# Modified   : Thursday June 1st 2023 01:52:15 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -150,7 +150,12 @@ class SessionHandler:
 
     def _get_proxy(self) -> dict:
         """Returns proxy servers"""
-        username = os.getenv("GEONODE_USERNAME")
-        password = os.getenv("GEONODE_PWD")
-        dns = os.getenv("GEONODE_DNS")
-        return {"http": "http://{}:{}@{}".format(username, password, dns)}
+        username = os.getenv("WEBSHARE_USER")
+        password = os.getenv("WEBSHARE_PWD")
+        dns = os.getenv("WEBSHARE_DNS")
+        port = os.getenv("WEBSHARE_PORT")
+
+        return {
+            "http": f"http://{username}:{password}@{dns}:{port}/",
+            "https": f"http://{username}:{password}@{dns}:{port}/",
+        }

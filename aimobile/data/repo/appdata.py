@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Thursday June 1st 2023 11:16:23 am                                                  #
+# Modified   : Thursday June 1st 2023 12:58:07 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -75,6 +75,7 @@ class AppDataRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=APPSTORE_APPDATA_DTYPES, if_exists="append"
         )
@@ -84,6 +85,7 @@ class AppDataRepo(Repo):
     @cache
     def getall(self) -> pd.DataFrame:
         """Returns all data in the repository."""
+
         return super().getall(dtypes=DTYPES, parse_dates=PARSE_DATES)
 
     def replace(self, data: pd.DataFrame) -> None:
@@ -92,6 +94,7 @@ class AppDataRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=APPSTORE_APPDATA_DTYPES, if_exists="replace"
         )
@@ -106,6 +109,7 @@ class AppDataRepo(Repo):
             keys (str): A list of keys corresponding to columns on the database.
             values (str): A list of values for the corresponding keys.
         """
+        self._df = None
         kv = ""
         for i, key in enumerate(keys):
             if i == 0:

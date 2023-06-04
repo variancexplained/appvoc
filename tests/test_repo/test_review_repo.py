@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Thursday June 1st 2023 11:16:10 am                                                  #
+# Modified   : Thursday June 1st 2023 12:54:53 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -95,16 +95,17 @@ class TestReviewRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
-            info = repo.info()
-            assert isinstance(info, dict)
-            assert isinstance(info["summary"], dict)
-            assert isinstance(info["info"], pd.DataFrame)
-            assert isinstance(info["vtypes"], pd.DataFrame)
-            msg = f"\n\n{'Repo Info'}:\n"
-            msg += f"Summary: {info['summary']}\n"
-            msg += f"Info: \n{info['info']}\n"
-            msg += f"Types:\n{info['vtypes']}\n"
-            logger.debug(msg)
+            repo.info()
+
+            # assert isinstance(info, dict)
+            # assert isinstance(info["summary"], dict)
+            # assert isinstance(info["info"], pd.DataFrame)
+            # assert isinstance(info["vtypes"], pd.DataFrame)
+            # msg = f"\n\n{'Repo Info'}:\n"
+            # msg += f"Summary: {info['summary']}\n"
+            # msg += f"Info: \n{info['info']}\n"
+            # msg += f"Types:\n{info['vtypes']}\n"
+            # logger.debug(msg)
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -334,7 +335,7 @@ class TestReviewRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
-            summary = repo.summarize()
+            summary = repo.summary
             assert isinstance(summary, pd.DataFrame)
             assert "Category" in summary.columns
             assert "Reviews" in summary.columns

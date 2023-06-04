@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Thursday June 1st 2023 11:16:19 am                                                  #
+# Modified   : Thursday June 1st 2023 01:02:30 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -83,6 +83,11 @@ class Repo(ABC):
         df = self.getall()
         return df.sample(n=n, frac=frac).T
 
+    def info(self) -> pd.DataFrame:
+        """Wrapper for pandas info method"""
+        df = self.getall()
+        return df.info()
+
     def get(
         self, id: Union[str, int], dtypes: dict = None, parse_dates: dict = None
     ) -> pd.DataFrame:
@@ -93,6 +98,7 @@ class Repo(ABC):
             dtypes (dict): Dictionary mapping of column to data types
             parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
         """
+
         query = f"SELECT * FROM {self._name} WHERE id = :id;"
         params = {"id": id}
         return self._database.query(
@@ -153,8 +159,7 @@ class Repo(ABC):
             query = f"SELECT * FROM {self._name};"
             params = {}
 
-        df = self._database.query(query=query, params=params)
-        return df.shape[0]
+        return self._database.query(query=query, params=params).shape[0]
 
     def delete(self, id: Union[str, int]) -> int:
         """Deletes the entity designated by the id.
@@ -163,7 +168,6 @@ class Repo(ABC):
             id (Union[str,int]): Entity id
 
         """
-
         query = f"DELETE FROM {self._name} WHERE id = :id;"
         params = {"id": id}
         self._database.delete(query=query, params=params)
@@ -175,7 +179,6 @@ class Repo(ABC):
             category_id (Union[str,int]): Category identifier.
 
         """
-
         query = f"DELETE FROM {self._name} WHERE category_id = :category_id;"
         params = {"category_id": category_id}
         self._database.delete(query=query, params=params)
@@ -185,7 +188,6 @@ class Repo(ABC):
 
         query = f"DELETE FROM {self._name};"
         params = {}
-
         self._database.delete(query=query, params=params)
 
     def get_duplicates(self, by: str = "id") -> pd.DataFrame:
