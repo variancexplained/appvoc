@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 12:37:58 pm                                                  #
-# Modified   : Thursday May 18th 2023 11:37:03 pm                                                  #
+# Modified   : Friday June 23rd 2023 10:54:13 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -118,6 +118,41 @@ APPSTORE_RATING_VTYPES = {
     "name": "nominal",
     "category_id": "discrete",
     "category": "nominal",
+    "rating": "continous",
+    "reviews": "discrete",
+    "ratings": "discrete",
+    "onestar": "discrete",
+    "twostar": "discrete",
+    "threestar": "discrete",
+    "fourstar": "discrete",
+    "fivestar": "discrete",
+}
+
+# ------------------------------------------------------------------------------------------------ #
+#                                           APPSTORE                                               #
+# ------------------------------------------------------------------------------------------------ #
+APPSTORE_DTYPES = {
+    "id": BIGINT,
+    "name": VARCHAR(128),
+    "category_id": INTEGER,
+    "category": VARCHAR(64),
+    "price": FLOAT,
+    "rating": FLOAT,
+    "reviews": BIGINT,
+    "ratings": BIGINT,
+    "onestar": BIGINT,
+    "twostar": BIGINT,
+    "threestar": BIGINT,
+    "fourstar": BIGINT,
+    "fivestar": BIGINT,
+}
+
+APPSTORE_VTYPES = {
+    "id": "discrete",
+    "name": "nominal",
+    "category_id": "discrete",
+    "category": "nominal",
+    "price": "continuous",
     "rating": "continous",
     "reviews": "discrete",
     "ratings": "discrete",

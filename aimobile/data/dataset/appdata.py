@@ -11,12 +11,13 @@
 # URL        : https://github.com/john-james-ai/aimobile                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Thursday June 1st 2023 11:16:17 am                                                  #
+# Modified   : Saturday June 24th 2023 01:56:30 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from functools import cached_property
+import dependency_injector
 from dependency_injector.wiring import Provide, inject
 
 import pandas as pd
