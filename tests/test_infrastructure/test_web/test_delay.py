@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.0                                                                               #
+# Project    : Enter Project Name in Workspace Settings                                            #
+# Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_web/test_delay.py                                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 7th 2023 01:21:31 am                                                     #
-# Modified   : Thursday June 1st 2023 11:16:00 am                                                  #
+# Modified   : Tuesday July 25th 2023 01:04:38 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 from time import sleep
 import numpy as np
 
-from aimobile.infrastructure.web.throttle import AThrottle
+from appstore.infrastructure.web.throttle import AThrottle
 
 
 # ------------------------------------------------------------------------------------------------ #

@@ -2,16 +2,16 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # AppDataProject    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.0                                                                               #
+# Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_project_repo.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 04:40:41 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:05 am                                                  #
+# Modified   : Tuesday July 25th 2023 01:04:35 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,7 @@ import pytest
 import logging
 import pandas as pd
 
-from aimobile.data.acquisition.appdata.project import AppDataProject
+from appstore.data.acquisition.appdata.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
 PROJECT = AppDataProject(

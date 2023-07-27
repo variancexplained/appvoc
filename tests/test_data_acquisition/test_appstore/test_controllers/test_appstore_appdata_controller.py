@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.0                                                                               #
+# Project    : Enter Project Name in Workspace Settings                                            #
+# Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_data_acquisition/test_appstore/test_controllers/test_appstore_appdata_controller.py #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 09:11:00 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:15:54 am                                                  #
+# Modified   : Tuesday July 25th 2023 01:04:26 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,8 +21,8 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.acquisition.project import Project
-from aimobile.data.acquisition.appdata.controller import AppDataController
+from appstore.data.acquisition.project import Project
+from appstore.data.acquisition.appdata.controller import AppDataController
 
 TERMS = ["social", "weather", "productivity"]
 # ------------------------------------------------------------------------------------------------ #

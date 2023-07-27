@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.0                                                                               #
+# Project    : Enter Project Name in Workspace Settings                                            #
+# Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_uow.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 21st 2023 04:25:43 pm                                                  #
-# Modified   : Thursday June 1st 2023 11:16:08 am                                                  #
+# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,8 +21,8 @@ from datetime import datetime
 import pytest
 import logging
 
-from aimobile.data.repo.base import Repo
-from aimobile.infrastructure.dal.base import Database
+from appstore.data.storage.base import Repo
+from appstore.infrastructure.database.base import Database
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

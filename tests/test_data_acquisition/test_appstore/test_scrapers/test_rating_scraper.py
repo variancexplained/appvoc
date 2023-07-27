@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.0                                                                               #
+# Project    : Enter Project Name in Workspace Settings                                            #
+# Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_rating_scraper.py     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/aimobile                                           #
+# URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 24th 2023 08:26:10 am                                                  #
-# Modified   : Thursday June 1st 2023 11:15:55 am                                                  #
+# Modified   : Tuesday July 25th 2023 01:04:27 pm                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,8 +23,8 @@ import logging
 
 import pandas as pd
 
-from aimobile.data.acquisition.rating.scraper import RatingScraper
-from aimobile.data.acquisition.rating.result import RatingResult
+from appstore.data.acquisition.rating.scraper import RatingScraper
+from appstore.data.acquisition.rating.result import RatingResult
 
 CATEGORIES = [6000, 6012, 6013]
 # ------------------------------------------------------------------------------------------------ #
