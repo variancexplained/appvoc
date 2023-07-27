@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Tuesday July 25th 2023 03:42:23 pm                                                  #
+# Modified   : Thursday July 27th 2023 06:04:53 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -131,7 +131,7 @@ class AppDataScraper(Scraper):
         if session.status_code != 200:
             msg = f"\nInvalid status code={session.status_code} encountered. Terminating at page {self._page}."
             valid = False
-            self._logger.error(msg)
+            self._logger.debug(msg)
             return valid
         else:
             try:
@@ -139,24 +139,24 @@ class AppDataScraper(Scraper):
             except AttributeError as e:
                 msg = f"\n{e}. Terminating at page {self._page}."
                 valid = False
-                self._logger.error(msg)
+                self._logger.debug(msg)
                 return valid
             except KeyError as e:
                 msg = f"\nInvalid response encountered. Response has no 'results' key.\n{e}\nTerminating at page {self._page}."
                 valid = False
-                self._logger.error(msg)
+                self._logger.debug(msg)
                 return valid
 
         if not isinstance(results, list):
             msg = f"\nInvalid response encountered. Result data type not expected. Terminating at page {self._page}."
             valid = False
-            self._logger.error(msg)
+            self._logger.debug(msg)
             return valid
 
         if len(results) == 0:
             valid = False
             msg = f"\nInvalid Response: Zero length result encountered. Terminating at page {self._page}."
-            self._logger.error(msg)
+            self._logger.debug(msg)
             return valid
 
         return valid

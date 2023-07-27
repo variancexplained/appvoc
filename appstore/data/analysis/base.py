@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:00:19 am                                                    #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Thursday July 27th 2023 06:49:33 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -120,9 +120,9 @@ class Dataset(ABC):
             columns (list): List of columns for which unique values are to be returned.
         """
         if columns is not None:
-            return self._df[columns].drop_duplicates().reset_index()
+            return self._df[columns].drop_duplicates().reset_index(drop=True)
         else:
-            return self._df.drop_duplicates().reset_index()
+            return self._df.drop_duplicates().reset_index(drop=True)
 
     # ------------------------------------------------------------------------------------------------ #
     def describe(

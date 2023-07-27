@@ -11,28 +11,30 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Thursday July 27th 2023 06:17:35 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Repository Implementation Module"""
-import os
-from datetime import datetime
 import logging
 
 import numpy as np
 import pandas as pd
 
-from appstore.data.storage import APPSTORE_APPDATA_DTYPES
-from appstore.data.storage.base import ARCHIVE, Repo
+from appstore.data.storage.base import Repo
 from appstore.infrastructure.database.base import Database
-from appstore.infrastructure.io.local import IOService
+from sqlalchemy.dialects.mysql import (
+    LONGTEXT,
+    BIGINT,
+    VARCHAR,
+    FLOAT,
+)
 
 # ------------------------------------------------------------------------------------------------ #
-#                                    PANDAS DATA TYPES                                             #
+#                                    DATAFRAME DATA TYPES                                          #
 # ------------------------------------------------------------------------------------------------ #
-DTYPES = {
+DATAFRAME_DTYPES = {
     "id": "string",
     "name": "string",
     "description": "string",
@@ -46,7 +48,24 @@ DTYPES = {
 }
 
 PARSE_DATES = {
-    "released": {"errors": "ignore", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    "released": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+}
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      DATABASE DATA TYPES                                         #
+# ------------------------------------------------------------------------------------------------ #
+DATABASE_DTYPES = {
+    "id": VARCHAR(24),
+    "name": VARCHAR(256),
+    "description": LONGTEXT,
+    "category_id": VARCHAR(8),
+    "category": VARCHAR(128),
+    "price": FLOAT,
+    "developer_id": VARCHAR(24),
+    "developer": VARCHAR(256),
+    "rating": FLOAT,
+    "ratings": BIGINT,
+    "released": VARCHAR(32),
 }
 
 
@@ -72,15 +91,30 @@ class AppDataRepo(Repo):
         """
         self._df = None
         self._database.insert(
-            data=data, tablename=self._name, dtype=APPSTORE_APPDATA_DTYPES, if_exists="append"
+            data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="append"
         )
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
 
+    def get(
+        self,
+        id: str,  # noqa
+        dtypes: dict = DATAFRAME_DTYPES,
+        parse_dates: dict = PARSE_DATES,  # noqa
+    ) -> pd.DataFrame:
+        """Returns data for the entity designated by the 'id' parameter.
+
+        Args:
+            id (Union[str,int]): The entity id.
+            dtypes (dict): Dictionary mapping of column to data types
+            parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
+        """
+        return super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
+
     def getall(self) -> pd.DataFrame:
         """Returns all data in the repository."""
 
-        return super().getall(parse_dates=PARSE_DATES)
+        return super().getall(dtypes=DATAFRAME_DTYPES, parse_dates=PARSE_DATES)
 
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.
@@ -90,34 +124,7 @@ class AppDataRepo(Repo):
         """
         self._df = None
         self._database.insert(
-            data=data, tablename=self._name, dtype=APPSTORE_APPDATA_DTYPES, if_exists="replace"
+            data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="replace"
         )
         msg = f"Replaced {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
-
-    def update(self, id: int, keys: list, values: list) -> None:
-        """Updates the keys with the values for the app designated by the id.
-
-        Args:
-            id (int): The app id
-            keys (str): A list of keys corresponding to columns on the database.
-            values (str): A list of values for the corresponding keys.
-        """
-        self._df = None
-        kv = ""
-        for i, key in enumerate(keys):
-            if i == 0:
-                kv += f"appdata.{key} = :{key}"
-            else:
-                kv += f", appdata.{key} = :{key}"
-
-        query = f"UPDATE appdata SET {kv} WHERE appdata.id = :id;"
-        params = {k: v for (k, v) in zip(keys, values)}
-        params["id"] = id
-        self._database.execute(query=query, params=params)
-
-    def export(self, directory: str = ARCHIVE["appstore"]) -> None:
-        os.makedirs(directory, exist_ok=True)
-        filename = "appdata_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
-        filepath = os.path.join(directory, filename)
-        IOService.write(filepath=filepath, data=self.getall())

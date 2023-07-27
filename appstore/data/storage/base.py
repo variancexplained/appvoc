@@ -4,26 +4,29 @@
 # Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/repo/base.py                                                         #
+# Filename   : /appstore/data/storage/base.py                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Wednesday July 26th 2023 09:59:33 am                                                #
+# Modified   : Thursday July 27th 2023 03:28:14 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Module provides basic database interface"""
 from __future__ import annotations
+import os
+from datetime import datetime
 from abc import ABC, abstractmethod
 from typing import Union
 
 import pandas as pd
 
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.io.local import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 ARCHIVE = {"appstore": "data/appstore/archive", "googleplay": "data/googleplay/archive"}
@@ -89,7 +92,7 @@ class Repo(ABC):
         return df.info()
 
     def get(
-        self, id: Union[str, int], dtypes: dict = None, parse_dates: dict = None
+        self, id: Union[str, int], dtypes: dict = None, parse_dates: dict = None  # noqa
     ) -> pd.DataFrame:
         """Returns data for the entity designated by the 'id' parameter.
 
@@ -134,7 +137,7 @@ class Repo(ABC):
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
 
-    def exists(self, id: Union[str, int] = "appdata") -> bool:
+    def exists(self, id: Union[str, int] = "appdata") -> bool:  # noqa
         """Assesses the existence of an entity in the database.
 
         Args:
@@ -144,7 +147,7 @@ class Repo(ABC):
         params = {"id": id}
         return self._database.exists(query=query, params=params)
 
-    def count(self, id: Union[str, int] = None) -> int:
+    def count(self, id: Union[str, int] = None) -> int:  # noqa
         """Counts the entities matching the criteria. Counts all entities if id is None.
 
         Args:
@@ -161,7 +164,7 @@ class Repo(ABC):
 
         return self._database.query(query=query, params=params).shape[0]
 
-    def delete(self, id: Union[str, int]) -> int:
+    def delete(self, id: Union[str, int]) -> int:  # noqa
         """Deletes the entity designated by the id.
 
         Args:
@@ -231,3 +234,10 @@ class Repo(ABC):
     def save(self) -> None:
         """Saves the repository to file located in the designated directory."""
         self._database.commit()
+
+    def archive(self) -> None:
+        directory = os.path.join(ARCHIVE["appstore"], self._name)
+        os.makedirs(directory, exist_ok=True)
+        filename = self._name + "_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
+        filepath = os.path.join(directory, filename)
+        IOService.write(filepath=filepath, data=self.getall())

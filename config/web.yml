@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 12:00:43 pm                                                #
-# Modified   : Wednesday July 26th 2023 07:48:18 pm                                                #
+# Modified   : Wednesday July 26th 2023 11:47:07 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -54,7 +54,7 @@ web:
       verbose: 100
 
   async_session:
-    concurrency: 10
+    concurrency: 100
     timeout: 30
     retries: 5
     athrottle:
@@ -66,7 +66,7 @@ web:
       cooldown_factor: 2
       cooldown_phase: 10
       tolerance: 0.8
-      rate: 5
+      rate: 10
       verbose: 100
 
 

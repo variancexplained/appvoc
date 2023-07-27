@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Wednesday July 26th 2023 01:28:56 pm                                                #
+# Modified   : Thursday July 27th 2023 03:38:42 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,7 +28,6 @@ from appstore.data.acquisition.base import Result
 @dataclass
 class RatingResult(Result):
     scraper: str
-    projects: List[pd.DataFrame]
     results: List[pd.DataFrame]
     total: int = 0
     success: int = 0
