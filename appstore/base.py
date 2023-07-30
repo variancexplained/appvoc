@@ -1,44 +1,57 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/acquisition/project.py                                               #
+# Python     : 3.10.12                                                                             #
+# Filename   : /appstore/base.py                                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Sunday April 30th 2023 03:47:36 pm                                                  #
-# Modified   : Tuesday July 25th 2023 01:05:09 pm                                                  #
+# Created    : Saturday July 29th 2023 09:33:09 pm                                                 #
+# Modified   : Sunday July 30th 2023 02:50:14 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
 from abc import ABC
-from dataclasses import dataclass
-import itertools
 from datetime import datetime
+from dataclasses import dataclass
+
 
 import pandas as pd
 
 # ------------------------------------------------------------------------------------------------ #
-IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None))
+IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None), datetime)
 SEQUENCE_TYPES: tuple = (list, tuple)
 # ------------------------------------------------------------------------------------------------ #
-counter = itertools.count()
+
+
 # ------------------------------------------------------------------------------------------------ #
-
-
 @dataclass
-class Project(ABC):
-    """Project"""
+class DTO(ABC):  # noqa
+    """Base Class for Data Transfer Objects"""
 
-    @classmethod
-    def from_df(cls, df: pd.DataFrame) -> Project:
-        """Takes a DataFrame and creates a Project object."""
+    def __repr__(self) -> str:
+        return "{}({})".format(
+            self.__class__.__name__,
+            ", ".join(
+                "{}={!r}".format(k, v)
+                for k, v in self.__dict__.items()
+                if type(v) in IMMUTABLE_TYPES
+            ),
+        )
+
+    def __str__(self) -> str:
+        s = ""
+        width = 32
+        for k, v in self.__dict__.items():
+            if type(v) in IMMUTABLE_TYPES:
+                s += f"\t{k.rjust(width,' ')} | {v}\n"
+        return s
 
     def as_dict(self) -> dict:
         """Returns a dictionary representation of the the Config object."""

@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Tuesday July 25th 2023 01:04:44 pm                                                  #
+# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -116,10 +116,10 @@ class SessionHandler:
             except Exception as e:  # pragma: no cover
                 self._sessions += 1
                 msg = f"A {type(e)} exception occurred. \n{e}\nRetrying with session #{self._sessions}."
-                self._logger.error(msg)
+                self._logger.exception(msg)
                 self._status_code = 999
 
-        self._logger.error("All retry and session limits have been reached. Exiting.")
+        self._logger.exception("All retry and session limits have been reached. Exiting.")
         return self
 
     def _setup(self, header: dict = None) -> None:

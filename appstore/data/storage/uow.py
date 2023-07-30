@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/storage/uow.py                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Saturday July 29th 2023 11:15:34 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -42,12 +42,14 @@ class UoW:
         rating_repo: Repo,
         review_repo: Repo,
         appdata_project_repo: Repo,
+        job_repo: Repo,
     ) -> None:
         self._database = database
         self._appdata_repo = appdata_repo
         self._review_repo = review_repo
         self._rating_repo = rating_repo
         self._appdata_project_repo = appdata_project_repo
+        self._job_repo = job_repo
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -70,6 +72,10 @@ class UoW:
     @property
     def appdata_project_repo(self) -> Repo:
         return self._appdata_project_repo(database=self._database)
+
+    @property
+    def job_repo(self) -> Repo:
+        return self._job_repo(database=self._database)
 
     def connect(self) -> None:
         """Connects the database"""

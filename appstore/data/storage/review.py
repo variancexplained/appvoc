@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Thursday July 27th 2023 06:01:24 am                                                 #
+# Modified   : Saturday July 29th 2023 08:21:18 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -130,10 +130,8 @@ class ReviewRepo(Repo):
     def summary(self) -> pd.DataFrame:
         """Summarizes the app data by category"""
         df = self.getall()
-        summary = df["category"].value_counts().reset_index()
-        df2 = df.groupby(by="category")["app_id"].nunique().to_frame()
-        df3 = df.groupby(by="category")["rating"].mean().to_frame()
-        summary = summary.join(df2, on="category")
-        summary = summary.join(df3, on="category")
-        summary.columns = ["Category", "Reviews", "Apps", "Average Rating"]
+        df2 = df.groupby(["category"])["id"].nunique().to_frame()
+        df3 = df.groupby(["category"])["app_id"].nunique().to_frame()
+        summary = df2.join(df3, on="category").reset_index()
+        summary.columns = ["Category", "Reviews", "Apps"]
         return summary

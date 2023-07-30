@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 12:01:04 pm                                                #
-# Modified   : Tuesday July 25th 2023 01:02:55 pm                                                  #
+# Modified   : Saturday July 29th 2023 06:04:16 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,8 +23,4 @@
 # ------------------------------------------------------------------------------------------------ #
 database:
   appstore:
-    name: appstore_dev
-  googleplay:
-    name: googleplay
-  test:
-    name: appstore_test
+    name: appstore

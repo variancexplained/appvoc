@@ -4,14 +4,14 @@
 # Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/infrastructure/dal/base.py                                                #
+# Filename   : /appstore/infrastructure/database/base.py                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Tuesday July 25th 2023 01:04:53 pm                                                  #
+# Modified   : Saturday July 29th 2023 03:27:17 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -63,10 +63,10 @@ class Database(ABC):
                 self.rollback()
             except SQLAlchemyError as e:
                 msg = f"Exception occurred.\nException type: {type[SQLAlchemyError]}\n{e}"
-                self._logger.error(msg)
+                self._logger.exception(msg)
                 raise
             msg = f"Exception occurred.\nException type: {exc_type}\n{exc_value}\n{traceback}"
-            self._logger.error(msg)
+            self._logger.exception(msg)
             raise
         else:
             self.commit()
@@ -106,8 +106,8 @@ class Database(ABC):
             self._connection.commit()
         except SQLAlchemyError as e:  # pragma: no cover
             msg = f"Exception occurred during connection commit.\n{e}"
-            self._logger.error(msg)
-            raise e
+            self._logger.exception(msg)
+            raise
 
     def rollback(self) -> None:
         """Restores the database to the state of the last commit."""
@@ -115,8 +115,8 @@ class Database(ABC):
             self._connection.rollback()
         except SQLAlchemyError as e:  # pragma: no cover
             msg = f"Exception occurred during connection rollback.\n{e}"
-            self._logger.error(msg)
-            raise e
+            self._logger.exception(msg)
+            raise
 
     def close(self) -> None:
         """Closes the database connection."""
@@ -126,8 +126,8 @@ class Database(ABC):
         except SQLAlchemyError as e:  # pragma: no cover
             self._is_connected = False
             msg = f"Database connection close failed.\nException type: {type[e]}\n{e}"
-            self._logger.error(msg)
-            raise e
+            self._logger.exception(msg)
+            raise
 
     def dispose(self) -> None:
         """Disposes the connection and releases resources."""
@@ -136,8 +136,8 @@ class Database(ABC):
             self._is_connected = False
         except SQLAlchemyError as e:  # pragma: no cover
             msg = f"Database connection close failed.\nException type: {type[e]}\n{e}"
-            self._logger.error(msg)
-            raise e
+            self._logger.exception(msg)
+            raise
 
     def insert(
         self, data: pd.DataFrame, tablename: str, dtype: dict = None, if_exists: str = "append"
@@ -164,27 +164,27 @@ class Database(ABC):
             )
         except SQLAlchemyError as e:  # pragma: no cover
             msg = f"Exception occurred during database insert.\nException type:{type[SQLAlchemyError]}\n{e}"
-            self._logger.error(msg)
-            raise e
+            self._logger.exception(msg)
+            raise
 
-    def update(self, query: str, params: tuple = None) -> int:
+    def update(self, query: str, params: dict = None) -> int:
         """Updates row(s) matching the query.
 
         Args:
             query (str): The SQL command
-            params (tuple): Parameters for the SQL command
+            params (dict): Parameters for the SQL command
 
         Returns (int): Number of rows updated.
         """
         result = self.execute(query=query, params=params)
         return result.rowcount
 
-    def delete(self, query: str, params: tuple = None) -> int:
+    def delete(self, query: str, params: dict = None) -> int:
         """Deletes row(s) matching the query.
 
         Args:
             query (str): The SQL command
-            params (tuple): Parameters for the SQL command
+            params (dict): Parameters for the SQL command
 
         Returns (int): Number of rows deleted.
         """
@@ -192,12 +192,12 @@ class Database(ABC):
         return result.rowcount
 
     def query(
-        self, query: str, params: tuple = (), dtypes: dict = None, parse_dates: dict = None
+        self, query: str, params: dict = (), dtypes: dict = None, parse_dates: dict = None
     ) -> pd.DataFrame:
         """Fetches the next row of a query result set, returning a single sequence, or None if no more data
         Args:
             query (str): The SQL command
-            params (tuple): Parameters for the SQL command
+            params (dict): Parameters for the SQL command
             dtypes (dict): Dictionary mapping of column to data types
             parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
 
@@ -212,23 +212,23 @@ class Database(ABC):
             parse_dates=parse_dates,
         )
 
-    def exists(self, query: str, params: tuple = None) -> bool:
+    def exists(self, query: str, params: dict = None) -> bool:
         """Returns True if a row matching the query and parameters exists. Returns False otherwise.
         Args:
             query (str): The SQL command
-            params (tuple): Parameters for the SQL command
+            params (dict): Parameters for the SQL command
 
         """
         result = self.execute(query=query, params=params)
         result = result.fetchall()
         return result[0][0] != 0
 
-    def execute(self, query: str, params: tuple = ()) -> list:
+    def execute(self, query: str, params: dict = ()) -> list:
         """Execute method reserved primarily for updates, and deletes, as opposed to queries returning data.
 
         Args:
             query (str): The SQL command
-            params (tuple): Parameters for the SQL command
+            params (dict): Parameters for the SQL command
 
         Returns (int): Number of rows updated or deleted.
 

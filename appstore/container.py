@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/container.py                                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Wednesday July 26th 2023 12:51:34 pm                                                #
+# Modified   : Sunday July 30th 2023 06:29:13 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -30,6 +30,7 @@ from appstore.data.storage.project import AppDataProjectRepo
 from appstore.data.storage.appdata import AppDataRepo
 from appstore.data.storage.review import ReviewRepo
 from appstore.data.storage.rating import RatingRepo
+from appstore.data.storage.job import RatingJobRepo, ReviewJobRepo
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.data.storage.uow import UoW
 from appstore.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
@@ -67,6 +68,8 @@ class PersistenceContainer(containers.DeclarativeContainer):
     appdata_repo = providers.Singleton(AppDataRepo, database=db)
     review_repo = providers.Singleton(ReviewRepo, database=db)
     rating_repo = providers.Singleton(RatingRepo, database=db)
+    rating_job_repo = providers.Singleton(RatingJobRepo, database=db)
+    review_job_repo = providers.Singleton(ReviewJobRepo, database=db)
 
     uow = providers.Singleton(
         UoW,
@@ -75,6 +78,8 @@ class PersistenceContainer(containers.DeclarativeContainer):
         review_repo=ReviewRepo,
         rating_repo=RatingRepo,
         appdata_project_repo=AppDataProjectRepo,
+        rating_job_repo=RatingJobRepo,
+        review_job_repo=ReviewJobRepo,
     )
 
 

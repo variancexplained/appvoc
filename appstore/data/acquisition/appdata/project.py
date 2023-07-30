@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/acquisition/appdata/project.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 03:47:36 pm                                                  #
-# Modified   : Tuesday July 25th 2023 01:05:02 pm                                                  #
+# Modified   : Sunday July 30th 2023 02:56:55 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,11 +22,10 @@ import itertools
 from datetime import datetime
 
 import pandas as pd
-from appstore.data.acquisition.project import Project
+from appstore.data.acquisition.base import Project
 
 # ------------------------------------------------------------------------------------------------ #
-IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None))
-SEQUENCE_TYPES: tuple = (list, tuple)
+
 # ------------------------------------------------------------------------------------------------ #
 counter = itertools.count()
 
@@ -46,23 +45,7 @@ class AppDataProject(Project):
     started: datetime = None
     updated: datetime = None
     completed: datetime = None
-    id: int = field(default_factory=lambda: next(counter))
-
-    def __str__(self) -> str:
-        width = 32
-        msg = f"{self.__class__.__name__}:\n:"
-        msg += f"\t{'Id:'.rjust(width,' ')} | {self.id}\n"
-        msg += f"\t{'Controller:'.rjust(width,' ')} | {self.controller}\n"
-        msg += f"\t{'Term:'.rjust(width,' ')} | {self.term}\n"
-        msg += f"\t{'Status:'.rjust(width,' ')} | {self.status}\n"
-        msg += f"\t{'Page Size:'.rjust(width,' ')} | {self.page_size}\n"
-        msg += f"\t{'Pages:'.rjust(width,' ')} | {self.pages}\n"
-        msg += f"\t{'V-Pages:'.rjust(width,' ')} | {self.vpages}\n"
-        msg += f"\t{'Apps:'.rjust(width,' ')} | {self.apps}\n"
-        msg += f"\t{'Started:'.rjust(width,' ')} | {self.started}\n"
-        msg += f"\t{'Updated:'.rjust(width,' ')} | {self.updated}\n"
-        msg += f"\t{'Started:'.rjust(width,' ')} | {self.completed}\n"
-        return msg
+    id: int = field(default_factory=lambda: next(counter))  # noqa
 
     def __len__(self):
         return 1
@@ -124,28 +107,3 @@ class AppDataProject(Project):
             updated=df["updated"][0],
             completed=df["completed"][0],
         )
-
-    def as_dict(self) -> dict:
-        """Returns a dictionary representation of the the Config object."""
-        return {k: self._export_config(v) for k, v in self.__dict__.items()}
-
-    @classmethod
-    def _export_config(cls, v):  # pragma: no cover
-        """Returns v with Configs converted to dicts, recursively."""
-        if isinstance(v, IMMUTABLE_TYPES):
-            return v
-        elif isinstance(v, SEQUENCE_TYPES):
-            return type(v)(map(cls._export_config, v))
-        elif isinstance(v, datetime):
-            return v
-        elif isinstance(v, dict):
-            return v
-        elif hasattr(v, "as_dict"):
-            return v.as_dict()
-        else:
-            """Else nothing. What do you want?"""
-
-    def as_df(self) -> pd.DataFrame:
-        """Returns the project in DataFrame format"""
-        d = self.as_dict()
-        return pd.DataFrame(data=d, index=[0])

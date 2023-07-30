@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Wednesday July 26th 2023 01:00:44 pm                                                #
+# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -128,7 +128,7 @@ class ASessionHandler:
                     msg = f"Exception type {type(e)} occurred.\n{e}\nExecuting retry # {retries}."
                     self._logger.exception(msg)
             msg = "Exhausted retries. Returning to calling environment."
-            self._logger.error(msg)
+            self._logger.exception(msg)
 
     def _get_proxy(self) -> dict:
         dns = os.getenv("WEBSHARE_DNS")

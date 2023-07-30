@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Wednesday July 26th 2023 09:59:26 am                                                #
+# Modified   : Saturday July 29th 2023 05:29:14 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import sqlalchemy
 import subprocess
 from time import sleep
 
-from appstore.infrastructure.database.base import Database, DBNAMES
+from appstore.infrastructure.database.base import Database
 
 # ------------------------------------------------------------------------------------------------ #
 START_SCRIPT_FILEPATH = "scripts/database/management/start.sh"
@@ -61,19 +61,21 @@ class MySQLDatabase(Database):
                     self._connection.execution_options(isolation_level="READ UNCOMMITTED")
                 self._is_connected = True
                 database_started = True
-                return self
+
             except SQLAlchemyError as e:  # pragma: no cover
                 self._is_connected = False
                 if not database_started:
                     msg = "Database is not started. Starting database..."
-                    self._logger.error(msg)
+                    self._logger.info(msg)
                     self._start_db()
                     database_started = True
                     sleep(3)
                 else:
                     msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
-                    self._logger.error(msg)
-                    raise e
+                    self._logger.exception(msg)
+                    raise
+            else:
+                return self
 
     def _get_connection_string(self) -> str:
         """Returns the connection string for the named database."""

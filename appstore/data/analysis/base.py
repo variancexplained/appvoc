@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:00:19 am                                                    #
-# Modified   : Thursday July 27th 2023 06:49:33 am                                                 #
+# Modified   : Thursday July 27th 2023 08:06:34 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -151,6 +151,10 @@ class Dataset(ABC):
                     .describe(include=include, exclude=exclude)
                     .T
                 )
+
+    def as_df(self) -> pd.DataFrame:
+        """Returns the dataset as a pandas dataframe"""
+        return self._df
 
     # ------------------------------------------------------------------------------------------------ #
     #                                    VISUALIZATION METHODS                                         #

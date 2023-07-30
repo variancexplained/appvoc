@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -72,7 +72,7 @@ class AppDataProjectRepo(Repo):
             return AppDataProject.from_df(result)
         else:
             msg = f"Exception. Multiple projects for {term}."
-            self._logger.error(msg)
+            self._logger.exception(msg)
             raise Exception(msg)
 
     def add(self, data: AppDataProject) -> None:

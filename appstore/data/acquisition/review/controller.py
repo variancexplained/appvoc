@@ -8,19 +8,17 @@
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Sunday July 30th 2023 03:42:06 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Scraper Controller Module"""
-import os
 import sys
 import logging
-from dotenv import load_dotenv
 import datetime
 
 import numpy as np
@@ -110,32 +108,20 @@ class ReviewController(Controller):
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def scrape(self, category_ids: str) -> None:
-        """Scrapes app data matching the search term from the target URL.
-
-        Args:
-            category_ids (str): Category id or a list of category ids from AppStoreCategories
-        """
-        load_dotenv()
-        status = os.getenv("APPSTORE_REVIEWS_SCRAPED")
-        if status in [True, "True", "true"]:
-            msg = "\n\nAppstore Review Scraped Status is Complete. Skipping App Store Review Scraping Operation."
-            self._logger.info(msg)
-        else:
-            self._scrape(category_ids=category_ids)
-
-        self._teardown()
-
     def summarize(self) -> pd.DataFrame:
         """Returns a DataFrame summarizing the data extracted"""
         return self._uow.review_repo.summarize()
 
-    def archive(self) -> None:
-        """Saves the repository to an archive"""
-        self._uow.review_repo.export()
+    def scrape(self) -> None:
+        """Entry point for scraping operation"""
+        if not super().is_locked():
+            self._scrape()
+        else:
+            msg = f"Running {self.__class__.__name__} is not authorized at this time."
+            self._logger.info(msg)
 
-    def _scrape(self, category_ids: str) -> None:
-        category_ids = [category_ids] if isinstance(category_ids, (str, int)) else category_ids
+    def _scrape(self) -> None:
+        """Entry point for scraping operation"""
 
         self._start_project(category_ids=category_ids)
 
@@ -162,12 +148,20 @@ class ReviewController(Controller):
             self._end_category()
 
         self._end_project()
+        self._teardown()
 
-    def _start_project(self, category_ids: list) -> None:
-        self._project_stats["categories"] = len(category_ids)
-        self._project_stats["started"] = datetime.datetime.now()
-        msg = f"\n\nController with {self._project_stats['categories']} categories started at {self._project_stats['started'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
+    def start(self) -> None:
+        jobs = self._uow.job_repo.get_by_controller(
+            controller=self.__class__.__name__, completed=False
+        )
+        msg = f"\n{self.__class__.__name__} started with {len(jobs)} jobs to complete"
         self._logger.info(msg)
+
+    def end(self) -> None:
+        msg = f"\n{self.__class__.__name__} has completed."
+        self._logger.info(msg)
+        self._logger.info(f"\nJob Status:\n{self._uow.job_repo.getall()}")
+        self._logger.info(f"\nRepo Summary:\n{self._uow.review_repo.summary}")
 
     def _end_project(self) -> None:
         self._project_stats["ended"] = datetime.datetime.now()
@@ -324,6 +318,5 @@ class ReviewController(Controller):
     def _announce_batch(self) -> None:
         msg = f"Category: {self._category_stats['category_id']}-{self._category_stats['category']}\
             \tApps: {self._category_stats['app_count']}\tReviews: {self._category_stats['reviews']}\
-            \tElapsed Time: {self._category_stats['duration']}\
-            \tRate: {self._project_stats['reviews_per_second']} reviews/second."
+            \tElapsed Time: {self._category_stats['duration']}"
         self._logger.info(msg)

@@ -1,5 +1,5 @@
 site_name: AI-Based Mobile Technology Opportunity Discovery
-repo_url: https://github.com/john-james-ai/aimobile
+repo_url: https://github.com/john-james-ai/appstore
 
 theme:
   name: material
@@ -33,4 +33,4 @@ plugins:
             show_source: true
             show_submodules: true
       watch:
-        - src/aimobile
+        - src/appstore

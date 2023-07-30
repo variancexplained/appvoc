@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 05:02:58 pm                                                 #
-# Modified   : Wednesday July 26th 2023 09:59:25 am                                                #
+# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -55,7 +55,7 @@ class SQLiteDatabase(Database):
         except SQLAlchemyError as e:  # pragma: no cover
             self._is_connected = False
             msg = f"Database connection failed.\nException type: {type[e]}\n{e}"
-            self._logger.error(msg)
+            self._logger.exception(msg)
             raise e
 
     def _get_connection_string(self) -> str:

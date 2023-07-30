@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/storage/base.py                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Thursday July 27th 2023 03:28:14 am                                                 #
+# Modified   : Saturday July 29th 2023 11:30:33 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ from appstore.infrastructure.database.base import Database
 from appstore.infrastructure.io.local import IOService
 
 # ------------------------------------------------------------------------------------------------ #
-ARCHIVE = {"appstore": "data/appstore/archive", "googleplay": "data/googleplay/archive"}
+ARCHIVE = "data/archive"
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -92,8 +92,11 @@ class Repo(ABC):
         return df.info()
 
     def get(
-        self, id: Union[str, int], dtypes: dict = None, parse_dates: dict = None  # noqa
-    ) -> pd.DataFrame:
+        self,
+        id: Union[str, int],
+        dtypes: dict = None,
+        parse_dates: dict = None,
+    ) -> pd.DataFrame:  # noqa
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
@@ -236,7 +239,7 @@ class Repo(ABC):
         self._database.commit()
 
     def archive(self) -> None:
-        directory = os.path.join(ARCHIVE["appstore"], self._name)
+        directory = os.path.join(ARCHIVE, self._name)
         os.makedirs(directory, exist_ok=True)
         filename = self._name + "_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
         filepath = os.path.join(directory, filename)

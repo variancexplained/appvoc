@@ -11,15 +11,12 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Wednesday July 26th 2023 05:47:21 pm                                                #
+# Modified   : Saturday July 29th 2023 06:13:01 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from functools import cached_property
-
 from dependency_injector.wiring import Provide, inject
-
 import pandas as pd
 
 from appstore.data.storage.base import Repo
@@ -72,12 +69,12 @@ class AppDataDataset(Dataset):
     def __init__(self, repo: Repo = Provide[AppstoreContainer.data.appdata_repo]) -> None:
         super().__init__(repo=repo)
 
-    @cached_property
+    @property
     def structure(self) -> pd.DataFrame:
         """Describes dataset structure, in terms of shape, size, and data type."""
         return super().structure
 
-    @cached_property
+    @property
     def dtypes(self) -> pd.DataFrame:
         """Summarizes the data types in the dataset."""
 
@@ -91,7 +88,7 @@ class AppDataDataset(Dataset):
         dtypes.columns = ["Data Type", "Number of Features"]
         return dtypes
 
-    @cached_property
+    @property
     def quality(self) -> pd.DataFrame:
         """Provides statistical information at the variable level."""
         quality = self._df.dtypes.to_frame().reset_index()
@@ -106,7 +103,7 @@ class AppDataDataset(Dataset):
         quality = round(quality, 2)
         return quality
 
-    @cached_property
+    @property
     def summary(self) -> None:
         """Summarizes the data"""
 

@@ -8,8 +8,8 @@
       "author_email": "john.james.ai.studio@gmail.com",
       "github_username": "john-james-ai",
       "project_name": "AI-Based Mobile Technology Opportunity Discovery",
-      "project_slug": "aimobile",
-      "package_name": "aimobile",
+      "project_slug": "appstore",
+      "package_name": "appstore",
       "project_short_description": "Voice of the Customer",
       "_template": "https://github.com/woltapp/wolt-python-package-cookiecutter"
     }

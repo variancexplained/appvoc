@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Thursday July 27th 2023 03:41:45 am                                                 #
+# Modified   : Friday July 28th 2023 04:51:01 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from appstore.data.acquisition.rating.result import RatingResult
+from appstore.data.acquisition.rating.result import RatingResult, RatingResponse
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.asession import ASessionHandler
@@ -77,13 +77,15 @@ class RatingScraper:
         """
 
         if self._batch == len(self._batches):
-            return False
+            raise StopAsyncIteration
 
         responses = await self._session.get(
             urls=self._batches[self._batch]["urls"], headers=self._header
         )
 
-        result = self._parse_responses(responses=responses)
+        result = RatingResult()  # result object that will contain the responses.
+
+        result = self._parse_responses(responses=responses, result=result)
         self._batch += 1
         return result
 
@@ -105,74 +107,23 @@ class RatingScraper:
                 urls = []
         return batches
 
-    def _parse_responses(self, responses: list) -> list:
+    def _parse_responses(self, responses: list, result: RatingResult) -> list:
         """Accepts responses in list format and returns a list of parsed responses.
 
         Args:
             responses (list): A list of Response objects.
+            result (RatingResult): Object to which the responses will be added.
 
         """
-        apps = self._batches[self._batch]["apps"]
+        batch = self._batches[self._batch]["apps"]
 
-        results = []
-        total = 0
-        success = 0
-        fail = 0
         for response in responses:
-            total += 1
-            result = {}
-
             try:
-                result["id"] = response["adamId"]
-                result["name"] = [app["name"] for app in apps if app["id"] == response["adamId"]][0]
-                result["category_id"] = [
-                    app["category_id"] for app in apps if app["id"] == response["adamId"]
-                ][0]
-                result["category"] = [
-                    app["category"] for app in apps if app["id"] == response["adamId"]
-                ][0]
-                result["rating"] = response["ratingAverage"]
-                result["reviews"] = response["totalNumberOfReviews"]
-                result["ratings"] = response["ratingCount"]
-                result["onestar"] = response["ratingCountList"][0]
-                result["twostar"] = response["ratingCountList"][1]
-                result["threestar"] = response["ratingCountList"][2]
-                result["fourstar"] = response["ratingCountList"][3]
-                result["fivestar"] = response["ratingCountList"][4]
-                result["status"] = True
-                success += 1
-                results.append(result)
-
+                if "adamId" in response:
+                    response = RatingResponse.create(batch=batch, response=response)
+                    result.add_response(response=response)
             except Exception as e:
-                result["id"] = response["adamId"]
-                result["name"] = [app["name"] for app in apps if app["id"] == response["adamId"]][0]
-                result["category_id"] = [
-                    app["category_id"] for app in apps if app["id"] == response["adamId"]
-                ][0]
-                result["category"] = [
-                    app["category"] for app in apps if app["id"] == response["adamId"]
-                ][0]
-                result["rating"] = 0
-                result["reviews"] = 0
-                result["ratings"] = 0
-                result["onestar"] = 0
-                result["twostar"] = 0
-                result["threestar"] = 0
-                result["fourstar"] = 0
-                result["fivestar"] = 0
-                result["status"] = False
-                fail += 1
-                results.append(result)
-
-                msg = f"\nInvalid response. Encountered {type(e)} exception.\n{e}\n{response}"
+                msg = f"\nInvalid response. Encountered {type(e)} exception.\n{e}\nResponse: {response}"
                 self._logger.debug(msg)
 
-        results = pd.DataFrame(data=results)
-        result = RatingResult(
-            scraper=self.__class__.__name__,
-            results=results,
-            total=total,
-            success=success,
-            fail=fail,
-        )
         return result

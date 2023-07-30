@@ -27,7 +27,7 @@ execute:
 # ================================================================================================ #
 latex:
   latex_documents:
-    targetname: aimobile.tex
+    targetname: appstore.tex
 
 # ================================================================================================ #
 #                                       BIBTEX                                                     #
@@ -65,7 +65,7 @@ launch_buttons:
 #                                    REPOSITORY                                                    #
 # ================================================================================================ #
 repository:
-  url: https://github.com/john-james-ai/aimobile # Online location of your book
+  url: https://github.com/john-james-ai/appstore # Online location of your book
   path_to_book: jbook # Optional path to your book, relative to the repository root
   branch: main # Which branch of the repository should be used when creating links (optional)
 

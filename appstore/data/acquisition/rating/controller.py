@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/acquisition/rating/controller.py                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Wednesday July 26th 2023 02:09:10 pm                                                #
+# Modified   : Sunday July 30th 2023 06:35:09 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,11 +25,13 @@ import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from appstore.data.acquisition import AppStoreCategories
+from appstore.data.acquisition.rating.job import RatingJobRun
 from appstore.data.acquisition.rating.scraper import RatingScraper
 from appstore.data.storage.uow import UoW
 from appstore.data.acquisition.rating.result import RatingResult
 from appstore.data.acquisition.base import Controller
 from appstore.container import AppstoreContainer
+from .job import RatingJobMonitor
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -50,65 +52,63 @@ class RatingController(Controller):
         self,
         scraper: type[RatingScraper] = RatingScraper,
         uow: UoW = Provide[AppstoreContainer.data.uow],
+        monitor: type[RatingJobMonitor] = RatingJobMonitor,
         batchsize: int = 100,
         verbose: int = 1000,
     ) -> None:
         super().__init__()
         self._uow = uow
         self._scraper = scraper
+        self._monitor = monitor
         self._batchsize = batchsize
         self._verbose = verbose
 
-        # Stats
-        self._categories = 0
-        self._apps = 0
-        self._started = None
-        self._duration = None
-        self._apps_per_second = 0
-        self._total = 0
-        self._success = 0
-        self._fail = 0
+        self._job = None
+        self._job_run = None
+
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    async def scrape(self, category_ids: str) -> None:
-        """Scrapes app data matching the search term from the target URL.
-
-        Args:
-            category_ids (str): Category id or a list of category ids from AppStoreCategories
-        """
-        if super().scrape():
-            await self._scrape(category_ids=category_ids)
+    async def scrape(self) -> None:
+        """Entry point for scraping operation"""
+        if not super().is_locked():
+            await self._scrape()
         else:
             msg = f"Running {self.__class__.__name__} is not authorized at this time."
             self._logger.info(msg)
 
-    def archive(self) -> None:
-        """Saves the repo to an archive"""
-        self._uow.rating_repo.export()
+    async def _scrape(self) -> None:
+        while True:
+            job = self._uow.job_repo.get_next(controller=self.__class__.__name__)
+            if job:
+                self.start_job_run(job=job)
+                job.start()
+                self.start_job_run(job=job)
+                apps = self._get_apps(category_id=job.category_id)
+                # Iterate over results returned from the scraper
+                async for result in self._scraper(apps=apps, batch_size=self._batchsize):
+                    if result.is_valid():
+                        await self._persist(result)
+                        self._update_stats(result)
+                        self._announce()
 
-    async def _scrape(self, category_ids: str) -> None:
-        self._setup()
+                job.end()
+                self._uow.job_repo.update(job=job)
+                self._uow.rating_repo.archive()
+            else:
+                self._teardown()
 
-        category_ids = [category_ids] if isinstance(category_ids, (str, int)) else category_ids
+    def start_job_run(self, job: Job) -> None:
+        """Starts the job and creates a job run."""
+        job.start()
+        job_run = RatingJobRun.create(job=job)
+        job_run.start_job_run()
 
-        for category_id in category_ids:
-            self._categories += 1
-            self._current_category_id = category_id
-            # Grab a dataframe containing apps for which rating data is to be obtained
-            apps = self._get_apps(category_id=category_id)
-            # Iterate over list of apps, returning a dictionary for each app in the category
-            async for result in self._scraper(apps=apps, batch_size=self._batchsize):
-                if not result:
-                    break
-                else:
-                    await self._persist(result)
-                    self._update_stats(result)
-                    self._announce()
-
-    def _setup(self) -> None:
-        self._started = datetime.datetime.now()
-        self._categories = 0
-        self._apps = 0
+    def _teardown(self) -> None:
+        msg = f"{self.__class__.__name__} has completed."
+        self._logger.info(msg)
+        jobs = self._uow.job_repo.get_by_controller(controller=self.__class__.__name__)
+        self._logger.info(f"Jobs\n{jobs}")
+        self._logger.info(f"Summary\n{self._uow.rating_repo.summary}")
 
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         """Obtains apps for the category, removing any apps for which ratings exist."""
@@ -138,7 +138,7 @@ class RatingController(Controller):
     async def _persist(self, result: RatingResult) -> None:
         try:
             await asyncio.gather(
-                self._uow.rating_repo.add(data=result.results),
+                self._uow.rating_repo.add(data=result.as_df()),
             )
             self._uow.save()
         except Exception:
@@ -146,7 +146,7 @@ class RatingController(Controller):
 
     def _update_stats(self, result: RatingResult) -> None:
         seconds = (datetime.datetime.now() - self._started).total_seconds()
-        self._apps += result.results.shape[0]
+        self._apps += result.success
         self._apps_per_second = round(self._apps / seconds, 2)
         self._duration = str(datetime.timedelta(seconds=seconds))
         self._total += result.total

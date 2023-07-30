@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "aimobile"
+name = "appstore"
 version = "0.0.1"
 description = "Voice of the Customer"
 authors = [
@@ -8,9 +8,9 @@ authors = [
 license = "MIT"
 readme = "README.md"
 
-documentation = "https://john-james-ai.github.io/aimobile"
-homepage = "https://john-james-ai.github.io/aimobile"
-repository = "https://github.com/john-james-ai/aimobile"
+documentation = "https://john-james-ai.github.io/appstore"
+homepage = "https://john-james-ai.github.io/appstore"
+repository = "https://github.com/john-james-ai/appstore"
 
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 packages = [
-    { include = "aimobile" }
+    { include = "appstore" }
 ]
 
 [tool.poetry.dependencies]
@@ -62,7 +62,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 profile = "black"
-src_paths = ["aimobile", "tests"]
+src_paths = ["appstore", "tests"]
 
 [tool.black]
 target-version = ["py37", "py38", "py39"]
@@ -70,7 +70,7 @@ include = '\.pyi?$'
 
 [tool.pytest.ini_options]
 addopts = """\
-    --cov aimobile \
+    --cov appstore \
     --cov tests \
     --cov-report term-missing \
     --no-cov-on-fail \

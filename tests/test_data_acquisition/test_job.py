@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /tests/test_data_acquisition/test_appstore/test_controllers/test_appstore_appdata_controller.py #
+# Python     : 3.10.12                                                                             #
+# Filename   : /tests/test_data_acquisition/test_job.py                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Sunday April 30th 2023 09:11:00 pm                                                  #
-# Modified   : Saturday July 29th 2023 07:16:49 pm                                                 #
+# Created    : Saturday July 29th 2023 09:19:19 pm                                                 #
+# Modified   : Sunday July 30th 2023 04:28:52 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,10 +21,9 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.acquisition.base import Project
-from appstore.data.acquisition.appdata.controller import AppDataController
+from appstore.data.acquisition.job import Job
 
-TERMS = ["social", "weather", "productivity"]
+
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -32,11 +31,10 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.ctrl
-@pytest.mark.appdata_ctrl
-class TestAppDataController:  # pragma: no cover
+@pytest.mark.job
+class TestJob:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, appdata_project, appdata_project_repo, caplog):
+    def test_from_df(self, job_df, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -48,8 +46,15 @@ class TestAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        appdata_project_repo.delete_all()
-        appdata_project_repo.add(appdata_project)
+        job = Job.from_df(df=job_df)
+        assert isinstance(job, Job)
+        assert job.id == job_df["id"][0]
+        assert job.controller == job_df["controller"][0]
+        assert job.category_id == job_df["category_id"][0]
+        assert job.category == job_df["category"][0]
+        assert isinstance(job.started, datetime)
+        assert isinstance(job.ended, datetime)
+        assert job.status == "not_started"
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -67,7 +72,7 @@ class TestAppDataController:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_new_project(self, appdata_project_repo, caplog):
+    def test_as_dict(self, job_df, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -79,13 +84,19 @@ class TestAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        ctrl = AppDataController(max_pages=5, max_results_per_page=5, backup_to_file=False)
-        ctrl.scrape(terms="social")
-        repo = appdata_project_repo
-        project = repo.get_project(controller="AppDataController", term="social")
-        assert isinstance(project, Project)
-        assert project.status == "complete"
-        logger.debug(project)
+        job = Job.from_df(df=job_df)
+        job_dict = job.as_dict()
+        assert isinstance(job_dict, dict)
+
+        assert job_dict["id"] == job_df["id"][0]
+        assert job_dict["controller"] == job_df["controller"][0]
+        assert job_dict["category_id"] == job_df["category_id"][0]
+        assert job_dict["category"] == job_df["category"][0]
+        assert isinstance(job_dict["started"], datetime)
+        assert isinstance(job_dict["updated"], datetime)
+        assert isinstance(job_dict["ended"], datetime)
+        assert isinstance(job_dict["status"], str)
+        assert job_dict["status"] == "not_started"
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -102,7 +113,7 @@ class TestAppDataController:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_existing_new_project(self, appdata_project_repo, caplog):
+    def test_start_end(self, job, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -114,13 +125,22 @@ class TestAppDataController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        ctrl = AppDataController(max_pages=5, max_results_per_page=5, backup_to_file=False)
-        ctrl.scrape(terms=TERMS)
-        repo = appdata_project_repo
-        for term in TERMS:
-            project = repo.get_project(controller="AppDataController", term=term)
-            assert isinstance(project, Project)
-            logger.debug(project)
+        assert job.status == "not_started"
+        assert job.started < datetime.strptime("2000-01-01", "%Y-%m-%d")
+        assert job.ended < datetime.strptime("2000-01-01", "%Y-%m-%d")
+        job.start()
+        started = job.started
+        assert job.status == "in_progress"
+        assert job.started > datetime.strptime("2000-01-01", "%Y-%m-%d")
+        assert job.ended < datetime.strptime("2000-01-01", "%Y-%m-%d")
+        job.start()
+        assert job.started == started
+        assert job.updated > job.started
+        job.end()
+        assert job.status == "completed"
+        assert job.started > datetime.strptime("2000-01-01", "%Y-%m-%d")
+        assert job.ended > datetime.strptime("2000-01-01", "%Y-%m-%d")
+
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

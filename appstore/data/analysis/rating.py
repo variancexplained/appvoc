@@ -11,13 +11,11 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Wednesday July 26th 2023 12:04:28 pm                                                #
+# Modified   : Saturday July 29th 2023 08:16:30 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from functools import cached_property
-
 from dependency_injector.wiring import Provide, inject
 import pandas as pd
 
@@ -31,7 +29,8 @@ DTYPES = [
     "Nominal",
     "Categorical",
     "Categorical",
-    "Interval",
+    "Continuous",
+    "Discrete",
     "Discrete",
     "Discrete",
     "Discrete",
@@ -54,12 +53,12 @@ class RatingDataset(Dataset):
     def __init__(self, repo: Repo = Provide[AppstoreContainer.data.rating_repo]) -> None:
         super().__init__(repo=repo)
 
-    @cached_property
+    @property
     def structure(self) -> pd.DataFrame:
         """Describes dataset structure, in terms of shape, size, and data type."""
         return super().structure
 
-    @cached_property
+    @property
     def dtypes(self) -> pd.DataFrame:
         """Summarizes the data types in the dataset."""
 
@@ -73,7 +72,7 @@ class RatingDataset(Dataset):
         dtypes.columns = ["Data Type", "Number of Features"]
         return dtypes
 
-    @cached_property
+    @property
     def quality(self) -> pd.DataFrame:
         """Provides statistical information at the variable level."""
         quality = self._df.dtypes.to_frame().reset_index()
@@ -88,7 +87,7 @@ class RatingDataset(Dataset):
         quality = round(quality, 2)
         return quality
 
-    @cached_property
+    @property
     def summary(self) -> None:
         """Summarizes the data"""
 

@@ -11,7 +11,7 @@
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 4th 2023 08:46:04 pm                                                  #
-# Modified   : Tuesday July 25th 2023 01:04:55 pm                                                  #
+# Modified   : Saturday July 29th 2023 04:39:08 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -159,7 +159,7 @@ class YamlIO(IO):  # pragma: no cover
             try:
                 return yaml.safe_load(f)
             except yaml.YAMLError as e:  # pragma: no cover
-                cls._logger.error(e)
+                cls._logger.exception(e)
                 raise IOError(e)
             finally:
                 f.close()
@@ -170,7 +170,7 @@ class YamlIO(IO):  # pragma: no cover
             try:
                 yaml.dump(data, f)
             except yaml.YAMLError as e:  # pragma: no cover
-                cls._logger.error(e)
+                cls._logger.exception(e)
                 raise IOError(e)
             finally:
                 f.close()
@@ -188,7 +188,7 @@ class PickleIO(IO):  # pragma: no cover
             try:
                 return pickle.load(f)
             except pickle.PickleError() as e:  # pragma: no cover
-                cls._logger.error(e)
+                cls._logger.exception(e)
                 raise IOError(e)
             finally:
                 f.close()
@@ -201,7 +201,7 @@ class PickleIO(IO):  # pragma: no cover
             try:
                 pickle.dump(data, f)
             except pickle.PickleError() as e:  # pragma: no cover
-                cls._logger.error(e)
+                cls._logger.exception(e)
                 raise (e)
             finally:
                 f.close()
@@ -266,13 +266,13 @@ class JsonIO(IO):  # pragma: no cover
                         json.dump(datum, json_file, indent=2)
                     else:
                         msg = "JsonIO supports dictionaries and lists of dictionaries only."
-                        cls._logger.error(msg)
+                        cls._logger.exception(msg)
                         raise ValueError(msg)
             else:
                 try:
                     json.dump(data, json_file, indent=2)
                 except json.JSONDecodeError as e:
-                    cls._logger.error(f"Exception of type {type(e)} occurred.\n{e}")
+                    cls._logger.exception(f"Exception of type {type(e)} occurred.\n{e}")
                     raise
 
 
@@ -316,9 +316,9 @@ class IOService:  # pragma: no cover
         except TypeError:
             if filepath is None:
                 msg = "Filepath is None"
-                cls._logger.error(msg)
+                cls._logger.exception(msg)
                 raise ValueError(msg)
         except KeyError:
             msg = "File type {} is not supported.".format(file_format)
-            cls._logger.error(msg)
+            cls._logger.exception(msg)
             raise ValueError(msg)
