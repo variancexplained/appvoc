@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:35:09 am                                                   #
+# Modified   : Sunday July 30th 2023 06:49:35 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,13 +25,12 @@ import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from appstore.data.acquisition import AppStoreCategories
-from appstore.data.acquisition.rating.job import RatingJobRun
+from appstore.data.acquisition.rating.job import RatingJob
 from appstore.data.acquisition.rating.scraper import RatingScraper
 from appstore.data.storage.uow import UoW
 from appstore.data.acquisition.rating.result import RatingResult
 from appstore.data.acquisition.base import Controller
 from appstore.container import AppstoreContainer
-from .job import RatingJobMonitor
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -52,14 +51,12 @@ class RatingController(Controller):
         self,
         scraper: type[RatingScraper] = RatingScraper,
         uow: UoW = Provide[AppstoreContainer.data.uow],
-        monitor: type[RatingJobMonitor] = RatingJobMonitor,
         batchsize: int = 100,
         verbose: int = 1000,
     ) -> None:
         super().__init__()
         self._uow = uow
         self._scraper = scraper
-        self._monitor = monitor
         self._batchsize = batchsize
         self._verbose = verbose
 
@@ -97,10 +94,10 @@ class RatingController(Controller):
             else:
                 self._teardown()
 
-    def start_job_run(self, job: Job) -> None:
+    def start_job_run(self, job: RatingJob) -> None:
         """Starts the job and creates a job run."""
         job.start()
-        job_run = RatingJobRun.create(job=job)
+        job_run = RatingJob.create(job=job)
         job_run.start_job_run()
 
     def _teardown(self) -> None:

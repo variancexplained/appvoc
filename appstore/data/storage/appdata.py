@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/storage/appdata.py                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Saturday July 29th 2023 07:50:09 pm                                                 #
+# Modified   : Sunday July 30th 2023 07:26:57 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -89,7 +89,6 @@ class AppDataRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="append"
         )
@@ -116,13 +115,23 @@ class AppDataRepo(Repo):
 
         return super().getall(dtypes=DATAFRAME_DTYPES, parse_dates=PARSE_DATES)
 
+    def get_ids(self, category_id: str) -> list:
+        """Returns the list of app ids for the category
+
+        Args:
+            category_id (str): The four character AppStore category identifier.
+        """
+        query = f"SELECT id FROM {self._name} WHERE category_id = :category_id;"
+        params = {"category_id": category_id}
+        ids = self._database.query(query=query, params=params)
+        return list(ids["id"].values)
+
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        self._df = None
         self._database.insert(
             data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="replace"
         )
@@ -132,12 +141,13 @@ class AppDataRepo(Repo):
     @property
     def summary(self) -> None:
         """Summarizes the data"""
+        df = self.getall()
 
-        summary = self._df["category"].value_counts().reset_index()
+        summary = df["category"].value_counts().reset_index()
         summary.columns = ["category", "Examples"]
-        df2 = self._df.groupby(by="category")["id"].nunique().to_frame()
-        df3 = self._df.groupby(by="category")["rating"].mean().to_frame()
-        df4 = self._df.groupby(by="category")["ratings"].sum().to_frame()
+        df2 = df.groupby(by="category")["id"].nunique().to_frame()
+        df3 = df.groupby(by="category")["rating"].mean().to_frame()
+        df4 = df.groupby(by="category")["ratings"].sum().to_frame()
 
         summary = summary.join(df2, on="category")
         summary = summary.join(df3, on="category")

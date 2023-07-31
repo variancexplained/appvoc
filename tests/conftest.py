@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Sunday July 30th 2023 04:22:48 am                                                   #
+# Modified   : Sunday July 30th 2023 09:51:18 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,13 +23,10 @@ import dotenv
 import subprocess
 from datetime import datetime
 
-import pandas as pd
-
 from appstore.infrastructure.io.local import IOService
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
-from appstore.data.acquisition.job import Job
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -44,29 +41,17 @@ APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"
 REVIEWS_FILEPATH = "tests/data/reviews.csv"
 RATINGS_FILEPATH = "tests/data/appstore_ratings.csv"
 RESET_SCRIPT = "tests/scripts/reset.sh"
-JOBS_FILEPATH = "tests/data/job/jobs.csv"
+RATING_JOBS_FILEPATH = "tests/data/job/rating.csv"
+REVIEW_JOBS_FILEPATH = "tests/data/job/review.csv"
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
 APPS = [
-    {"id": "297606951", "name": "amazon", "category_id": 6024, "category": "SHOPPING"},
-    {"id": "544007664", "name": "youtube", "category_id": 6005, "category": "SOCIAL_NETWORKING"},
-    {"id": "951937596", "name": "outlook", "category_id": 6000, "category": "BUSINESS"},
-    {"id": "422689480", "name": "gmail", "category_id": 6002, "category": "UTILITIES"},
-    {"id": "310633997", "name": "whatsapp", "category_id": 6002, "category": "UTILITIES"},
+    {"id": "297606951", "name": "amazon", "category_id": "6024", "category": "SHOPPING"},
+    {"id": "544007664", "name": "youtube", "category_id": "6005", "category": "SOCIAL_NETWORKING"},
+    {"id": "951937596", "name": "outlook", "category_id": "6000", "category": "BUSINESS"},
+    {"id": "422689480", "name": "gmail", "category_id": "6002", "category": "UTILITIES"},
+    {"id": "310633997", "name": "whatsapp", "category_id": "6002", "category": "UTILITIES"},
 ]
 EPOCH = "1970-01-01 00:00:00"
-JOB = {
-    "id": "test_job",
-    "controller": "TestController",
-    "category_id": "9999",
-    "category": "Some Category",
-    "started": datetime.strptime(EPOCH, "%Y-%m-%d %H:%M:%S"),
-    "updated": datetime.strptime(EPOCH, "%Y-%m-%d %H:%M:%S"),
-    "ended": datetime.strptime(EPOCH, "%Y-%m-%d %H:%M:%S"),
-    "elapsed": 0,
-    "runs": 0,
-    "status": "not_started",
-}
-
 collect_ignore = ["test_database*.*"]
 
 
@@ -156,38 +141,63 @@ def appdata_repo(container):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                          JOB_DF                                                  #
+#                                     RATING JOB_DF                                                #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def job_df():
-    return pd.DataFrame(JOB, index=[0])
+def rating_job_df(rating_jobs):
+    return rating_jobs.sample(1)
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                          JOB                                                     #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def job(job_df):
-    return Job.from_df(job_df)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                          JOBs                                                    #
+#                                     REVIEW JOB_DF                                                #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def jobs():
-    return IOService.read(JOBS_FILEPATH)
+def review_job_df(review_jobs):
+    return review_jobs.sample(1)
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                      JOB REPO ZERO                                               #
+#                                       RATING JOBS                                                #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def job_repo(container, jobs):
-    repo = container.data.job_repo()
+def rating_jobs():
+    return IOService.read(RATING_JOBS_FILEPATH)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                       REVIEW JOBS                                                #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_jobs():
+    return IOService.read(REVIEW_JOBS_FILEPATH)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  RATING JOB REPO ZERO                                            #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_job_repo(container):
+    repo = container.data.rating_job_repo()
+    df = repo.getall()
     repo.delete_all()
     repo.save()
-    return repo
+    yield repo
+    repo.add(df)
+    repo.save()
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  REVIEW JOB REPO ZERO                                            #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_job_repo(container):
+    repo = container.data.review_job_repo()
+    df = repo.getall()
+    repo.delete_all()
+    repo.save()
+    yield repo
+    repo.add(df)
+    repo.save()
 
 
 # ------------------------------------------------------------------------------------------------ #

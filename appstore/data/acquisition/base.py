@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:41:54 am                                                   #
+# Modified   : Sunday July 30th 2023 07:56:27 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,8 +28,28 @@ from typing import Any
 import pandas as pd
 
 from appstore.base import DTO
+from appstore.data.storage.base import Repo
+
 
 # ------------------------------------------------------------------------------------------------ #
+class Director(ABC):
+    """Iterator serving jobs to the controller."""
+
+    def __init__(self, repo: Repo) -> None:
+        self._repo = repo
+        self._job = None
+
+    @property
+    def job(self) -> Job:
+        return self._job
+
+    @abstractmethod
+    def __iter__(self) -> None:
+        """Initializes the job iterator"""
+
+    @abstractmethod
+    def __next__(self) -> Director:
+        """Sets the next job and returns an instance of this iterator"""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -51,12 +71,24 @@ class Controller(ABC):
         """Starts a job run"""
 
     @abstractmethod
-    def update_job(self, result: Result) -> None:
-        """Updates the job run's statistics."""
+    def end_job(self, job: Job) -> None:
+        """Ends a job run"""
 
     @abstractmethod
-    def end_job(self) -> None:
-        """Ends a job run"""
+    def save_results(self, result: Result) -> None:
+        """Saves results to Database"""
+
+
+# ------------------------------------------------------------------------------------------------ #
+@dataclass
+class Response(DTO):
+    """Encapsulates a parsed response from a Scraper object."""
+
+    status: bool = True
+
+    @abstractclassmethod
+    def create(cls, *args, **kwargs) -> Response:  # noqa
+        """Factory method that creates a parsed response object"""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -64,8 +96,23 @@ class Controller(ABC):
 class Result(ABC):
     """Interface for result objects which encapsulate HTTP responses."""
 
-    response: Any  # Can be a list of responses (async) or a single response.
-    success: Any  # Can be a count or a boolean
+    response: Any
+    # Can be a list of responses (async) or a single response.
+    requests: int = 0
+    # The number of requests in the result. For synchronous requests,
+    # this will be 1.
+    successes: int = 0
+    # The number of successful requests in the result.
+    fails: int = 0
+    # The number of failed requests in the result
+
+    @abstractmethod
+    def update_result(self, response: Any = None) -> None:
+        """Updates the response object as well as metadata associated with subclasses
+
+        Args:
+           response (Any): The parsed HTTP response.
+        """
 
     @abstractmethod
     def is_valid(self) -> bool:
@@ -108,12 +155,13 @@ class Job(DTO):
     controller: str
     category_id: str
     category: str
-    started: datetime
-    updated: datetime
-    ended: datetime
-    runs: int
-    elapsed: int
-    status: str
+    started: datetime = None
+    updated: datetime = None
+    ended: datetime = None
+    runs: int = None
+    job_elapsed: int = None
+    run_elapsed: int = None
+    status: str = None
 
     def __post_init__(self) -> None:
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
@@ -135,29 +183,30 @@ class Job(DTO):
     @abstractmethod
     def update(self, result: Result) -> None:
         """Updates the job's statistics."""
+        now = datetime.now()
+        elapsed = (now - self.started).total_seconds()
+        self.updated = now
+        self.job_elapsed += elapsed
+        self.run_elapsed = elapsed
+        self.total_requests += result.requests
+        self.successful_requests += result.success
+        self.failed_requests += result.failed
 
     def end(self) -> None:
         now = datetime.now()
+        elapsed = (self.ended - self.started).total_seconds()
         self.updated = now
         self.ended = now
-        self.elapsed += (self.ended - self.started).total_seconds()
+        self.job_elapsed += elapsed
+        self.run_elapsed = elapsed
         self.status = "completed"
         msg = f"\nJob Completed:\n{self.__str__}"
         self._logger.info(msg)
 
     @abstractclassmethod
-    def from_df(cls, df: pd.DataFrame) -> Job:
+    def from_df(cls, df: pd.DataFrame) -> Job:  # noqa
         """Creates a job from a Dataframe object."""
-        df = df.iloc[0]
-        return cls(
-            id=df["id"],  # noqa
-            controller=df["controller"],
-            category_id=df["category_id"],
-            category=df["category"],
-            started=df["started"],
-            updated=df["updated"],
-            ended=df["ended"],
-            runs=df["runs"],
-            elapsed=df["elapsed"],
-            status=df["status"],
-        )
+
+    @abstractmethod
+    def announce(self) -> None:
+        """Writes progress to the log"""

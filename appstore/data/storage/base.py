@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Saturday July 29th 2023 11:30:33 pm                                                 #
+# Modified   : Sunday July 30th 2023 06:20:04 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -238,8 +238,9 @@ class Repo(ABC):
         """Saves the repository to file located in the designated directory."""
         self._database.commit()
 
-    def archive(self) -> None:
-        directory = os.path.join(ARCHIVE, self._name)
+    def archive(self, directory: str = None) -> None:
+        if directory is None:
+            directory = os.path.join(ARCHIVE, self._name)
         os.makedirs(directory, exist_ok=True)
         filename = self._name + "_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
         filepath = os.path.join(directory, filename)

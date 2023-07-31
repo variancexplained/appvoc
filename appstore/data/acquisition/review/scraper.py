@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/acquisition/review/scraper.py                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Wednesday July 26th 2023 09:30:21 pm                                                #
+# Modified   : Sunday July 30th 2023 06:00:29 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,14 +20,13 @@
 from __future__ import annotations
 import sys
 import logging
-from datetime import datetime
 
 import requests
-import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.base import Scraper
+from appstore.data.acquisition.review.result import ReviewResponse, ReviewResult
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.session import SessionHandler
 
@@ -47,6 +46,7 @@ class ReviewScraper(Scraper):
         start: int = 0,
         max_results_per_page: int = 400,
         max_pages: int = sys.maxsize,
+        failure_threshold: int = Provide[AppstoreContainer.config.web.scraper.failures_threshold],
     ) -> None:
         self._app_id = app_id
         self._app_name = app_name
@@ -56,12 +56,12 @@ class ReviewScraper(Scraper):
         self._start = start
         self._max_results_per_page = max_results_per_page
         self._max_pages = max_pages
+        self._failure_threshold = failure_threshold
 
         self._page = 0
         self._result = None
-        self._results = 0
+        self._failure_count = 0
 
-        self._status_code = None
         self._start_index = start
         self._end_index = start + max_results_per_page
         self._url = None
@@ -70,50 +70,25 @@ class ReviewScraper(Scraper):
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
-    def url(self) -> int:
-        """Returns the current page processed."""
-        return self._url
-
-    @property
-    def status_code(self) -> int:
-        """Returns the length of the response"""
-        return self._status_code
-
-    @property
-    def page(self) -> int:
-        """Returns the current page processed."""
-        return self._page
-
-    @property
-    def results(self) -> int:
-        """Returns the number of results returned."""
-        return self._results
-
-    @property
-    def result(self) -> int:
-        """Returns result in DataFrame format."""
+    def result(self) -> ReviewResult:
         return self._result
 
     def __iter__(self) -> ReviewScraper:
         return self
 
-    def __next__(self) -> None:
+    def __next__(self) -> ReviewScraper:
         """Formats an itunes request for the next page"""
 
         if self._page < self._max_pages:
             self._setup_url()
 
-            session = self._session.get(url=self._url, header=self._header)
-
-            if self._is_valid_response(session):
-                response = self._parse_session(session)
-                self._result = self._parse_response(response)
+            response = self._session.get(url=self._url, header=self._header)
+            self._result = self._parse_response(response)
+            if self._failure_count < self._failure_threshold:
                 self._paginate_url()
                 return self
             else:
                 raise StopIteration
-        else:  # pragma: no cover
-            raise StopIteration
 
     def _setup_url(self) -> None:
         """Sets the header iterable and request url"""
@@ -121,27 +96,27 @@ class ReviewScraper(Scraper):
         self._logger.debug(msg)
         self._url = f"https://itunes.apple.com/WebObjects/MZStore.woa/wa/userReviewsRow?id={self._app_id}&displayable-kind=11&startIndex={self._start_index}&endIndex={self._end_index}&sort=1"
 
-    def _is_valid_response(self, session: SessionHandler) -> bool:
+    def _is_valid_response(self, response: requests.Response) -> bool:
         """Evaluates response status code and content"""
         valid = True
 
         try:
-            if session.status_code != 200:
-                msg = f"Invalid Response: Status code = {session.status_code}."
+            if response.headers.status_code != 200:
+                msg = f"Invalid Response: Status code = {response.headers.status_code}."
                 valid = False
-            elif not isinstance(session.response, requests.Response):
-                msg = f"Invalid Response: Response is of type {type(session.response)}."
+            elif not isinstance(response, requests.Response):
+                msg = f"Invalid Response: Response is of type {type(response)}."
                 valid = False
-            elif not isinstance(session.response.json(), dict):
-                msg = f"Invalid Response: Response json is of type {type(session.response.json())}."
+            elif not isinstance(response.json(), dict):
+                msg = f"Invalid Response: Response json is of type {type(response.json())}."
                 valid = False
-            elif "userReviewList" not in session.response.json():
+            elif "userReviewList" not in response.json():
                 msg = "Invalid Response: Response json has no 'userReviewList' key."
                 valid = False
-            elif not isinstance(session.response.json()["userReviewList"], list):
-                msg = f"Invalid Response: Response json 'userReviewList' is of type {type(session.response.json()['userReviewList'])}, not a list."
+            elif not isinstance(response.json()["userReviewList"], list):
+                msg = f"Invalid Response: Response json 'userReviewList' is of type {type(response.json()['userReviewList'])}, not a list."
                 valid = False
-            elif len(session.response.json()["userReviewList"]) == 0:
+            elif len(response.json()["userReviewList"]) == 0:
                 msg = "Invalid Response: Response json 'userReviewList' has zero length."
                 valid = False
 
@@ -153,46 +128,27 @@ class ReviewScraper(Scraper):
             self._logger.debug(msg)
         return valid
 
-    def _parse_response(self, response: requests.Response) -> pd.DataFrame:
-        """Accepts a requests Response object and returns a DataFrame
+    def _parse_response(self, response: requests.Response) -> ReviewResult:
+        review_result = ReviewResult()
 
-        Args:
-            response (requests.Response): A requests Response object.
+        if self._is_valid_response(response=response):
+            self._failure_count = 0
 
-        """
-        result_list = []
-        try:
-            results = response.json()["userReviewList"]
-
-            for result in results:
-                review = {}
-                review["id"] = result["userReviewId"]
-                review["app_id"] = self._app_id
-                review["app_name"] = self._app_name
-                review["category_id"] = self._category_id
-                review["category"] = self._category
-                review["author"] = result["name"]
-                review["rating"] = float(result["rating"])
-                review["title"] = result["title"]
-                review["content"] = result["body"]
-                review["vote_sum"] = int(result["voteSum"])
-                review["vote_count"] = int(result["voteCount"])
-                review["date"] = datetime.strptime(result["date"], "%Y-%m-%dT%H:%M:%f%z")
-                result_list.append(review)
-
-            df = pd.DataFrame(data=result_list)
-            self._results = df.shape[0]
-
-        except requests.exceptions.JSONDecodeError:  # pragma: no cover
-            return pd.DataFrame()
-
+            for result in response.json()["userReviewList"]:
+                review_response = ReviewResponse.create(
+                    app_id=self._app_id,
+                    app_name=self._app_name,
+                    category_id=self._category_id,
+                    category=self._category,
+                    response=result,
+                )
+                review_result.update_result(response=review_response)
         else:
-            return df
+            self._failure_count += 1
+            review_result.requests += 1
+            review_result.fails += 1
 
-    def _parse_session(self, session: SessionHandler) -> requests.Response:
-        """Extracts data from the sesion object"""
-        self._status_code = int(session.response.status_code)
-        return session.response
+        return review_result
 
     def _paginate_url(self) -> None:
         self._page += 1

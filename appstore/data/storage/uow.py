@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Saturday July 29th 2023 11:15:34 pm                                                 #
+# Modified   : Sunday July 30th 2023 08:06:05 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -42,14 +42,16 @@ class UoW:
         rating_repo: Repo,
         review_repo: Repo,
         appdata_project_repo: Repo,
-        job_repo: Repo,
+        rating_job_repo: Repo,
+        review_job_repo: Repo,
     ) -> None:
         self._database = database
         self._appdata_repo = appdata_repo
         self._review_repo = review_repo
         self._rating_repo = rating_repo
         self._appdata_project_repo = appdata_project_repo
-        self._job_repo = job_repo
+        self._rating_job_repo = rating_job_repo
+        self._review_job_repo = review_job_repo
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -74,8 +76,12 @@ class UoW:
         return self._appdata_project_repo(database=self._database)
 
     @property
-    def job_repo(self) -> Repo:
-        return self._job_repo(database=self._database)
+    def rating_job_repo(self) -> Repo:
+        return self._rating_job_repo(database=self._database)
+
+    @property
+    def review_job_repo(self) -> Repo:
+        return self._review_job_repo(database=self._database)
 
     def connect(self) -> None:
         """Connects the database"""

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Fileapp_name   : /appstore/scraper/appstore/http/review.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Friday July 28th 2023 04:51:01 pm                                                   #
+# Modified   : Sunday July 30th 2023 01:24:49 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -121,7 +121,7 @@ class RatingScraper:
             try:
                 if "adamId" in response:
                     response = RatingResponse.create(batch=batch, response=response)
-                    result.add_response(response=response)
+                    result.update_result(response=response)
             except Exception as e:
                 msg = f"\nInvalid response. Encountered {type(e)} exception.\n{e}\nResponse: {response}"
                 self._logger.debug(msg)

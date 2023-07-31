@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appstore/data/acquisition/rating/job.py                                            #
+# Filename   : /appstore/data/acquisition/review/job.py                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 02:36:49 am                                                   #
-# Modified   : Sunday July 30th 2023 12:40:27 pm                                                   #
+# Modified   : Sunday July 30th 2023 07:53:33 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,14 +20,14 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from appstore.data.acquisition.rating.result import RatingResult
+from appstore.data.acquisition.review.result import ReviewResult
 from appstore.data.acquisition.base import Job
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class RatingJob(Job):
-    """Rating Job object
+class ReviewJob(Job):
+    """Review Job object
 
     Inherits the following from the base class:
         id: str  # noqa
@@ -45,15 +45,22 @@ class RatingJob(Job):
 
     apps: int = None
     apps_per_second: float = None
+    reviews: int = None
+    reviews_per_second: float = None
     total_requests: int = None
     successful_requests: int = None
     failed_requests: int = None
 
-    def update(self, result: RatingResult) -> None:
+    def update(self, result: ReviewResult) -> None:
         """Adds result metadata"""
         super().update(result=result)
         self.apps += result.success
         self.apps_per_second = round(self.apps / self.run_elapsed, 2)
+        self.reviews += result.reviews
+        self.reviews_per_second = round(self.reviews / self.run_elapsed, 2)
+        self.total_requests += result.requests
+        self.successful_requests += result.successes
+        self.failed_requests += result.fails
 
     def announce(self) -> None:
         """Writes progress to the log"""
@@ -76,6 +83,8 @@ class RatingJob(Job):
             run_elapsed=df["run_elapsed"],
             apps=df["apps"],
             apps_per_second=df["apps_per_second"],
+            reviews=df["reviews"],
+            reviews_per_second=df["reviews_per_second"],
             total_requests=df["total_requests"],
             successful_requests=df["successful_requests"],
             failed_requests=df["failed_requests"],

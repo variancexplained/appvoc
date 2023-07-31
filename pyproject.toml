@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "appstore"
-version = "0.0.1"
-description = "Voice of the Customer"
+version = "0.1.1"
+description = "Appstore Rating and Review Analysis"
 authors = [
     "John James <john.james.ai.studio@gmail.com>",
 ]

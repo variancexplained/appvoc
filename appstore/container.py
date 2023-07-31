@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:29:13 am                                                   #
+# Modified   : Sunday July 30th 2023 06:50:04 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,6 +22,8 @@ import logging.config  # pragma: no cover
 from dependency_injector import containers, providers
 from urllib3.util import Retry
 
+from appstore.data.acquisition.rating.director import RatingDirector
+from appstore.data.acquisition.review.director import ReviewDirector
 from appstore.infrastructure.io.local import IOService
 from appstore.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appstore.infrastructure.web.throttle import LatencyThrottle, AThrottle
@@ -81,6 +83,17 @@ class PersistenceContainer(containers.DeclarativeContainer):
         rating_job_repo=RatingJobRepo,
         review_job_repo=ReviewJobRepo,
     )
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    DIRECTOR CONTAINER                                            #
+# ------------------------------------------------------------------------------------------------ #
+class DirectorContainer(containers.DeclarativeContainer):
+    rating_job_repo = providers.Dependency()
+    review_job_repo = providers.Dependency()
+
+    rating = providers.Singleton(RatingDirector, repo=rating_job_repo)
+    review = providers.Singleton(ReviewDirector, repo=review_job_repo)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -164,6 +177,12 @@ class AppstoreContainer(containers.DeclarativeContainer):
     io = providers.Container(IOContainer)
 
     web = providers.Container(WebSessionContainer, config=config)
+
+    director = providers.Container(
+        DirectorContainer,
+        rating_job_repo=data.rating_job_repo,
+        review_job_repo=data.review_job_repo,
+    )
 
 
 # ------------------------------------------------------------------------------------------------ #

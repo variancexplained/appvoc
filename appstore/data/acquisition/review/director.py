@@ -3,31 +3,39 @@
 # ================================================================================================ #
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/acquisition/appdata/result.py                                        #
+# Python     : 3.10.12                                                                             #
+# Filename   : /appstore/data/acquisition/review/director.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:48:25 pm                                                   #
+# Created    : Sunday July 30th 2023 05:32:24 pm                                                   #
+# Modified   : Sunday July 30th 2023 08:35:22 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Defines the Result Object for AppData Requests"""
-from dataclasses import dataclass
-import pandas as pd
-
-from appstore.data.acquisition.base import Result
+from __future__ import annotations
+from appstore.data.acquisition.base import Director
+from appstore.data.storage.job import ReviewJobRepo
 
 
 # ------------------------------------------------------------------------------------------------ #
-@dataclass
-class AppDataResult(Result):
-    page: int = 0  # The result page
-    pages: int = 0  # The number of pages cumulatively processed up to this result
-    size: int = 0  # Size of result in bytes
-    results: int = 0  # The number of records returned
-    content: pd.DataFrame = None  # The content of the response.
+class ReviewDirector(Director):
+    """Iterator serving jobs to the controller."""
+
+    def __init__(self, repo: ReviewJobRepo) -> None:
+        super().__init__(repo=repo)
+
+    def __iter__(self) -> ReviewDirector:
+        """Initializes the job iterator"""
+        return self
+
+    def __next__(self) -> ReviewDirector:
+        """Sets the next job and returns an instance of this iterator"""
+        job = self._repo.next()
+        if job:
+            return self
+        else:
+            raise StopIteration
