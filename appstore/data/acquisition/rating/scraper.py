@@ -11,19 +11,21 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Sunday July 30th 2023 01:24:49 pm                                                   #
+# Modified   : Monday July 31st 2023 05:44:21 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Review Request Module"""
 from __future__ import annotations
+import sys
 import logging
+import requests
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from appstore.data.acquisition.rating.result import RatingResult, RatingResponse
+from appstore.data.acquisition.rating.result import RatingResult
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.asession import ASessionHandler
@@ -59,7 +61,6 @@ class RatingScraper:
         self._batch = 0
         self._batches = []
 
-        self._invalid_responses = 0
         self._url = None
         self._header = STOREFRONT["headers"]
 
@@ -107,8 +108,8 @@ class RatingScraper:
                 urls = []
         return batches
 
-    def _parse_responses(self, responses: list, result: RatingResult) -> list:
-        """Accepts responses in list format and returns a list of parsed responses.
+    def _parse_responses(self, responses: list, result: RatingResult) -> RatingResult:
+        """Accepts responses in list format and returns a RatingResult object.
 
         Args:
             responses (list): A list of Response objects.
@@ -117,13 +118,51 @@ class RatingScraper:
         """
         batch = self._batches[self._batch]["apps"]
 
-        for response in responses:
-            try:
-                if "adamId" in response:
-                    response = RatingResponse.create(batch=batch, response=response)
-                    result.update_result(response=response)
-            except Exception as e:
-                msg = f"\nInvalid response. Encountered {type(e)} exception.\n{e}\nResponse: {response}"
-                self._logger.debug(msg)
+        results = []
 
+        result.total_requests = len(batch)
+        result.status = True  # Default
+
+        try:
+            for response in responses:
+                if self._is_valid(response):
+                    id = str(response["adamId"])  # noqa
+                    page = {}
+                    page["id"] = [app["id"] for app in batch if app["id"] == id][0]
+                    page["name"] = [app["name"] for app in batch if app["id"] == id][0]
+                    page["category_id"] = [
+                        str(app["category_id"]) for app in batch if app["id"] == id
+                    ][0]
+                    page["category"] = [app["category"] for app in batch if app["id"] == id][0]
+                    page["rating"] = response["ratingAverage"]
+                    page["reviews"] = response["totalNumberOfReviews"]
+                    page["ratings"] = response["ratingCount"]
+                    page["onestar"] = response["ratingCountList"][0]
+                    page["twostar"] = response["ratingCountList"][1]
+                    page["threestar"] = response["ratingCountList"][2]
+                    page["fourstar"] = response["ratingCountList"][3]
+                    page["fivestar"] = response["ratingCountList"][4]
+                    page["status"] = True
+                    results.append(page)
+
+                    result.successful_requests += 1
+                    result.apps += 1
+                    result.size += sys.getsizeof(page)
+                else:
+                    result.failed_requests += 1
+
+            result.response = results
+        except Exception as e:  # pragma: no cover
+            msg = f"Exception of type {type(e)} occurred.\n{e}."
+            self._logger.exception(msg)
+            result.status = False
+        else:  # pragma: no cover
+            result.status = False
         return result
+
+    def _is_valid(self, response: requests.Response) -> bool:
+        """Validates an HTTP response page"""
+        keys = ["adamId", "ratingAverage", "totalNumberOfReviews", "ratingCount", "ratingCountList"]
+        valid = response.status_code == 200
+        if valid:
+            return sum([1 for key in response.json() for key in keys]) == len(keys)

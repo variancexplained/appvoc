@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Sunday July 30th 2023 05:15:33 pm                                                   #
+# Modified   : Monday July 31st 2023 01:09:30 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -106,7 +106,7 @@ class ReviewResult(Result):
     successes: int = 0
     fails: int = 0
 
-    def update_result(self, response: ReviewResponse) -> None:
+    def add_response(self, response: ReviewResponse) -> None:
         """Adds a response to the result object
 
         Args:

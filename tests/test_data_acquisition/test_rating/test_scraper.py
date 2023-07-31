@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_rating_scraper.py     #
+# Python     : 3.10.12                                                                             #
+# Filename   : /tests/test_data_acquisition/test_rating/test_scraper.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday April 24th 2023 08:26:10 am                                                  #
-# Modified   : Tuesday July 25th 2023 01:04:27 pm                                                  #
+# Created    : Monday July 31st 2023 02:04:35 am                                                   #
+# Modified   : Monday July 31st 2023 02:58:32 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,12 +21,9 @@ from datetime import datetime
 import pytest
 import logging
 
-import pandas as pd
-
 from appstore.data.acquisition.rating.scraper import RatingScraper
-from appstore.data.acquisition.rating.result import RatingResult
 
-CATEGORIES = [6000, 6012, 6013]
+
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
@@ -34,11 +31,12 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.scraper
+@pytest.mark.rating
 @pytest.mark.rating_scraper
+@pytest.mark.asyncio
 class TestRatingScraper:  # pragma: no cover
     # ============================================================================================ #
-    def test_scraper(self, uow, caplog):
+    async def test_setup(self, container, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -50,21 +48,17 @@ class TestRatingScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = uow.appdata_repo
-        apps = repo.getall()
+        repo = appdata_repo
+        df = repo.sample(10)
 
-        projects = pd.DataFrame()
-        results = pd.DataFrame()
+        async for result in RatingScraper(apps=df, batch_size=5):
+            assert isinstance(result.response, list)
+            assert result.apps == 5
+            assert isinstance(result.size, int)
+            assert result.status is True
+            logger.debug(result.as_df())
+            logger.debug(result)
 
-        for result in RatingScraper(apps=apps):
-            assert isinstance(result, RatingResult)
-            assert isinstance(result.projects, pd.DataFrame)
-            assert isinstance(result.results, pd.DataFrame)
-            # assert result.projects.shape[0] == result.results.shape[0]
-            projects = pd.concat([projects, result.projects], axis=0)
-            results = pd.concat([results, result.results], axis=0)
-        logger.debug(f"\nProjects:\n{projects}")
-        logger.debug(f"\nResults:\n{results}")
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Sunday July 30th 2023 09:51:18 pm                                                   #
+# Modified   : Monday July 31st 2023 02:04:18 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,6 +27,7 @@ from appstore.infrastructure.io.local import IOService
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
+from tests.data.rating.response import responses, batch
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -44,6 +45,7 @@ RESET_SCRIPT = "tests/scripts/reset.sh"
 RATING_JOBS_FILEPATH = "tests/data/job/rating.csv"
 REVIEW_JOBS_FILEPATH = "tests/data/job/review.csv"
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
+
 APPS = [
     {"id": "297606951", "name": "amazon", "category_id": "6024", "category": "SHOPPING"},
     {"id": "544007664", "name": "youtube", "category_id": "6005", "category": "SOCIAL_NETWORKING"},
@@ -133,11 +135,38 @@ def appdata():
 #                                    APPDATA REPO ZERO                                             #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata_repo(container):
+def appdata_repo_zero(container):
     repo = container.data.appdata_repo()
+    df = repo.getall()
     repo.delete_all()
     repo.save()
-    return repo
+    yield repo
+    repo.add(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    APPDATA REPO ZERO                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def appdata_repo(container):
+    repo = container.data.appdata_repo()
+    yield repo
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      RATING RESPONSE                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_response():
+    return responses
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      RATING BATCH                                                #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_batch():
+    return batch
 
 
 # ------------------------------------------------------------------------------------------------ #

@@ -11,13 +11,12 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Sunday July 30th 2023 03:25:00 pm                                                   #
+# Modified   : Monday July 31st 2023 05:45:41 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
-from datetime import datetime
 import logging
 from dotenv import load_dotenv
 
@@ -26,6 +25,7 @@ import requests
 from appstore.infrastructure.web.throttle import LatencyThrottle
 from appstore.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appstore.infrastructure.web.headers import BrowserHeader
+from appstore.infrastructure.web.response import response_agent
 
 load_dotenv()
 
@@ -76,14 +76,11 @@ class SessionHandler:
             self._setup(header=header)
 
             try:
-                response = self._session.get(
-                    url=url,
-                    headers=self._header,
-                    params=params,
-                    proxies=self._proxy,
+                response = self.make_request(
+                    url=url, headers=self._header, params=params, proxies=self._proxy
                 )
-                self._teardown()
-                self._throttle.delay(latency=self._latency, wait=True)
+                latency_seconds = response.latency / 1000
+                self._throttle.delay(latency=latency_seconds, wait=True)
 
             except Exception as e:  # pragma: no cover
                 self._sessions += 1
@@ -109,13 +106,16 @@ class SessionHandler:
         # Set / reset the response
         self._response = None
 
-        # Capture the time to measure latency
-        self._start = datetime.now()
-
-    def _teardown(self) -> None:
-        """Conducts post-request housekeeping"""
-        self._end = datetime.now()
-        self._latency = (self._end - self._start).total_seconds()
+    @response_agent
+    def make_request(
+        self, url: str, headers: dict, params: dict, proxies: dict
+    ) -> requests.Response:
+        return self._session.get(
+            url=url,
+            headers=headers,
+            params=params,
+            proxies=proxies,
+        )
 
     def _get_proxy(self) -> dict:
         """Returns proxy servers"""

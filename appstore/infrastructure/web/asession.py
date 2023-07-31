@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/infrastructure/web/asession.py                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
+# Modified   : Monday July 31st 2023 05:35:24 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -30,6 +30,7 @@ import aiohttp
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.infrastructure.web.headers import BrowserHeader
 from appstore.infrastructure.web.throttle import AThrottle
+from appstore.infrastructure.web.response import Response
 
 load_dotenv()
 
@@ -121,7 +122,18 @@ class ASessionHandler:
                     async with client.get(url, proxy=proxy, ssl=False) as response:
                         self._throttle.stop()
                         self._throttle.delay()
-                        return await response.json()
+                        size = response.headers["content-length"]
+                        latency_seconds = self._throttle.latency
+                        latency = latency_seconds * 1000
+                        throughput = size / latency_seconds
+                        r = Response(
+                            response=response,
+                            status_code=response.status_code,
+                            size=size,
+                            latency=latency,
+                            throughput=throughput,
+                        )
+                        return await r
 
                 except Exception as e:
                     retries += 1

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Sunday July 30th 2023 07:56:27 pm                                                   #
+# Modified   : Monday July 31st 2023 02:41:10 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -98,25 +98,6 @@ class Result(ABC):
 
     response: Any
     # Can be a list of responses (async) or a single response.
-    requests: int = 0
-    # The number of requests in the result. For synchronous requests,
-    # this will be 1.
-    successes: int = 0
-    # The number of successful requests in the result.
-    fails: int = 0
-    # The number of failed requests in the result
-
-    @abstractmethod
-    def update_result(self, response: Any = None) -> None:
-        """Updates the response object as well as metadata associated with subclasses
-
-        Args:
-           response (Any): The parsed HTTP response.
-        """
-
-    @abstractmethod
-    def is_valid(self) -> bool:
-        """Returns the validity of the result as a boolean."""
 
     @abstractmethod
     def as_df(self) -> bool:

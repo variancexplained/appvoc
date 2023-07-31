@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Sunday July 30th 2023 06:20:04 pm                                                   #
+# Modified   : Sunday July 30th 2023 11:38:05 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -84,7 +84,7 @@ class Repo(ABC):
             random_state (int): Seed for pseudo random generation.
         """
         df = self.getall()
-        return df.sample(n=n, frac=frac).T
+        return df.sample(n=n, frac=frac)
 
     def info(self) -> pd.DataFrame:
         """Wrapper for pandas info method"""

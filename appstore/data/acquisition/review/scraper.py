@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:00:29 pm                                                   #
+# Modified   : Monday July 31st 2023 01:09:30 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -142,7 +142,7 @@ class ReviewScraper(Scraper):
                     category=self._category,
                     response=result,
                 )
-                review_result.update_result(response=review_response)
+                review_result.add_response(response=review_response)
         else:
             self._failure_count += 1
             review_result.requests += 1
