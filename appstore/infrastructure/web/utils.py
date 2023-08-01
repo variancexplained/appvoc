@@ -4,58 +4,34 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appstore/infrastructure/web/response.py                                            #
+# Filename   : /appstore/infrastructure/web/utils.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday July 31st 2023 04:55:52 am                                                   #
-# Modified   : Monday July 31st 2023 06:36:16 pm                                                   #
+# Created    : Monday July 31st 2023 06:32:36 pm                                                   #
+# Modified   : Monday July 31st 2023 06:34:57 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from dataclasses import dataclass
-from datetime import datetime
-import functools
-
+import sys
 import requests
 
-from appstore.base import DTO
-from appstore.infrastructure.web.utils import getsize
-
 
 # ------------------------------------------------------------------------------------------------ #
-@dataclass
-class Response(DTO):
-    response: requests.Response
-    status_code: int
-    size: int
-    latency: float
-    throughput: float = None
+def getsize(response: requests.Response) -> int:
+    """Returns the size of an HTTP response object.
 
-    def __post_init__(self) -> None:
-        self.throughput = self.size / self.latency
+    Args:
+        response (requests.Response): An HTTP Response object.
 
-
-# ------------------------------------------------------------------------------------------------ #
-def response_agent(func):
-    """Wraps response with a Response object."""
-
-    @functools.wraps(func)
-    def response_wrapper(*args, **kwargs):
-        start = datetime.now()
-        r = func(*args, **kwargs)
-        end = datetime.now()
-
-        latency = (end - start).total_seconds()
-        size = getsize(r)
-        throughput = size / latency
-
-        response = Response(
-            response=r, status_code=r.status_code, latency=latency, size=size, throughput=throughput
-        )
-        return response
-
-    return response_wrapper
+    """
+    try:
+        size = int(response.headers["content-length"])
+    except KeyError:
+        size = sys.getsizeof(response.json())
+    except Exception:
+        size = 0
+    return size

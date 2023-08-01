@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Monday July 31st 2023 05:35:24 am                                                   #
+# Modified   : Monday July 31st 2023 06:39:39 pm                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -31,6 +31,7 @@ from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.infrastructure.web.headers import BrowserHeader
 from appstore.infrastructure.web.throttle import AThrottle
 from appstore.infrastructure.web.response import Response
+from appstore.infrastructure.web.utils import getsize
 
 load_dotenv()
 
@@ -122,10 +123,9 @@ class ASessionHandler:
                     async with client.get(url, proxy=proxy, ssl=False) as response:
                         self._throttle.stop()
                         self._throttle.delay()
-                        size = response.headers["content-length"]
-                        latency_seconds = self._throttle.latency
-                        latency = latency_seconds * 1000
-                        throughput = size / latency_seconds
+                        size = getsize(response)
+                        latency = self._throttle.latency
+                        throughput = size / latency
                         r = Response(
                             response=response,
                             status_code=response.status_code,
