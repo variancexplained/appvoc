@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Sunday July 30th 2023 08:18:30 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 08:38:27 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,15 +19,17 @@
 """AppStore Scraper Controller Module"""
 import sys
 import logging
+from datetime import datetime
 
+import pandas as pd
 from dependency_injector.wiring import inject, Provide
 
 from appstore.data.acquisition.review.scraper import ReviewScraper
 from appstore.data.acquisition.review.director import ReviewDirector
-from appstore.data.acquisition.review.job import ReviewJob
+from appstore.data.acquisition.review.job import ReviewJobRun
 from appstore.data.acquisition.review.result import ReviewResult
 from appstore.data.storage.uow import UoW
-from appstore.data.acquisition.base import Controller
+from appstore.data.acquisition.base import Controller, App
 from appstore.container import AppstoreContainer
 
 
@@ -83,79 +85,89 @@ class ReviewController(Controller):
     def _scrape(self) -> None:
         """Driver for scraping operation."""
 
-        for job in self._director():
-            apps = self.start_job(job=job)
+        for jobrun in self._director:
+            if jobrun is not None:
+                self._logger.debug(jobrun)
+                jobrun.start()
+                apps = self._get_apps(category_id=jobrun.category_id)
+                self._logger.debug(apps)
+                if len(apps) > 0:
+                    for _, row in apps.iterrows():
+                        app = App(
+                            id=row["id"],
+                            name=row["name"],
+                            category_id=row["category_id"],
+                            category=row["category"],
+                        )
+                        jobrun.apps += 1
 
-            for idx, row in apps.iterrows():
-                for page in self._scraper(
-                    app_id=row["id"],
-                    app_name=row["name"],
-                    category_id=row["category_id"],
-                    category=row["category"],
-                    max_pages=self._max_pages,
-                    max_results_per_page=self._max_results_per_page,
-                ):
-                    self._save_results(result=page.result)
-                    job.update(result=page.result)
-                    if idx % self._verbose == 0:
-                        job.announce()
+                        for result in self._scraper(
+                            app=app,
+                            max_pages=self._max_pages,
+                            max_results_per_page=self._max_results_per_page,
+                        ):
+                            if result.is_valid():
+                                self.persist(result)
+                                self.update_jobrun(jobrun, result)
 
-            self._end_job(job=job)
+                            if jobrun.apps % self._verbose == 0:
+                                jobrun.announce()
 
-    def start_job(self, job: ReviewJob) -> None:
+                    self.end_jobrun(jobrun)
+
+    def _get_apps(self, category_id: int) -> pd.DataFrame:
         # Obtain all apps for the category from the repository.
-        frontier = {}
-        frontier["category_id"] = job.category_id
-        frontier["category"] = job.category
-        apps = self._uow.appdata_repo.get_by_category(category_id=job.category_id)
-        frontier["apps"] = len(apps)
+        apps = self._uow.appdata_repo.get_by_category(category_id=category_id)
+        msg = f"\n\nA total of {len(apps)} apps in category {category_id}."
 
         # Filter the apps that have greater than 'min_ratings' ratings
         # This is a proxy for number of potential reviews.
         apps = apps.loc[apps["ratings"] > self._min_ratings]
-        frontier["apps_with_min_ratings"] = len(apps)
 
         # Obtain apps for which we've already processed the reviews.
         try:
-            reviews = self._uow.review_repo.get_by_category(category_id=job.category_id)
+            reviews = self._uow.review_repo.get_by_category(category_id=category_id)
             apps_with_reviews = reviews["app_id"].unique()
-            frontier["apps_with_reviews"] = len(apps_with_reviews)
         except Exception:
-            frontier["apps_with_reviews"] = 0
+            apps_with_reviews = []
 
         # Remove apps for which reviews exist from the list of apps to process.
-        if frontier["apps_with_reviews"] > 0:
+        if apps_with_reviews > 0:
             apps = apps.loc[~apps["id"].isin(apps_with_reviews)]
-        frontier["apps_to_process"] = len(apps)
 
-        self._announce_job_start(frontier=frontier)
-
+        if len(apps) > 0:
+            msg += f"\nApps remaining: {len(apps)}"
+            self._logger.info(msg)
+        else:
+            msg += f"All apps have been processed for category: {category_id}"
+            self._logger.info(msg)
         return apps
 
-    def _announce_job_start(self, frontier: dict) -> None:
-        width = 32
-        msg = f"\n\nCategory: {frontier['category_id']}-{frontier['category']} Started at {frontier['started'].strftime('%m/%d/%Y, %H:%M:%S')}\n"
-        msg += f"\t{'Apps in Category:'.rjust(width, ' ')} | {frontier['apps']}\n"
-        msg += f"\t{'Apps with Min Ratings:'.rjust(width, ' ')} | {frontier['apps_with_min_ratings']}\n"
-        msg += f"\t{'Apps with Reviews:'.rjust(width, ' ')} | {frontier['apps_with_reviews']}\n"
-        msg += f"\t{'Apps to Process:'.rjust(width, ' ')} | {frontier['apps_to_process']}\n"
-        self._logger.info(msg)
-
-    def save_results(self, result: ReviewResult) -> None:
+    def persist(self, result: ReviewResult) -> None:
         """Persists results to Database
 
         Args:
             result (ReviewResult) -> Parsed result object
         """
-        self._uow.review_repo.add(data=result.as_df())
+        self._uow.review_repo.add(data=result.get_result())
         self._uow.save()
 
-    def end_job(self, job: ReviewJob) -> None:
+    def update_jobrun(self, jobrun: ReviewJobRun, result: ReviewResult) -> None:
+        jobrun.add_result(result=result)
+        self._uow.review_jobrun_repo.update(jobrun=jobrun)
+        self._uow.save()
+
+    def end_jobrun(self, jobrun: ReviewJobRun) -> None:
         """Persists job to the Database
 
         Args:
             result (ReviewResult) -> Parsed result object
         """
-        job.end()
-        self._uow.review_job_repo.update(job=job)
+        jobrun.end()
+        self._uow.review_jobrun_repo.update(jobrun=jobrun)
+        job = self._uow.job_repo.get(id=jobrun.jobid)
+        job.completed = datetime.now()
+        job.complete = True
+        self._uow.job_repo.update(job=job)
         self._uow.review_repo.archive()
+        self._uow.save()

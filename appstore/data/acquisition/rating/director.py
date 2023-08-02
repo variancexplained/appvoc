@@ -11,22 +11,23 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 05:32:24 pm                                                   #
-# Modified   : Sunday July 30th 2023 08:35:32 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 05:49:32 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
 from appstore.data.acquisition.base import Director
-from appstore.data.storage.job import RatingJobRepo
+from appstore.data.acquisition.rating.job import RatingJobRun
+from appstore.data.storage.job import RatingJobRunRepo, JobRepo
 
 
 # ------------------------------------------------------------------------------------------------ #
 class RatingDirector(Director):
     """Iterator serving jobs to the controller."""
 
-    def __init__(self, repo: RatingJobRepo) -> None:
-        super().__init__(repo=repo)
+    def __init__(self, jobrun_repo: RatingJobRunRepo, job_repo: JobRepo) -> None:
+        super().__init__(jobrun_repo=jobrun_repo, job_repo=job_repo)
 
     def __iter__(self) -> RatingDirector:
         """Initializes the job iterator"""
@@ -34,8 +35,12 @@ class RatingDirector(Director):
 
     def __next__(self) -> RatingDirector:
         """Sets the next job and returns an instance of this iterator"""
-        job = self._repo.next()
-        if job:
-            return self
+        jobrun = self._jobrun_repo.next()
+        if jobrun is not None:
+            return RatingJobRun.from_jobrun(jobrun=jobrun)
         else:
-            raise StopIteration
+            job = self._job_repo.next(controller="RatingController")
+            if job is not None:
+                return RatingJobRun.from_job(job=job)
+            else:
+                raise StopIteration

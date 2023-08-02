@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 03:12:11 am                                               #
+# Modified   : Wednesday August 2nd 2023 07:13:57 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -43,8 +43,7 @@ APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"
 REVIEWS_FILEPATH = "tests/data/reviews.csv"
 RATINGS_FILEPATH = "tests/data/appstore_ratings.csv"
 RESET_SCRIPT = "tests/scripts/reset.sh"
-RATING_JOBS_FILEPATH = "tests/data/job/rating.csv"
-REVIEW_JOBS_FILEPATH = "tests/data/job/review.csv"
+JOBS_FILEPATH = "tests/data/job/jobs.csv"
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
 
 APPS = [
@@ -55,7 +54,11 @@ APPS = [
     {"id": "310633997", "name": "whatsapp", "category_id": "6002", "category": "UTILITIES"},
 ]
 EPOCH = "1970-01-01 00:00:00"
-collect_ignore = ["test_database*.*"]
+collect_ignore = [
+    "test_database*.*",
+    "appstore/data/acquisition/rating/*.*",
+    "appstore/data/acquisition/review/*.*",
+]
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -177,29 +180,38 @@ def rating_batch():
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                     RATING JOB_DF                                                #
+#                                         JOB DF                                                   #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def rating_job_df(rating_jobs):
-    return rating_jobs.sample(1)
+def job_df():
+    return IOService.read(JOBS_FILEPATH)
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                     REVIEW JOB_DF                                                #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def review_job_df(review_jobs):
-    return review_jobs.sample(1)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                       RATING JOBS                                                #
+#                                       JOB REPO                                                   #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def rating_jobs():
-    return IOService.read(RATING_JOBS_FILEPATH)
+def job_repo(container):
+    return container.data.job_repo
 
 
+# ------------------------------------------------------------------------------------------------ #
+#                                     REVIEW JOBRUN REPO                                           #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_jobrun_repo(container):
+    return container.data.review_jobrun_repo
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                     RATING JOBRUN REPO                                           #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_jobrun_repo(container):
+    return container.data.rating_jobrun_repo
+
+
+# -------------------
 # ------------------------------------------------------------------------------------------------ #
 #                                     RATING RESPONSES                                             #
 # ------------------------------------------------------------------------------------------------ #
@@ -240,42 +252,6 @@ def review_responses():
         {"status_code": 500},
         {"status_code": 200},
     ]
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                       REVIEW JOBS                                                #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def review_jobs():
-    return IOService.read(REVIEW_JOBS_FILEPATH)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                  RATING JOB REPO ZERO                                            #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def rating_job_repo(container):
-    repo = container.data.rating_job_repo()
-    df = repo.getall()
-    repo.delete_all()
-    repo.save()
-    yield repo
-    repo.add(df)
-    repo.save()
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                  REVIEW JOB REPO ZERO                                            #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def review_job_repo(container):
-    repo = container.data.review_job_repo()
-    df = repo.getall()
-    repo.delete_all()
-    repo.save()
-    yield repo
-    repo.add(df)
-    repo.save()
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -340,12 +316,28 @@ def review():
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                                      REVIEW REPO                                                 #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_repo(container):
+    return container.data.review_repo
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                        RATINGS                                                   #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def rating():
     df = IOService.read(RATINGS_FILEPATH)
     return df
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      RATING REPO                                                 #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_repo(container):
+    return container.data.rating_repo
 
 
 # ------------------------------------------------------------------------------------------------ #

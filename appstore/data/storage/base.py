@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Sunday July 30th 2023 11:38:05 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 07:41:33 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,6 +20,7 @@
 from __future__ import annotations
 import os
 from datetime import datetime
+import logging
 from abc import ABC, abstractmethod
 from typing import Union
 
@@ -44,6 +45,7 @@ class Repo(ABC):
     def __init__(self, name: str, database: Database) -> None:
         self._name = name
         self._database = database
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @abstractmethod
     def add(self, data: pd.DataFrame) -> None:

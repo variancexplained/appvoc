@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Tuesday August 1st 2023 05:46:43 pm                                                 #
+# Modified   : Wednesday August 2nd 2023 04:57:36 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -32,7 +32,7 @@ from appstore.data.storage.project import AppDataProjectRepo
 from appstore.data.storage.appdata import AppDataRepo
 from appstore.data.storage.review import ReviewRepo
 from appstore.data.storage.rating import RatingRepo
-from appstore.data.storage.job import RatingJobRepo, ReviewJobRepo
+from appstore.data.storage.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.data.storage.uow import UoW
 from appstore.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
@@ -70,8 +70,9 @@ class PersistenceContainer(containers.DeclarativeContainer):
     appdata_repo = providers.Singleton(AppDataRepo, database=db)
     review_repo = providers.Singleton(ReviewRepo, database=db)
     rating_repo = providers.Singleton(RatingRepo, database=db)
-    rating_job_repo = providers.Singleton(RatingJobRepo, database=db)
-    review_job_repo = providers.Singleton(ReviewJobRepo, database=db)
+    job_repo = providers.Singleton(JobRepo, database=db)
+    rating_jobrun_repo = providers.Singleton(RatingJobRunRepo, database=db)
+    review_jobrun_repo = providers.Singleton(ReviewJobRunRepo, database=db)
 
     uow = providers.Singleton(
         UoW,
@@ -80,8 +81,9 @@ class PersistenceContainer(containers.DeclarativeContainer):
         review_repo=ReviewRepo,
         rating_repo=RatingRepo,
         appdata_project_repo=AppDataProjectRepo,
-        rating_job_repo=RatingJobRepo,
-        review_job_repo=ReviewJobRepo,
+        job_repo=JobRepo,
+        rating_jobrun_repo=RatingJobRunRepo,
+        review_jobrun_repo=ReviewJobRunRepo,
     )
 
 
@@ -89,11 +91,12 @@ class PersistenceContainer(containers.DeclarativeContainer):
 #                                    DIRECTOR CONTAINER                                            #
 # ------------------------------------------------------------------------------------------------ #
 class DirectorContainer(containers.DeclarativeContainer):
-    rating_job_repo = providers.Dependency()
-    review_job_repo = providers.Dependency()
+    job_repo = providers.Dependency()
+    rating_jobrun_repo = providers.Dependency()
+    review_jobrun_repo = providers.Dependency()
 
-    rating = providers.Singleton(RatingDirector, repo=rating_job_repo)
-    review = providers.Singleton(ReviewDirector, repo=review_job_repo)
+    rating = providers.Singleton(RatingDirector, jobrun_repo=rating_jobrun_repo, job_repo=job_repo)
+    review = providers.Singleton(ReviewDirector, jobrun_repo=review_jobrun_repo, job_repo=job_repo)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -184,8 +187,9 @@ class AppstoreContainer(containers.DeclarativeContainer):
 
     director = providers.Container(
         DirectorContainer,
-        rating_job_repo=data.rating_job_repo,
-        review_job_repo=data.review_job_repo,
+        job_repo=data.job_repo,
+        rating_jobrun_repo=data.rating_jobrun_repo,
+        review_jobrun_repo=data.review_jobrun_repo,
     )
 
 

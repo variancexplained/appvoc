@@ -11,73 +11,99 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 02:36:49 am                                                   #
-# Modified   : Tuesday August 1st 2023 06:26:30 pm                                                 #
+# Modified   : Wednesday August 2nd 2023 07:36:03 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+from __future__ import annotations
 from dataclasses import dataclass
 
 import pandas as pd
 
 from appstore.data.acquisition.rating.result import RatingResult
-from appstore.data.acquisition.base import Job
+from appstore.data.acquisition.base import Job, JobRun
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class RatingJob(Job):
+class RatingJobRun(JobRun):
     """Rating Job object
 
     Inherits the following from the base class:
         id: str  # noqa
-        controller: str
-        category_id: str
-        category: str
+        jobid: str = None
+        controller: str = None
+        category_id: str = None
+        category: str = None
         started: datetime = None
-        updated: datetime = None
         ended: datetime = None
-        runs: int = None
-        job_elapsed: int = None
-        run_elapsed: int = None
-        status: str = None
+        elapsed: int = 0
+        client_errors: int = 0
+        server_errors: int = 0
+        data_errors: int = 0
+        errors: int = 0
+        size: int = 0
+        completed: bool = False
     """
 
-    apps: int = None
-    apps_per_second: float = None
-    total_requests: int = None
-    successful_requests: int = None
-    failed_requests: int = None
+    apps: int = 0
+    apps_per_second: float = 0
+    size_ave: float = 0
 
     def add_result(self, result: RatingResult) -> None:
         """Adds Iterate through responses to update metrics. Result will have a list of response objects."""
-        super().update(result=result)
-        self.apps += result.success
-        self.apps_per_second = round(self.apps / self.run_elapsed, 2)
+        super().add_result(result=result)
+        self.apps += result.apps
+        self.apps_per_second = round(self.apps / self.elapsed, 2)
+        self.size_ave = self.size / self.apps
+        super().end()
 
     def announce(self) -> None:
         """Writes progress to the log"""
-        self._logger.info(self.__str__)
+        self._logger.info(self.__str__())
 
     @classmethod
-    def from_df(cls, df: pd.DataFrame) -> Job:
+    def from_job(cls, job: Job) -> JobRun:  # noqa
+        """Creates a JobRun from a Job object."""
+        return cls(
+            jobid=job.id,
+            controller=job.controller,
+            category_id=job.category_id,
+            category=job.category,
+        )
+
+    @classmethod
+    def from_jobrun(cls, jobrun: JobRun) -> JobRun:  # noqa
+        """Creates a JobRun from a JobRun object."""
+        return cls(
+            jobid=jobrun.jobid,
+            controller=jobrun.controller,
+            category_id=jobrun.category_id,
+            category=jobrun.category,
+        )
+
+    @classmethod
+    def from_df(cls, df: pd.DataFrame) -> RatingJobRun:
         """Creates a job from a Dataframe object."""
         df = df.iloc[0]
         return cls(
             id=df["id"],  # noqa
+            jobid=df["jobid"],
             controller=df["controller"],
             category_id=df["category_id"],
             category=df["category"],
             started=df["started"],
-            updated=df["updated"],
             ended=df["ended"],
-            runs=df["runs"],
-            job_elapsed=df["job_elapsed"],
-            run_elapsed=df["run_elapsed"],
+            elapsed=df["elapsed"],
+            client_errors=df["client_errors"],
+            server_errors=df["server_errors"],
+            data_errors=df["data_errors"],
+            errors=df["errors"],
+            size=df["size"],
+            size_ave=df["size_ave"],
             apps=df["apps"],
             apps_per_second=df["apps_per_second"],
-            total_requests=df["total_requests"],
-            successful_requests=df["successful_requests"],
-            failed_requests=df["failed_requests"],
-            status=df["status"],
+            complete=df["complete"],
+            completed=df["completed"],
         )

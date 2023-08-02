@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:19:19 pm                                                 #
-# Modified   : Sunday July 30th 2023 11:59:15 am                                                   #
+# Modified   : Wednesday August 2nd 2023 05:48:19 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,6 +20,9 @@ import inspect
 from datetime import datetime
 import pytest
 import logging
+
+import pandas as pd
+from uuid import uuid4
 
 from appstore.data.acquisition.base import Job
 
@@ -46,15 +49,20 @@ class TestJob:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        job = Job.from_df(df=job_df)
-        assert isinstance(job, Job)
-        assert job.id == job_df["id"][0]
-        assert job.controller == job_df["controller"][0]
-        assert job.category_id == job_df["category_id"][0]
-        assert job.category == job_df["category"][0]
-        assert isinstance(job.started, datetime)
-        assert isinstance(job.ended, datetime)
-        assert job.status == "not_started"
+        for idx, row in job_df.iterrows():
+            job = Job.from_df(df=row)
+            assert isinstance(job, Job)
+            assert isinstance(job.id, uuid4)
+            assert job.controller == "ReviewController" or job.controller == "RatingController"
+            assert isinstance(job.category, str)
+            assert isinstance(job.category_id, str)
+            assert isinstance(job.completed, datetime)
+            assert isinstance(job.complete, bool)
+            assert job.id == row["id"][idx]
+            assert job.controller == row["controller"][idx]
+            assert job.category_id == row["category_id"][idx]
+            assert job.category == row["category"][idx]
+            assert job.complete == row["complete"][idx]
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -84,19 +92,14 @@ class TestJob:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        job = Job.from_df(df=job_df)
-        job_dict = job.as_dict()
-        assert isinstance(job_dict, dict)
-
-        assert job_dict["id"] == job_df["id"][0]
-        assert job_dict["controller"] == job_df["controller"][0]
-        assert job_dict["category_id"] == job_df["category_id"][0]
-        assert job_dict["category"] == job_df["category"][0]
-        assert isinstance(job_dict["started"], datetime)
-        assert isinstance(job_dict["updated"], datetime)
-        assert isinstance(job_dict["ended"], datetime)
-        assert isinstance(job_dict["status"], str)
-        assert job_dict["status"] == "not_started"
+        for idx, row in job_df.iterrows():
+            job = Job.from_df(df=row)
+            d = job.as_dict()
+            assert d["id"] == row["id"][idx]
+            assert d["controller"] == row["controller"][idx]
+            assert d["category_id"] == row["category_id"][idx]
+            assert d["category"] == row["category"][idx]
+            assert d["complete"] == row["complete"][idx]
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -113,7 +116,7 @@ class TestJob:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_start_end(self, job, caplog):
+    def test_repo_add(self, job_df, job_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -125,21 +128,48 @@ class TestJob:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        assert job.status == "not_started"
-        assert job.started < datetime.strptime("2000-01-01", "%Y-%m-%d")
-        assert job.ended < datetime.strptime("2000-01-01", "%Y-%m-%d")
-        job.start()
-        started = job.started
-        assert job.status == "in_progress"
-        assert job.started > datetime.strptime("2000-01-01", "%Y-%m-%d")
-        assert job.ended < datetime.strptime("2000-01-01", "%Y-%m-%d")
-        job.start()
-        assert job.started == started
-        assert job.updated > job.started
-        job.end()
-        assert job.status == "completed"
-        assert job.started > datetime.strptime("2000-01-01", "%Y-%m-%d")
-        assert job.ended > datetime.strptime("2000-01-01", "%Y-%m-%d")
+        job_repo.add(job_df)
+        jobs = job_repo.getall()
+        assert isinstance(jobs, pd.DataFrame)
+        logger.debug(jobs)
+
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_next_update(self, job_df, job_repo, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        job_repo.add(job_df)
+        for i in range(10):
+            job = job_repo.next(controller="RatingController")
+            if i < 7:
+                assert isinstance(job, Job)
+                job.complete = True
+                job_repo.update(job)
+            else:
+                assert job is None
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

@@ -11,26 +11,47 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Sunday July 30th 2023 10:14:41 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 09:19:18 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import logging
-from abc import abstractmethod
 from typing import Union
 
 import pandas as pd
 import numpy as np
 from appstore.data.acquisition.base import Job
-from appstore.data.acquisition.review.job import ReviewJob
-from appstore.data.acquisition.rating.job import RatingJob
+from appstore.data.acquisition.review.job import ReviewJobRun
+from appstore.data.acquisition.rating.job import RatingJobRun
 from appstore.data.storage.base import Repo
 from appstore.infrastructure.database.base import Database
-from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, INTEGER, BIGINT, FLOAT
-
+from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BIGINT, FLOAT, TINYINT
 
 # ------------------------------------------------------------------------------------------------ #
+#                                 RATING DATAFRAME DATA TYPES                                      #
+# ------------------------------------------------------------------------------------------------ #
+JOB_DATAFRAME_DTYPES = {
+    "id": "string",
+    "controller": "category",
+    "category_id": "category",
+    "category": "category",
+    "complete": bool,
+}
+JOB_PARSE_DATES = {
+    "completed": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+}
+
+JOB_DATABASE_DTYPES = {
+    "id": VARCHAR(32),
+    "controller": VARCHAR(64),
+    "category_id": VARCHAR(8),
+    "category": VARCHAR(64),
+    "complete": TINYINT,
+    "completed": VARCHAR(64),
+}
+
+
 class JobRepo(Repo):
     """Repository tracking progress of ETL
 
@@ -38,105 +59,133 @@ class JobRepo(Repo):
         database(Database): Database containing data to access.
     """
 
-    def __init__(self, name: str, database: Database) -> None:
-        super().__init__(name=name, database=database)
+    __name = "job"
+
+    def __init__(self, database: Database) -> None:
+        super().__init__(name=self.__name, database=database)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    @abstractmethod
     def add(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        self._database.insert(
+            data=data, tablename=self._name, dtype=JOB_DATABASE_DTYPES, if_exists="append"
+        )
+        msg = f"Added {data.shape[0]} rows to the {self._name} repository."
+        self._logger.debug(msg)
 
-    @abstractmethod
-    def get(self, id: str, dtypes: dict = None, parse_dates: dict = None) -> Job:  # noqa
+    def get(
+        self, id: str, dtypes: dict = JOB_DATAFRAME_DTYPES, parse_dates: dict = JOB_PARSE_DATES
+    ) -> Job:  # noqa
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
             id (Union[str,int]): The entity id.
         """
+        return super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
 
-    @abstractmethod
-    def next(self) -> Job:
+    def next(self, controller: str) -> Job:
         """Returns a randomly selected job not yet completed"""
 
-    @abstractmethod
-    def getall(self, dtypes: dict = None, parse_dates: dict = None) -> pd.DataFrame:
+        df = self.getall()
+        # First get any in-progress jobs
+        jobs = df[(df["complete"] == False) & (df["controller"] == controller)]  # noqa
+        if len(jobs) == 0:
+            return None
+        else:
+            job = jobs.sample(n=1)
+            return Job.from_df(df=job)
+
+    def getall(
+        self, dtypes: dict = JOB_DATAFRAME_DTYPES, parse_dates: dict = JOB_PARSE_DATES
+    ) -> pd.DataFrame:
         """Returns all data in the repository."""
         return super().getall(dtypes=dtypes, parse_dates=parse_dates)
 
-    @abstractmethod
     def update(self, job: Job) -> None:
         """Updates a job in the database"""
+        query = f"UPDATE {self._name} SET {self._name}.complete = :complete, {self._name}.completed = :completed WHERE {self._name}.id = :id;"
+        params = {
+            "complete": job.complete,
+            "completed": job.completed,
+            "id": job.id,
+        }
+        self._database.update(query=query, params=params)
 
-    @abstractmethod
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        self._database.insert(
+            data=data, tablename=self._name, dtype=JOB_DATABASE_DTYPES, if_exists="replace"
+        )
+        msg = f"Added {data.shape[0]} rows to the {self._name} repository."
+        self._logger.debug(msg)
 
     @property
     def summary(self) -> pd.DataFrame:
         """Summarizes the app data by category"""
-        df = self.getall()
-        df = df.groupby(["controller", "status"])["id"].count().reset_index()
-        df.columns = ["Controller", "Status", "Jobs"]
-        return df
+        return self.getall()
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                 RATING DATAFRAME DATA TYPES                                      #
+#                           RATING JOBRUN DATAFRAME DATA TYPES                                     #
 # ------------------------------------------------------------------------------------------------ #
-RATING_JOB_DATAFRAME_DTYPES = {
+RATING_JOBRUN_DATAFRAME_DTYPES = {
     "id": "string",
-    "controller": "category",
-    "category_id": "category",
-    "category": "category",
-    "runs": np.int64,
-    "job_elapsed": np.int64,
-    "run_elapsed": np.int64,
-    "status": "string",
+    "jobid": "string",
+    "controller": "string",
+    "category_id": "string",
+    "category": "string",
+    "elapsed": np.int64,
+    "client_errors": np.int64,
+    "server_errors": np.int64,
+    "data_errors": np.int64,
+    "errors": np.int64,
+    "size": np.int64,
+    "size_ave": np.float64,
     "apps": np.int64,
     "apps_per_second": np.float64,
-    "total_requests": np.int64,
-    "successful_requests": np.int64,
-    "failed_requests": np.int64,
+    "complete": bool,
 }
-RATING_JOB_PARSE_DATES = {
+RATING_JOBRUN_PARSE_DATES = {
+    "completed": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
     "started": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
-    "updated": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
     "ended": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 # ------------------------------------------------------------------------------------------------ #
 #                                  RATING DATABASE DATA TYPES                                      #
 # ------------------------------------------------------------------------------------------------ #
-RATING_JOB_DATABASE_DTYPES = {
+RATING_JOBRUN_DATABASE_DTYPES = {
     "id": VARCHAR(32),
+    "jobid": VARCHAR(32),
     "controller": VARCHAR(64),
     "category_id": VARCHAR(8),
     "category": VARCHAR(64),
-    "runs": INTEGER,
     "started": DATETIME,
-    "updated": DATETIME,
     "ended": DATETIME,
-    "job_elapsed": BIGINT,
-    "run_elapsed": BIGINT,
-    "status": VARCHAR(16),
+    "elapsed": BIGINT,
+    "client_errors": BIGINT,
+    "server_errors": BIGINT,
+    "data_errors": BIGINT,
+    "errors": BIGINT,
+    "size": BIGINT,
+    "size_ave": FLOAT,
     "apps": BIGINT,
     "apps_per_second": FLOAT,
-    "total_requests": BIGINT,
-    "successful_requests": BIGINT,
-    "failed_requests": BIGINT,
+    "completed": VARCHAR(64),
+    "complete": TINYINT,
 }
 
 
 # ------------------------------------------------------------------------------------------------ #
-class RatingJobRepo(JobRepo):
-    __name = "rating_job"
+class RatingJobRunRepo(Repo):
+    __name = "rating_jobrun"
 
     def __init__(self, database: Database) -> None:
         super().__init__(self.__name, database)
@@ -150,7 +199,7 @@ class RatingJobRepo(JobRepo):
         self._database.insert(
             data=data,
             tablename=self._name,
-            dtype=RATING_JOB_DATABASE_DTYPES,
+            dtype=RATING_JOBRUN_DATABASE_DTYPES,
             if_exists="append",
         )
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
@@ -159,8 +208,8 @@ class RatingJobRepo(JobRepo):
     def get(
         self,
         id: Union[str, int],
-        dtypes: dict = RATING_JOB_DATAFRAME_DTYPES,
-        parse_dates: dict = RATING_JOB_PARSE_DATES,
+        dtypes: dict = RATING_JOBRUN_DATAFRAME_DTYPES,
+        parse_dates: dict = RATING_JOBRUN_PARSE_DATES,
     ) -> Job:
         """Returns data for the entity designated by the 'id' parameter.
 
@@ -172,72 +221,58 @@ class RatingJobRepo(JobRepo):
         job = self._database.query(
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
-        return RatingJob.from_df(df=job)
+        return RatingJobRun.from_df(df=job)
 
     def next(self) -> Job:
         """Returns a randomly selected job not yet completed"""
 
         df = self.getall()
         # First get any in-progress jobs
-        jobs = df.loc[df["status"] == "in_progress"]
+        jobs = df[df["complete"] == False]  # noqa
         if len(jobs) == 0:
-            # Get jobs not started
-            jobs = df.loc[df["status"] == "not_started"]
-
-        try:
-            job = jobs.sample(n=1)
-
-        except Exception:
-            msg = "All jobs complete."
-            self._logger.info(msg)
             return None
         else:
-            return RatingJob.from_df(job)
+            job = jobs.sample(n=1)
+            return Job.from_df(df=job)
 
     def getall(
         self,
-        dtypes: dict = RATING_JOB_DATAFRAME_DTYPES,
-        parse_dates: dict = RATING_JOB_PARSE_DATES,
+        dtypes: dict = RATING_JOBRUN_DATAFRAME_DTYPES,
+        parse_dates: dict = RATING_JOBRUN_PARSE_DATES,
     ) -> pd.DataFrame:
         """Returns all data in the repository."""
         return super().getall(dtypes=dtypes, parse_dates=parse_dates)
 
-    def update(self, job: Job) -> None:
+    def update(self, jobrun: RatingJobRun) -> None:
         """Updates a job in the database"""
         query = f"""UPDATE {self._name} SET
-        controller = :controller,
-        category_id = :category_id,
-        category = :category,
-        started = :started,
-        updated = :updated,
-        ended = :ended,
-        runs = :runs,
-        job_elapsed = :job_elapsed,
-        run_elapsed = :run_elapsed,
-        status = :status,
-        apps = :apps,
-        apps_per_second = :apps_per_second,
-        total_requests = :total_requests,
-        successful_requests = :successful_requests,
-        failed_requests =:failed_requests
-        WHERE id = :id;"""
+            started =:started,
+            ended =:ended,
+            elapsed =:elapsed,
+            client_errors =:client_errors,
+            server_errors =:server_errors,
+            data_errors =:data_errors,
+            errors =:errors,
+            size =:size,
+            size_ave =:size_ave,
+            apps =:apps,
+            apps_per_second =:apps_per_second,
+            completed =:completed
+            WHERE id = :id;"""
         params = {
-            "controller": job.controller,
-            "category_id": job.category_id,
-            "category": job.category,
-            "started": job.started,
-            "updated": job.updated,
-            "ended": job.ended,
-            "runs": job.runs,
-            "job_elapsed": job.job_elapsed,
-            "run_elapsed": job.run_elapsed,
-            "status": job.status,
-            "apps": job.apps,
-            "apps_per_second": job.apps_per_second,
-            "total_requests": job.total_requests,
-            "successful_requests": job.successful_requests,
-            "failed_requests": job.failed_requests,
-            "id": job.id,
+            "started": jobrun.started,
+            "ended": jobrun.ended,
+            "elapsed": jobrun.elapsed,
+            "client_errors": jobrun.client_errors,
+            "server_errors": jobrun.server_errors,
+            "data_errors": jobrun.data_errors,
+            "errors": jobrun.errors,
+            "size": jobrun.size,
+            "size_ave": jobrun.size_ave,
+            "apps": jobrun.apps,
+            "apps_per_second": jobrun.apps_per_second,
+            "completed": jobrun.completed,
+            "id": jobrun.id,
         }
         self._database.update(query=query, params=params)
 
@@ -248,65 +283,72 @@ class RatingJobRepo(JobRepo):
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
         self._database.insert(
-            data=data, tablename=self._name, dtype=RATING_JOB_DATABASE_DTYPES, if_exists="replace"
+            data=data,
+            tablename=self._name,
+            dtype=RATING_JOBRUN_DATABASE_DTYPES,
+            if_exists="replace",
         )
         msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                REVIEW DATAFRAME DATA TYPES                                       #
+#                           REVIEW JOBRUN DATAFRAME DATA TYPES                                     #
 # ------------------------------------------------------------------------------------------------ #
-REVIEW_JOB_DATAFRAME_DTYPES = {
+REVIEW_JOBRUN_DATAFRAME_DTYPES = {
     "id": "string",
-    "controller": "category",
-    "category_id": "category",
-    "category": "category",
-    "runs": np.int64,
-    "job_elapsed": np.int64,
-    "run_elapsed": np.int64,
-    "status": "string",
+    "jobid": "string",
+    "controller": "string",
+    "category_id": "string",
+    "category": "string",
+    "elapsed": np.int64,
+    "client_errors": np.int64,
+    "server_errors": np.int64,
+    "data_errors": np.int64,
+    "errors": np.int64,
+    "size": np.int64,
+    "size_ave": np.float64,
     "apps": np.int64,
     "apps_per_second": np.float64,
     "reviews": np.int64,
     "reviews_per_second": np.float64,
-    "total_requests": np.int64,
-    "successful_requests": np.int64,
-    "failed_requests": np.int64,
+    "complete": bool,
 }
-REVIEW_JOB_PARSE_DATES = {
+REVIEW_JOBRUN_PARSE_DATES = {
+    "completed": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
     "started": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
-    "updated": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
     "ended": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 # ------------------------------------------------------------------------------------------------ #
-#                                      DATABASE DATA TYPES                                         #
+#                                  REVIEW DATABASE DATA TYPES                                      #
 # ------------------------------------------------------------------------------------------------ #
-REVIEW_JOB_DATABASE_DTYPES = {
+REVIEW_JOBRUN_DATABASE_DTYPES = {
     "id": VARCHAR(32),
+    "jobid": VARCHAR(32),
     "controller": VARCHAR(64),
     "category_id": VARCHAR(8),
     "category": VARCHAR(64),
-    "runs": INTEGER,
     "started": DATETIME,
-    "updated": DATETIME,
     "ended": DATETIME,
-    "job_elapsed": BIGINT,
-    "run_elapsed": BIGINT,
-    "status": VARCHAR(16),
+    "elapsed": BIGINT,
+    "client_errors": BIGINT,
+    "server_errors": BIGINT,
+    "data_errors": BIGINT,
+    "errors": BIGINT,
+    "size": BIGINT,
+    "size_ave": FLOAT,
     "apps": BIGINT,
     "apps_per_second": FLOAT,
     "reviews": BIGINT,
     "reviews_per_second": FLOAT,
-    "total_requests": BIGINT,
-    "successful_requests": BIGINT,
-    "failed_requests": BIGINT,
+    "completed": VARCHAR(64),
+    "complete": TINYINT,
 }
 
 
 # ------------------------------------------------------------------------------------------------ #
-class ReviewJobRepo(JobRepo):
-    __name = "review_job"
+class ReviewJobRunRepo(Repo):
+    __name = "review_jobrun"
 
     def __init__(self, database: Database) -> None:
         super().__init__(self.__name, database)
@@ -320,7 +362,7 @@ class ReviewJobRepo(JobRepo):
         self._database.insert(
             data=data,
             tablename=self._name,
-            dtype=REVIEW_JOB_DATABASE_DTYPES,
+            dtype=REVIEW_JOBRUN_DATABASE_DTYPES,
             if_exists="append",
         )
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
@@ -329,8 +371,8 @@ class ReviewJobRepo(JobRepo):
     def get(
         self,
         id: Union[str, int],
-        dtypes: dict = REVIEW_JOB_DATAFRAME_DTYPES,
-        parse_dates: dict = REVIEW_JOB_PARSE_DATES,
+        dtypes: dict = REVIEW_JOBRUN_DATAFRAME_DTYPES,
+        parse_dates: dict = REVIEW_JOBRUN_PARSE_DATES,
     ) -> Job:
         """Returns data for the entity designated by the 'id' parameter.
 
@@ -342,76 +384,62 @@ class ReviewJobRepo(JobRepo):
         job = self._database.query(
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
-        return ReviewJob.from_df(df=job)
+        return ReviewJobRun.from_df(df=job)
 
     def next(self) -> Job:
         """Returns a randomly selected job not yet completed"""
 
         df = self.getall()
         # First get any in-progress jobs
-        jobs = df.loc[df["status"] == "in_progress"]
+        jobs = df[df["complete"] == False]  # noqa
         if len(jobs) == 0:
-            # Get jobs not started
-            jobs = df.loc[df["status"] == "not_started"]
-
-        try:
-            job = jobs.sample(n=1)
-
-        except Exception:
-            msg = "All jobs complete."
-            self._logger.info(msg)
             return None
         else:
-            return ReviewJob.from_df(job)
+            job = jobs.sample(n=1)
+            return Job.from_df(df=job)
 
     def getall(
         self,
-        dtypes: dict = REVIEW_JOB_DATAFRAME_DTYPES,
-        parse_dates: dict = REVIEW_JOB_PARSE_DATES,
+        dtypes: dict = REVIEW_JOBRUN_DATAFRAME_DTYPES,
+        parse_dates: dict = REVIEW_JOBRUN_PARSE_DATES,
     ) -> pd.DataFrame:
         """Returns all data in the repository."""
         return super().getall(dtypes=dtypes, parse_dates=parse_dates)
 
-    def update(self, job: Job) -> None:
+    def update(self, jobrun: ReviewJobRun) -> None:
         """Updates a job in the database"""
         query = f"""UPDATE {self._name} SET
-        controller = :controller,
-        category_id = :category_id,
-        category = :category,
-        started = :started,
-        updated = :updated,
-        ended = :ended,
-        runs = :runs,
-        job_elapsed = :job_elapsed,
-        run_elapsed = :run_elapsed,
-        status = :status,
-        apps = :apps,
-        apps_per_second = :apps_per_second,
-        reviews = :reviews,
-        reviews_per_second = :reviews_per_second,
-        total_requests = :total_requests,
-        successful_requests = :successful_requests,
-        failed_requests =:failed_requests
-        WHERE id = :id;"""
+            started =:started,
+            ended =:ended,
+            elapsed =:elapsed,
+            client_errors =:client_errors,
+            server_errors =:server_errors,
+            data_errors =:data_errors,
+            errors =:errors,
+            size =:size,
+            size_ave =:size_ave,
+            apps =:apps,
+            apps_per_second =:apps_per_second,
+            reviews =:reviews,
+            reviews_per_second =:reviews_per_second,
+            completed =:completed
+            WHERE id = :id;"""
         params = {
-            "controller": job.controller,
-            "category_id": job.category_id,
-            "category": job.category,
-            "started": job.started,
-            "updated": job.updated,
-            "ended": job.ended,
-            "runs": job.runs,
-            "job_elapsed": job.job_elapsed,
-            "run_elapsed": job.run_elapsed,
-            "status": job.status,
-            "apps": job.apps,
-            "apps_per_second": job.apps_per_second,
-            "reviews": job.reviews,
-            "reviews_per_second": job.reviews_per_second,
-            "total_requests": job.total_requests,
-            "successful_requests": job.successful_requests,
-            "failed_requests": job.failed_requests,
-            "id": job.id,
+            "started": jobrun.started,
+            "ended": jobrun.ended,
+            "elapsed": jobrun.elapsed,
+            "client_errors": jobrun.client_errors,
+            "server_errors": jobrun.server_errors,
+            "data_errors": jobrun.data_errors,
+            "errors": jobrun.errors,
+            "size": jobrun.size,
+            "size_ave": jobrun.size_ave,
+            "apps": jobrun.apps,
+            "apps_per_second": jobrun.apps_per_second,
+            "reviews": jobrun.reviews,
+            "reviews_per_second": jobrun.reviews_per_second,
+            "completed": jobrun.completed,
+            "id": jobrun.id,
         }
         self._database.update(query=query, params=params)
 
@@ -422,7 +450,10 @@ class ReviewJobRepo(JobRepo):
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
         self._database.insert(
-            data=data, tablename=self._name, dtype=REVIEW_JOB_DATABASE_DTYPES, if_exists="replace"
+            data=data,
+            tablename=self._name,
+            dtype=REVIEW_JOBRUN_DATABASE_DTYPES,
+            if_exists="replace",
         )
         msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)

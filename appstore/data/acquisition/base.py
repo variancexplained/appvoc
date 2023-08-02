@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 12:40:43 am                                               #
+# Modified   : Wednesday August 2nd 2023 09:27:44 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -36,8 +36,9 @@ from appstore.data.storage.base import Repo
 class Director(ABC):
     """Iterator serving jobs to the controller."""
 
-    def __init__(self, repo: Repo) -> None:
-        self._repo = repo
+    def __init__(self, jobrun_repo: Repo, job_repo: Repo) -> None:
+        self._jobrun_repo = jobrun_repo
+        self._job_repo = job_repo
         self._job = None
 
     @property
@@ -68,16 +69,16 @@ class Controller(ABC):
         return os.getenv(self.__class__.__name__, False) in (True, "true", "True")
 
     @abstractmethod
-    def start_job(self, job: Job) -> None:
+    def persist(self, result: Result) -> None:
         """Starts a job run"""
 
     @abstractmethod
-    def end_job(self, job: Job) -> None:
-        """Ends a job run"""
+    def update_jobrun(self, jobrun: JobRun, result: Result) -> None:
+        """Updates teh jobrun with the result"""
 
     @abstractmethod
-    def save_results(self, result: Result) -> None:
-        """Saves results to Database"""
+    def end_jobrun(self, jobrun: JobRun) -> None:
+        """Ends a job run"""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -110,26 +111,28 @@ class Job(DTO):
     controller: str = None
     category_id: str = None
     category: str = None
+    complete: bool = False
     completed: datetime = None
-    status: str = "not_started"
 
     def __post_init__(self) -> None:
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @classmethod
     def from_df(cls, df: pd.DataFrame) -> Job:
+        df = df.iloc[0].T
+        logging.debug(df)
         return cls(
             id=df["id"],
             controller=df["controller"],
             category_id=df["category_id"],
             category=df["category"],
-            completed=df["completed"],
-            status=df["status"],
+            complete=df["complete"],
+            completed=datetime.strftime(df["completed"], "%Y-%m-%d %H:%M:%S"),
         )
 
     def end(self) -> None:
         self.completed = datetime.now()
-        self.status = "completed"
+        self.complete = True
         msg = f"\nJob Completed.{self.__str__()}"
         self._logger.info(msg)
 
@@ -137,23 +140,23 @@ class Job(DTO):
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class JobRun(DTO):
-    """Encapsulates a job entity"""
+    """Encapsulates a job run entity"""
 
-    id: str  # noqa
-    job: Job = None
+    id: str = None
+    jobid: str = None
+    controller: str = None
+    category_id: str = None
+    category: str = None
     started: datetime = None
-    ended: datetime = None  # Updated each batch in the event of exception
+    ended: datetime = None
     elapsed: int = 0
-    apps: int = 0
-    apps_per_second: float = 0
-    reviews: int = 0
-    reviews_per_second: float = 0
-    requests: int = 0
-    successes: int = 0
+    client_errors: int = 0
+    server_errors: int = 0
+    data_errors: int = 0
     errors: int = 0
     size: int = 0
-    size_ave: float = 0
-    status: str = "not_started"
+    complete: bool = False
+    completed: datetime = None
 
     def __post_init__(self) -> None:
         self.id = uuid4()
@@ -161,8 +164,8 @@ class JobRun(DTO):
 
     def start(self) -> None:
         self.started = datetime.now()
-        self.status = "in_progress"
-        msg = f"\nJobRun for job {self.job.id} Started"
+        self.complete = False
+        msg = f"\nJobRun for job {self.jobid} Started"
         self._logger.info(msg)
 
     @abstractmethod
@@ -171,19 +174,16 @@ class JobRun(DTO):
         now = datetime.now()
         self.ended = now
         self.elapsed = (now - self.started).total_seconds()
-        self.requests += 1
-        self.successes += result.successes
         self.client_errors += result.client_errors
         self.server_errors += result.server_errors
         self.data_errors += result.data_errors
+        self.errors += self.client_errors + self.server_errors + self.data_errors
         self.size += result.size
-        self.latency += result.latency
-        self.latency_ave = self.successes / self.latency
-        self.throughput = self.size / self.latency
         self.status = "in_progress"
 
     def end(self) -> None:
-        self.status = "completed"
+        self.complete = True
+        self.completed = datetime.now()
         msg = f"\nJobRun Completed.{self.__str__()}"
         self._logger.info(msg)
 
@@ -192,30 +192,17 @@ class JobRun(DTO):
         msg = self.__str__()
         self._logger.info(msg)
 
-    @classmethod
-    def from_df(cls, df: pd.DataFrame) -> JobRun:
-        return cls(
-            id=df["id"],
-            jobid=df["jobid"],
-            started=df["started"],
-            ended=df["ended"],
-            elapsed=df["elapsed"],
-            apps=df["apps"],
-            apps_per_second=df["apps_per_second"],
-            reviews=df["reviews"],
-            reviews_per_second=df["reviews_per_second"],
-            requests=df["requests"],
-            successes=df["successes"],
-            client_errors=df["client_errors"],
-            server_errors=df["server_errors"],
-            data_errors=df["data_errors"],
-            size=df["size"],
-            size_ave=df["size_ave"],
-            latency=df["latency"],
-            latency_ave=df["latency_ave"],
-            throughput=df["throughput"],
-            status=df["status"],
-        )
+    @abstractclassmethod
+    def from_job(cls, job: Job) -> JobRun:  # noqa
+        """Creates a JobRun from a Job object."""
+
+    @abstractclassmethod
+    def from_jobrun(cls, jobrun: JobRun) -> JobRun:  # noqa
+        """Creates a JobRun from a JobRun object."""
+
+    @abstractclassmethod
+    def from_df(cls, df: pd.DataFrame) -> JobRun:  # noqa
+        """Creates a JobRun from a DataFrame."""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -270,3 +257,6 @@ class Result(DTO):
     def get_result(self) -> pd.DataFrame:
         """Returns the result in DataFrame format"""
         return pd.DataFrame(self.content)
+
+    def is_valid(self) -> bool:
+        return len(self.content) > self.errors
