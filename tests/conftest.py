@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Monday July 31st 2023 02:04:18 am                                                   #
+# Modified   : Wednesday August 2nd 2023 01:37:03 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,6 +23,7 @@ import dotenv
 import subprocess
 from datetime import datetime
 
+from appstore.data.acquisition.base import App
 from appstore.infrastructure.io.local import IOService
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.headers import STOREFRONT
@@ -62,7 +63,13 @@ collect_ignore = ["test_database*.*"]
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def apps():
-    return APPS
+    apps = []
+    for app in APPS:
+        a = App(
+            id=app["id"], name=app["name"], category_id=app["category_id"], category=app["category"]
+        )
+        apps.append(a)
+    return apps
 
 
 # ------------------------------------------------------------------------------------------------ #

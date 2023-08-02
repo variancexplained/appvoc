@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /tests/test_data_acquisition/test_appstore/test_scrapers/test_review_scraper.py     #
+# Python     : 3.10.12                                                                             #
+# Filename   : /tests/test_data_acquisition/test_review/test_review_scraper.py                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Saturday April 22nd 2023 10:39:34 am                                                #
-# Modified   : Tuesday July 25th 2023 01:04:28 pm                                                  #
+# Created    : Wednesday August 2nd 2023 01:27:54 am                                               #
+# Modified   : Wednesday August 2nd 2023 02:03:36 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,29 +20,34 @@ import inspect
 from datetime import datetime
 import pytest
 import logging
+
 import pandas as pd
 
 from appstore.data.acquisition.review.scraper import ReviewScraper
+from appstore.data.acquisition.review.result import ReviewResult
 
+KEYS = [
+    "userReviewId",
+    "name",
+    "rating",
+    "title",
+    "body",
+    "voteSum",
+    "voteCount",
+    "date",
+]
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
 double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
-# ------------------------------------------------------------------------------------------------ #
-ID = 1095999436
-NAME = "RVC Pet Diabetes App"
-CATEGORY_ID = 6020
-CATEGORY = "Health & Fitness"
 
 
-# ------------------------------------------------------------------------------------------------ #
-@pytest.mark.scraper
 @pytest.mark.review_scraper
 class TestReviewScraper:  # pragma: no cover
     # ============================================================================================ #
-    def test_scraper(self, container, mode, caplog):
+    def test_setup(self, apps, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -54,22 +59,16 @@ class TestReviewScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        scraper = ReviewScraper(
-            app_id=ID, app_name=NAME, category_id=CATEGORY_ID, category=CATEGORY
-        )
-        for i, scrape in enumerate(scraper, start=1):
-            result = scrape.result
-            assert isinstance(result, pd.DataFrame)
-            assert result.shape[0] > 0
-            assert "author" in result.columns
-            assert "content" in result.columns
-            assert "rating" in result.columns
-            assert scrape.results > 0
-            assert scrape.page == i
-            assert scrape.status_code == 200
-            assert str(ID) in scrape.url
-            logger.debug(f"\n\nThe {i}th page returned {scrape.results} results.")
-            logger.debug(f"\nResult:\n{scrape.result}\n")
+        for result in ReviewScraper(app=apps[0], max_pages=2):
+            assert isinstance(result, ReviewResult)
+            assert result.app == apps[0]
+            assert result.reviews > 0
+            assert isinstance(result.content, list)
+            assert isinstance(result.get_result(), pd.DataFrame)
+            for review in result.content:
+                logger.debug(review)
+                for key in KEYS:
+                    assert key in review
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

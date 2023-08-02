@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.11                                                                             #
-# Filename   : /tests/test_data_acquisition/test_appstore/test_controllers/test_appstore_rating_controller.py #
+# Python     : 3.10.12                                                                             #
+# Filename   : /tests/test_data_acquisition/test_rating/test_scraper.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday May 3rd 2023 02:39:32 pm                                                  #
-# Modified   : Tuesday July 25th 2023 01:04:25 pm                                                  #
+# Created    : Monday July 31st 2023 02:04:35 am                                                   #
+# Modified   : Wednesday August 2nd 2023 01:29:03 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.acquisition.rating.controller import RatingController
+from appstore.data.acquisition.rating.scraper import RatingScraper
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -31,10 +31,12 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.rating_ctrl
-class TestRatingController:  # pragma: no cover
+@pytest.mark.rating
+@pytest.mark.rating_scraper
+@pytest.mark.asyncio
+class TestRatingScraper:  # pragma: no cover
     # ============================================================================================ #
-    def test_controller(self, uow, caplog):
+    async def test_setup(self, container, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -46,19 +48,17 @@ class TestRatingController:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        project_repo = uow.rating_project_repo
-        project_repo.delete_all()
-        rating_repo = uow.rating_repo
-        rating_repo.delete_all()
-        controller = RatingController(batchsize=5)
-        controller.scrape(category_ids=[6000, 6012, 6013])
+        repo = appdata_repo
+        df = repo.sample(10)
 
-        projects = project_repo.getall()
-        ratings = rating_repo.getall()
-        assert projects.shape[0] == 60
-        assert ratings.shape[0] == 60
-        logger.debug(projects)
-        logger.debug(ratings)
+        async for result in RatingScraper(apps=df, batch_size=5):
+            assert isinstance(result.content, list)
+            assert result.apps == 5
+            assert isinstance(result.size, int)
+            assert result.status is True
+            logger.debug(result.as_df())
+            logger.debug(result)
+
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

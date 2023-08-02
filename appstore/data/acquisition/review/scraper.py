@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 01:02:34 am                                               #
+# Modified   : Wednesday August 2nd 2023 01:49:41 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -43,7 +43,7 @@ class ReviewScraper(Scraper):
         start: int = 0,
         max_results_per_page: int = 400,
         max_pages: int = sys.maxsize,
-        failure_threshold: int = Provide[AppstoreContainer.config.web.scraper.failures_threshold],
+        failure_threshold: int = 5,
     ) -> None:
         self._app = app
         self._session_handler = session_handler
@@ -88,7 +88,7 @@ class ReviewScraper(Scraper):
 
     def _setup_url(self) -> None:
         """Sets the request url"""
-        return f"https://itunes.apple.com/WebObjects/MZStore.woa/wa/userReviewsRow?id={self._app_id}&displayable-kind=11&startIndex={self._start_index}&endIndex={self._end_index}&sort=1"
+        return f"https://itunes.apple.com/WebObjects/MZStore.woa/wa/userReviewsRow?id={self._app.id}&displayable-kind=11&startIndex={self._start_index}&endIndex={self._end_index}&sort=1"
 
     def _paginate_url(self) -> None:
         self._page += 1
