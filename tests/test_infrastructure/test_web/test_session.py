@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday July 31st 2023 05:20:39 pm                                                   #
-# Modified   : Monday July 31st 2023 06:10:12 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 01:12:41 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,8 +22,6 @@ import pytest
 import logging
 
 import requests
-
-from appstore.infrastructure.web.response import Response
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -60,12 +58,9 @@ class TestSession:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         session = container.web.session()
         response = session.get(url=URL, params=PARAMS)
-        assert isinstance(response, Response)
-        assert isinstance(response.response, requests.Response)
+        assert isinstance(response, requests.Response)
         assert isinstance(response.status_code, int)
-        assert isinstance(response.size, int)
-        assert isinstance(response.latency, float)
-        assert isinstance(response.throughput, float)
+        assert response.headers.get("content-length") is not None
         assert response.status_code == 200
         logger.debug(response.__str__())
 

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:33:09 pm                                                 #
-# Modified   : Monday July 31st 2023 06:15:39 pm                                                   #
+# Modified   : Tuesday August 1st 2023 08:16:47 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -46,8 +46,9 @@ class DTO(ABC):  # noqa
         )
 
     def __str__(self) -> str:
-        s = f"\n\n\t\t\t{self.__class__.__name__}\n"
         width = 32
+        breadth = width * 2
+        s = f"\n\n{self.__class__.__name__.center(breadth, ' ')}"
         for k, v in self.__dict__.items():
             if type(v) in IMMUTABLE_TYPES:
                 s += f"\n{k.rjust(width,' ')} | {v}"

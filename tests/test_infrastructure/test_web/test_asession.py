@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_web/test_asession.py                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 7th 2023 02:22:49 am                                                     #
-# Modified   : Tuesday July 25th 2023 01:04:37 pm                                                  #
+# Modified   : Wednesday August 2nd 2023 01:24:16 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,8 +19,8 @@
 import inspect
 from datetime import datetime
 import pytest
-import asyncio
 import logging
+
 from appstore.infrastructure.web.headers import STOREFRONT
 
 # ------------------------------------------------------------------------------------------------ #
@@ -33,7 +33,8 @@ single_line = f"\n{100 * '-'}"
 @pytest.mark.asession
 class TestASession:  # pragma: no cover
     # ============================================================================================ #
-    def test_asession(self, container, urls, caplog):
+    @pytest.mark.asyncio
+    async def test_asession(self, container, urls, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -46,11 +47,10 @@ class TestASession:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         session = container.web.asession()
-        asyncio.run(session.get(urls, headers=STOREFRONT["headers"]))
-        responses = session.responses
-        assert len(responses) == len(urls)
+        responses = await session.get(urls, headers=STOREFRONT["headers"])
         for response in responses:
-            logger.debug(response)
+            assert isinstance(response, dict)
+            assert "adamId" in response
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

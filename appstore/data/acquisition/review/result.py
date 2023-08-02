@@ -11,120 +11,81 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Monday July 31st 2023 01:09:30 am                                                   #
+# Modified   : Wednesday August 2nd 2023 12:36:13 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Defines the Result Object for Rating Responses"""
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
-import logging
 
-import pandas as pd
-from appstore.data.acquisition.base import Result, Response
+import requests
 
-
-# ------------------------------------------------------------------------------------------------ #
-@dataclass
-class ReviewResponse(Response):
-    """Encapsulates a response from the ReviewScraper.
-
-    Inherits the following member from the Response base class:
-        status: bool = True
-    """
-
-    id: str = None  # noqa
-    app_id: str = None
-    app_name: str = None
-    category_id: str = None
-    category: str = None
-    author: str = None
-    rating: float = 0
-    title: str = None
-    content: str = None
-    vote_sum: int = 0
-    vote_count: int = 0
-    date: datetime = None
-
-    @classmethod
-    def create(
-        cls, app_id: str, app_name: str, category_id: str, category: str, response: dict
-    ) -> ReviewResponse:
-        """Factory method creating a ReviewResponse object
-
-        Args:
-            app_id (str): The application id for which the review was written
-            app_name (str): The application name
-            category_id (str): The four character Appstore category id
-            category (str): The Appstore label
-            response (dict): A dictionary containing a single review from the response object.
-        """
-        cls._logger = logging.getLogger(f"{cls.__class__.__name__}")
-
-        try:
-            review_response = cls(
-                id=response["userReviewId"],
-                app_id=app_id,
-                app_name=app_name,
-                category_id=category_id,
-                category=category,
-                author=response["name"],
-                rating=float(response["rating"]),
-                title=response["title"],
-                content=response["body"],
-                vote_sum=int(response["voteSum"]),
-                vote_count=int(response["voteCount"]),
-                date=datetime.strptime(response["date"], "%Y-%m-%dT%H:%M:%f%z"),
-                status=True,
-            )
-            return review_response  # noqa
-
-        except Exception as e:
-            msg = f"\nInvalid response. Encountered {type(e)} exception.\n{e}\n{response}"
-            cls._logger.debug(msg)
-
-            # Create a failed response
-            review_response = cls(
-                app_id=app_id,
-                app_name=app_name,
-                category_id=category_id,
-                category=category,
-                status=False,
-            )
-            return review_response  # noqa
+from appstore.data.acquisition.base import Result, App
+from appstore.infrastructure.web.utils import getsize
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class ReviewResult(Result):
-    response: list[dict] = field(default_factory=list)
-    apps: int = 1
-    reviews: int = 0
-    requests: int = 0
-    successes: int = 0
-    fails: int = 0
+    """Encapsulates the review results. Inherits the following from Result base class:
+    content (list): List of dictionaries containing the response content
+    size: (int): Total size of response in bytes
+    requests (int): Number of requests. This will be one for syncronous requests,
+        async requests vary.
+    successes: (int): Number of successful responses
+    errors: (int): Number of errors.
 
-    def add_response(self, response: ReviewResponse) -> None:
-        """Adds a response to the result object
+    """
+
+    app: App = None
+    reviews: int = 0
+
+    def add_response(self, response: requests.Response, app: App) -> None:
+        """Adds a response to the instance
 
         Args:
-           response (ReviewResponse): An object encapsulating a single review response.
+           response (requests.Response): HTTP Response
         """
+        self.app = app
 
-        self.response.append(response.as_dict())
-        self.requests += 1
-        if response.status:
-            self.reviews += 1
-            self.successes += 1
-        else:
-            self.fails += 1
+        self.size += getsize(response=response)
 
-    def as_df(self) -> pd.DataFrame:
-        """Returns the RatingResult(s) as a dataframe"""
-        return pd.DataFrame(self.response)
+        for data in response.json()["userReviewList"]:
+            review = self._parse_review(data=data)
+            if review is not None:
+                self.content.append(review)
 
-    def is_valid(self) -> bool:
-        """Assesses and returns Result validity"""
-        return self.successes > 0
+    def _parse_review(self, data: dict) -> dict:
+        keys = [
+            "userReviewId",
+            "name",
+            "rating",
+            "title",
+            "body",
+            "voteSum",
+            "voteCount",
+            "date",
+        ]
+
+        review = {}
+        review["id"] = self.app.id
+        review["name"] = self.app.name
+        review["category_id"] = self.app.category_id
+        review["category"] = self.app.category
+
+        for key in keys:
+            try:
+                if key == "date":
+                    review[key] = datetime.strptime(data[key], "%Y-%m-%dT%H:%M:%f%z")
+                else:
+                    review[key] = data[key]
+            except KeyError as e:
+                msg = f"Exception occurred: Review data is missing the {key} value.\n{e}"
+                self._logger.debug(msg)
+                self.errors += 1
+                return None
+        self.reviews += 1
+        return review

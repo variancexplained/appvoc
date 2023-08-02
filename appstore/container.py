@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Sunday July 30th 2023 06:50:04 pm                                                   #
+# Modified   : Tuesday August 1st 2023 05:46:43 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -144,7 +144,11 @@ class WebSessionContainer(containers.DeclarativeContainer):
     storefront_headers = providers.Resource(AppleStoreFrontHeader)
 
     session = providers.Resource(
-        SessionHandler, timeout=timeout, throttle=throttle, headers=browser_headers
+        SessionHandler,
+        timeout=timeout,
+        throttle=throttle,
+        headers=browser_headers,
+        session_retries=config.web.session.retries,
     )
 
     asession = providers.Resource(

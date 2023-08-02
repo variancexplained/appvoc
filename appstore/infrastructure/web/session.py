@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Monday July 31st 2023 05:45:41 pm                                                   #
+# Modified   : Tuesday August 1st 2023 10:36:04 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import requests
 from appstore.infrastructure.web.throttle import LatencyThrottle
 from appstore.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appstore.infrastructure.web.headers import BrowserHeader
-from appstore.infrastructure.web.response import response_agent
+
 
 load_dotenv()
 
@@ -36,7 +36,7 @@ class SessionHandler:
 
     Args:
         timeout (TimeoutHTTPAdapter): An HTTP Adapter for managing timeouts and retries at request level.
-        session_retries (int): Number of sessions to retry if timeout retry maximum has been reached.
+        retries (int): Number of sessions to retry if timeout retry maximum has been reached.
         delay (tuple): The lower and upper bound on time between requests.
     """
 
@@ -56,7 +56,6 @@ class SessionHandler:
         self._proxy = None  # The proxy used for the current request
         self._header = None  # The header used for the current request.
 
-        self._sessions = 0
         self._session = None
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
@@ -70,27 +69,30 @@ class SessionHandler:
             params (dict): The parameters to be added to the url
 
         """
-        self._sessions = 0
 
-        while self._sessions < self._session_retries:
+        session_retry = 0
+
+        while session_retry < self._session_retries:
             self._setup(header=header)
 
             try:
-                response = self.make_request(
+                self._throttle.start()
+                response = self._session.get(
                     url=url, headers=self._header, params=params, proxies=self._proxy
                 )
-                latency_seconds = response.latency / 1000
-                self._throttle.delay(latency=latency_seconds, wait=True)
+                self._throttle.stop()
+                self._throttle.delay()
 
             except Exception as e:  # pragma: no cover
-                self._sessions += 1
-                msg = f"A {type(e)} exception occurred. \n{e}\nRetrying with session #{self._sessions}."
+                session_retry += 1
+                msg = (
+                    f"A {type(e)} exception occurred. \n{e}\nRetrying with retry #{session_retry}."
+                )
                 self._logger.exception(msg)
             else:
                 return response
 
         self._logger.exception("All retry and session limits have been reached. Exiting.")
-        return self
 
     def _setup(self, header: dict = None) -> None:
         """Conducts pre-request initializations"""
@@ -102,20 +104,6 @@ class SessionHandler:
         self._session = requests.Session()
         self._session.mount("https://", self._timeout)
         self._session.mount("http://", self._timeout)
-
-        # Set / reset the response
-        self._response = None
-
-    @response_agent
-    def make_request(
-        self, url: str, headers: dict, params: dict, proxies: dict
-    ) -> requests.Response:
-        return self._session.get(
-            url=url,
-            headers=headers,
-            params=params,
-            proxies=proxies,
-        )
 
     def _get_proxy(self) -> dict:
         """Returns proxy servers"""

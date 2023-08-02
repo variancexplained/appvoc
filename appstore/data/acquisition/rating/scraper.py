@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Monday July 31st 2023 05:44:21 am                                                   #
+# Modified   : Tuesday August 1st 2023 05:14:24 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -52,11 +52,11 @@ class RatingScraper:
     def __init__(
         self,
         apps=pd.DataFrame,
-        session: ASessionHandler = Provide[AppstoreContainer.web.asession],
+        session_handler: ASessionHandler = Provide[AppstoreContainer.web.asession],
         batch_size: int = 5,
     ) -> None:
         self._apps = apps
-        self._session = session
+        self._session_handler = session_handler
         self._batch_size = batch_size
         self._batch = 0
         self._batches = []
@@ -80,7 +80,7 @@ class RatingScraper:
         if self._batch == len(self._batches):
             raise StopAsyncIteration
 
-        responses = await self._session.get(
+        responses = await self._session_handler.get(
             urls=self._batches[self._batch]["urls"], headers=self._header
         )
 

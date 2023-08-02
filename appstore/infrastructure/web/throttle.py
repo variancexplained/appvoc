@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday April 26th 2023 09:48:43 pm                                               #
-# Modified   : Monday July 31st 2023 05:31:39 am                                                   #
+# Modified   : Tuesday August 1st 2023 09:49:18 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -60,10 +60,22 @@ class LatencyThrottle(Throttle):
 
         self._prior_delay = start_delay
         self._counter = 0
-        self._latency = []
+        self._latency = None
+        self._latencies = []
         self._wait = []
 
-    def delay(self, latency: float, wait: bool = True) -> Union[float, None]:
+        self._start = None
+        self._end = None
+
+    def start(self) -> None:
+        self._start = datetime.now()
+
+    def stop(self) -> None:
+        self._end = datetime.now()
+        self._latency = (self._end - self._start).total_seconds()
+        self._latencies.append(self._latency)
+
+    def delay(self) -> Union[float, None]:
         """Computes and optionally executes a delay, related to request latency and status code.
 
         Delay is equal to the average of the prior delay and the latency, bounded
@@ -75,39 +87,35 @@ class LatencyThrottle(Throttle):
 
         """
         # Target delay is the time of round trips allowed per request.
-        target_delay = latency
+        target_delay = self._latency
         # Compute adjusted delay as average of prior delay and target delay
         new_delay = (target_delay + self._prior_delay) / 2.0
         # New delay should be at least the target delay
         new_delay = max(target_delay, new_delay)
         # New Delay should be between min and max delay
         new_delay = min(max(self._min_delay, new_delay), self._max_delay)
-        # Store state
+        # Store the new delay
         self._prior_delay = new_delay
+        self._wait.append(new_delay)
         # Viola
-        self._monitor(latency, new_delay)
+        self._monitor()
+        # Wait
+        sleep(new_delay)
 
-        if wait:
-            sleep(new_delay)
-        else:
-            return new_delay
-
-    def _monitor(self, latency: float, delay: float):
+    def _monitor(self):
         """Monitors and reports average latency and delay
 
         Args:
             latency (float): Time between request and server response
         """
         self._counter += 1
-        self._latency.append(latency)
-        self._wait.append(delay)
 
         if self._counter % self._verbose == 0:
-            min_latency = round(np.min(self._latency), 2)
-            max_latency = round(np.max(self._latency), 2)
-            ave_latency = round(np.mean(self._latency), 2)
-            std_latency = round(np.std(self._latency), 2)
-            ttl_latency = round(np.sum(self._latency), 2)
+            min_latency = round(np.min(self._latencies), 2)
+            max_latency = round(np.max(self._latencies), 2)
+            ave_latency = round(np.mean(self._latencies), 2)
+            std_latency = round(np.std(self._latencies), 2)
+            ttl_latency = round(np.sum(self._latencies), 2)
             min_delay = round(np.min(self._wait), 2)
             max_delay = round(np.max(self._wait), 2)
             ave_delay = round(np.mean(self._wait), 2)
@@ -128,7 +136,7 @@ class LatencyThrottle(Throttle):
             self._logger.debug(msg)
 
             self._counter = 0
-            self._latency = []
+            self._latencies = []
             self._wait = []
 
 
@@ -191,10 +199,6 @@ class AThrottle(Throttle):
 
         self._latency_window = np.zeros(self._rolling_window_size)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
-
-    @property
-    def latency(self) -> int:
-        return self._latency
 
     def start(self) -> None:
         self._start = datetime.now()

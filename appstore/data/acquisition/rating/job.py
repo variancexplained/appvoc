@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 02:36:49 am                                                   #
-# Modified   : Sunday July 30th 2023 12:40:27 pm                                                   #
+# Modified   : Tuesday August 1st 2023 06:26:30 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -49,8 +49,8 @@ class RatingJob(Job):
     successful_requests: int = None
     failed_requests: int = None
 
-    def update(self, result: RatingResult) -> None:
-        """Adds result metadata"""
+    def add_result(self, result: RatingResult) -> None:
+        """Adds Iterate through responses to update metrics. Result will have a list of response objects."""
         super().update(result=result)
         self.apps += result.success
         self.apps_per_second = round(self.apps / self.run_elapsed, 2)

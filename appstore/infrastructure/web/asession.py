@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 03:15:52 am                                                 #
-# Modified   : Monday July 31st 2023 06:39:39 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 01:08:27 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -30,8 +30,6 @@ import aiohttp
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.infrastructure.web.headers import BrowserHeader
 from appstore.infrastructure.web.throttle import AThrottle
-from appstore.infrastructure.web.response import Response
-from appstore.infrastructure.web.utils import getsize
 
 load_dotenv()
 
@@ -41,7 +39,7 @@ class ASessionHandler:
     """Asyncronous Session Handler
 
     Args:
-        session_retries (int): Number of sessions to retry if timeout retry maximum has been reached.
+        retries (int): Number of sessions to retry if timeout retry maximum has been reached.
 
     """
 
@@ -123,17 +121,7 @@ class ASessionHandler:
                     async with client.get(url, proxy=proxy, ssl=False) as response:
                         self._throttle.stop()
                         self._throttle.delay()
-                        size = getsize(response)
-                        latency = self._throttle.latency
-                        throughput = size / latency
-                        r = Response(
-                            response=response,
-                            status_code=response.status_code,
-                            size=size,
-                            latency=latency,
-                            throughput=throughput,
-                        )
-                        return await r
+                        return await response.json()
 
                 except Exception as e:
                     retries += 1
