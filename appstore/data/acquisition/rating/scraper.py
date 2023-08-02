@@ -11,21 +11,20 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Tuesday August 1st 2023 05:14:24 pm                                                 #
+# Modified   : Wednesday August 2nd 2023 03:25:37 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppStore Review Request Module"""
 from __future__ import annotations
-import sys
 import logging
-import requests
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from appstore.data.acquisition.rating.result import RatingResult
+from appstore.data.acquisition.rating.validator import RatingValidator
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.asession import ASessionHandler
@@ -59,6 +58,7 @@ class RatingScraper:
         self._session_handler = session_handler
         self._batch_size = batch_size
         self._batch = 0
+        self._failure_count = 0
         self._batches = []
 
         self._url = None
@@ -68,6 +68,7 @@ class RatingScraper:
 
     def __aiter__(self) -> RatingScraper:
         self._batch = 0
+        self._failure_count = 0
         self._batches = self._create_batches()
         return self
 
@@ -80,13 +81,20 @@ class RatingScraper:
         if self._batch == len(self._batches):
             raise StopAsyncIteration
 
+        validator = RatingValidator()
+        result = RatingResult()
+
         responses = await self._session_handler.get(
             urls=self._batches[self._batch]["urls"], headers=self._header
         )
 
-        result = RatingResult()  # result object that will contain the responses.
-
-        result = self._parse_responses(responses=responses, result=result)
+        batch = self._batches[self._batch]["apps"]
+        for response in responses:
+            if validator.is_valid(response=response):
+                self._failure_count = 0
+                result.add_response(response=response, batch=batch)
+            else:
+                result.errors += 1
         self._batch += 1
         return result
 
@@ -107,62 +115,3 @@ class RatingScraper:
                 apps = []
                 urls = []
         return batches
-
-    def _parse_responses(self, responses: list, result: RatingResult) -> RatingResult:
-        """Accepts responses in list format and returns a RatingResult object.
-
-        Args:
-            responses (list): A list of Response objects.
-            result (RatingResult): Object to which the responses will be added.
-
-        """
-        batch = self._batches[self._batch]["apps"]
-
-        results = []
-
-        result.total_requests = len(batch)
-        result.status = True  # Default
-
-        try:
-            for response in responses:
-                if self._is_valid(response):
-                    id = str(response["adamId"])  # noqa
-                    page = {}
-                    page["id"] = [app["id"] for app in batch if app["id"] == id][0]
-                    page["name"] = [app["name"] for app in batch if app["id"] == id][0]
-                    page["category_id"] = [
-                        str(app["category_id"]) for app in batch if app["id"] == id
-                    ][0]
-                    page["category"] = [app["category"] for app in batch if app["id"] == id][0]
-                    page["rating"] = response["ratingAverage"]
-                    page["reviews"] = response["totalNumberOfReviews"]
-                    page["ratings"] = response["ratingCount"]
-                    page["onestar"] = response["ratingCountList"][0]
-                    page["twostar"] = response["ratingCountList"][1]
-                    page["threestar"] = response["ratingCountList"][2]
-                    page["fourstar"] = response["ratingCountList"][3]
-                    page["fivestar"] = response["ratingCountList"][4]
-                    page["status"] = True
-                    results.append(page)
-
-                    result.successful_requests += 1
-                    result.apps += 1
-                    result.size += sys.getsizeof(page)
-                else:
-                    result.failed_requests += 1
-
-            result.response = results
-        except Exception as e:  # pragma: no cover
-            msg = f"Exception of type {type(e)} occurred.\n{e}."
-            self._logger.exception(msg)
-            result.status = False
-        else:  # pragma: no cover
-            result.status = False
-        return result
-
-    def _is_valid(self, response: requests.Response) -> bool:
-        """Validates an HTTP response page"""
-        keys = ["adamId", "ratingAverage", "totalNumberOfReviews", "ratingCount", "ratingCountList"]
-        valid = response.status_code == 200
-        if valid:
-            return sum([1 for key in response.json() for key in keys]) == len(keys)

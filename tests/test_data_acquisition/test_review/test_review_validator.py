@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /tests/test_data_acquisition/test_rating/test_rating_scraper.py                     #
+# Filename   : /tests/test_data_acquisition/test_review/test_review_validator.py                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday July 31st 2023 02:04:35 am                                                   #
-# Modified   : Wednesday August 2nd 2023 03:24:01 am                                               #
+# Created    : Wednesday August 2nd 2023 02:57:06 am                                               #
+# Modified   : Wednesday August 2nd 2023 03:05:05 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,8 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.acquisition.rating.scraper import RatingScraper
+from appstore.data.acquisition.review.validator import ReviewValidator
+from appstore.data.acquisition.base import ErrorCodes
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -30,15 +31,12 @@ logger = logging.getLogger(__name__)
 double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
-KEYS = ["name", "reviews", "onestar", "fivestar"]
 
-
-@pytest.mark.rating
-@pytest.mark.rating_scraper
-@pytest.mark.asyncio
-class TestRatingScraper:  # pragma: no cover
+@pytest.mark.review_validator
+@pytest.mark.validator
+class TestReviewValidator:  # pragma: no cover
     # ============================================================================================ #
-    async def test_setup(self, container, appdata_repo, caplog):
+    def test_setup(self, review_responses, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -50,21 +48,23 @@ class TestRatingScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_repo
-        df = repo.sample(10)
-
-        async for result in RatingScraper(apps=df, batch_size=5):
-            assert isinstance(result.content, list)
-            assert result.apps + result.errors == 5
-            assert isinstance(result.size, int)
-            for data in result.content:
-                for key in KEYS:
-                    assert key in data
-                logger.debug(data)
-
-            logger.debug(result.get_result())
-            logger.debug(result)
-
+        validator = ReviewValidator()
+        for idx, response in enumerate(review_responses):
+            if idx == 0:
+                assert not validator.is_valid(response)
+                assert validator.error_code == ErrorCodes.no_response
+            elif idx == 1:
+                assert not validator.is_valid(response)
+                assert validator.error_code == ErrorCodes.response_type_error
+            elif idx == 2:
+                assert not validator.is_valid(response)
+                assert validator.status_code == 300
+                assert validator.client_error is True
+            elif idx == 3:
+                assert validator.status_code == 500
+                assert validator.server_error is True
+            elif idx == 4:
+                assert validator.is_valid(response)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

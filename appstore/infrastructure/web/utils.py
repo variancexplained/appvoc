@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday July 31st 2023 06:32:36 pm                                                   #
-# Modified   : Monday July 31st 2023 06:34:57 pm                                                   #
+# Modified   : Wednesday August 2nd 2023 02:27:26 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -33,5 +33,5 @@ def getsize(response: requests.Response) -> int:
     except KeyError:
         size = sys.getsizeof(response.json())
     except Exception:
-        size = 0
+        size = sys.getsizeof(response)
     return size

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Tuesday August 1st 2023 10:28:20 pm                                                 #
+# Modified   : Wednesday August 2nd 2023 02:34:56 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -39,12 +39,28 @@ class RatingResult(Result):
 
     apps: int = 0
 
-    def add_response(self, content: dict) -> None:
+    def add_response(self, response: dict, batch: dict) -> None:
         """Adds a rating to the result content
 
         Args:
            review (dict): Dictionary containing review data
         """
-        self.content.append(content)
-        self.size += getsize()
+
+        self.size += getsize(response)
         self.apps += 1
+
+        id = str(response["adamId"])  # noqa
+        page = {}
+        page["id"] = [app["id"] for app in batch if app["id"] == id][0]
+        page["name"] = [app["name"] for app in batch if app["id"] == id][0]
+        page["category_id"] = [str(app["category_id"]) for app in batch if app["id"] == id][0]
+        page["category"] = [app["category"] for app in batch if app["id"] == id][0]
+        page["rating"] = response["ratingAverage"]
+        page["reviews"] = response["totalNumberOfReviews"]
+        page["ratings"] = response["ratingCount"]
+        page["onestar"] = response["ratingCountList"][0]
+        page["twostar"] = response["ratingCountList"][1]
+        page["threestar"] = response["ratingCountList"][2]
+        page["fourstar"] = response["ratingCountList"][3]
+        page["fivestar"] = response["ratingCountList"][4]
+        self.content.append(page)

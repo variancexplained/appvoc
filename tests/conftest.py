@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 01:37:03 am                                               #
+# Modified   : Wednesday August 2nd 2023 03:12:11 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -198,6 +198,48 @@ def review_job_df(review_jobs):
 @pytest.fixture(scope="module", autouse=False)
 def rating_jobs():
     return IOService.read(RATING_JOBS_FILEPATH)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                     RATING RESPONSES                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_responses():
+    return [
+        None,
+        [],
+        {},
+        {
+            "ratingAverage": 4,
+            "totalNumberOfReviews": 2,
+            "ratingCount": 3,
+            "ratingListCount": [
+                1,
+                2,
+                3,
+            ],
+        },
+        {
+            "ratingAverage": 4,
+            "totalNumberOfReviews": 2,
+            "ratingCount": 3,
+            "ratingCountList": [1, 2, 3, 4, 5],
+        },
+    ]
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                     REVIEW RESPONSES                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_responses():
+    return [
+        None,
+        [],
+        {"status_code": 300},
+        {"status_code": 500},
+        {"status_code": 200},
+    ]
 
 
 # ------------------------------------------------------------------------------------------------ #
