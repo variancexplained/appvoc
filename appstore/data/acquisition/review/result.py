@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 12:36:13 am                                               #
+# Modified   : Wednesday August 9th 2023 03:53:36 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,9 +19,9 @@
 """Defines the Result Object for Rating Responses"""
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import datetime
 
 import requests
+import pandas as pd
 
 from appstore.data.acquisition.base import Result, App
 from appstore.infrastructure.web.utils import getsize
@@ -59,33 +59,26 @@ class ReviewResult(Result):
                 self.content.append(review)
 
     def _parse_review(self, data: dict) -> dict:
-        keys = [
-            "userReviewId",
-            "name",
-            "rating",
-            "title",
-            "body",
-            "voteSum",
-            "voteCount",
-            "date",
-        ]
+        try:
+            review = {}
+            review["id"] = data["userReviewId"]
+            review["app_id"] = self.app.id
+            review["app_name"] = self.app.name
+            review["category_id"] = self.app.category_id
+            review["category"] = self.app.category
+            review["author"] = data["name"]
+            review["rating"] = data["rating"]
+            review["title"] = data["title"]
+            review["content"] = data["body"]
+            review["vote_sum"] = data["voteSum"]
+            review["vote_count"] = data["voteCount"]
+            review["date"] = pd.to_datetime(data["date"])
 
-        review = {}
-        review["id"] = self.app.id
-        review["name"] = self.app.name
-        review["category_id"] = self.app.category_id
-        review["category"] = self.app.category
-
-        for key in keys:
-            try:
-                if key == "date":
-                    review[key] = datetime.strptime(data[key], "%Y-%m-%dT%H:%M:%f%z")
-                else:
-                    review[key] = data[key]
-            except KeyError as e:
-                msg = f"Exception occurred: Review data is missing the {key} value.\n{e}"
-                self._logger.debug(msg)
-                self.errors += 1
-                return None
-        self.reviews += 1
-        return review
+        except Exception as e:
+            msg = f"Exception of type {type(e)} occurred.\n{e}"
+            self._logger.debug(msg)
+            self.data_errors += 1
+            return None
+        else:
+            self.reviews += 1
+            return review

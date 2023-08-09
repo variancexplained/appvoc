@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 1st 2023 10:52:26 pm                                                 #
-# Modified   : Wednesday August 2nd 2023 03:11:26 am                                               #
+# Modified   : Wednesday August 9th 2023 03:33:51 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,7 @@
 from dataclasses import dataclass
 import requests
 
-from appstore.data.acquisition.base import Validator, ErrorCodes
+from appstore.data.acquisition.base import Validator
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -30,8 +30,8 @@ class RatingValidator(Validator):
     response: Any = None
     valid: bool = True
     status_code: int = None
-    error_code: int = None
     msg: str = None
+    data_error: bool = False
     client_error: bool = False
     server_error: bool = False
     """
@@ -41,36 +41,43 @@ class RatingValidator(Validator):
         self.response = response
         self.valid = True
 
-        if self._is_valid_response_type():
-            if self._is_valid_response_content():
-                pass
+        self._validate_response_type()
+        if self.valid:
+            self._validate_response_content()
         return self.valid
 
-    def _is_valid_response_type(self) -> bool:
+    def _validate_response_type(self) -> bool:
         """Ensures the response is the correct type"""
         if self.response is None:
-            self.error_code = ErrorCodes.no_response
-            self.msg = "No response"
             self.valid = False
+            self.data_error = True
+            self.msg = "\n\nNo response"
+            self._logger.debug(self.msg)
 
         elif not isinstance(self.response, dict):
-            self.error_code = ErrorCodes.response_type_error
-            self.msg = f"Invalid response type: Response is of type {type(self.response)}."
             self.valid = False
+            self.data_error = True
+            self.msg = f"\n\nInvalid response type: Response is of type {type(self.response)}."
+            self._logger.debug(self.msg)
 
         return self.valid
 
-    def _is_valid_response_content(self) -> bool:
+    def _validate_response_content(self) -> bool:
         keys = ["ratingAverage", "totalNumberOfReviews", "ratingCount", "ratingCountList"]
         for key in keys:
             if key not in self.response:
-                self.error_code = ErrorCodes.data_error
-                self.msg = f"Invalid Response: {key} is missing from response."
                 self.valid = False
+                self.data_error = True
+                self.msg = f"\n\nInvalid Response: {key} is missing from response."
+                self._logger.debug(self.msg)
+                break
+
             elif key == "ratingCountList":
                 if len(self.response["ratingCountList"]) != 5:
-                    self.error_code = ErrorCodes.data_error
-                    self.msg = "Invalid Response: ratingCount histogram missing data."
                     self.valid = False
+                    self.data_error = True
+                    self.msg = "\n\nInvalid Response: ratingCount histogram missing data."
+                    self._logger.debug(self.msg)
+                    break
 
         return self.valid

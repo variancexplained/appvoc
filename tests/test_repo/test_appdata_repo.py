@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Sunday July 30th 2023 07:19:08 pm                                                   #
+# Modified   : Tuesday August 8th 2023 08:49:46 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -88,7 +88,7 @@ class TestAppDataRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         repo = appdata_repo
-        repo.add(data=appdata)
+        repo.load(data=appdata)
         assert repo.count() == 10
         logger.debug(repo.getall())
         repo.save()
@@ -349,7 +349,7 @@ class TestAppDataRepo:  # pragma: no cover
         db = container.data.db()
         repo = AppDataRepo(database=db)
         db.begin()
-        repo.add(data=appdata)
+        repo.load(data=appdata)
         assert repo.count() == 20
         db.rollback()
         assert repo.count() == 10
@@ -416,7 +416,7 @@ class TestAppDataRepo:  # pragma: no cover
         # You will be prompted to approve dedup, enter yes at this first prompt
         # Enter no at the second prompt
         repo = appdata_repo
-        repo.add(data=appdata)
+        repo.load(data=appdata)
         assert repo.count() == 20
         repo.dedup()
         assert repo.count() == 20

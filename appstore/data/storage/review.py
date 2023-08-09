@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/data/storage/review.py                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Saturday July 29th 2023 08:21:18 pm                                                 #
+# Modified   : Tuesday August 8th 2023 08:47:19 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -85,7 +85,7 @@ class ReviewRepo(Repo):
         super().__init__(name=self.__name, database=database)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def add(self, data: pd.DataFrame) -> None:
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 07:13:57 am                                               #
+# Modified   : Wednesday August 9th 2023 02:33:56 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,7 +28,7 @@ from appstore.infrastructure.io.local import IOService
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
-from tests.data.rating.response import responses, batch
+from tests.data.rating.response import batch
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -50,8 +50,13 @@ APPS = [
     {"id": "297606951", "name": "amazon", "category_id": "6024", "category": "SHOPPING"},
     {"id": "544007664", "name": "youtube", "category_id": "6005", "category": "SOCIAL_NETWORKING"},
     {"id": "951937596", "name": "outlook", "category_id": "6000", "category": "BUSINESS"},
-    {"id": "422689480", "name": "gmail", "category_id": "6002", "category": "UTILITIES"},
-    {"id": "310633997", "name": "whatsapp", "category_id": "6002", "category": "UTILITIES"},
+    {"id": "6446212408", "name": "Cookie Blocker", "category_id": "6002", "category": "UTILITIES"},
+    {
+        "id": "578119993",
+        "name": "SYSTEM UTIL Dashboard",
+        "category_id": "6002",
+        "category": "UTILITIES",
+    },
 ]
 EPOCH = "1970-01-01 00:00:00"
 collect_ignore = [
@@ -62,7 +67,7 @@ collect_ignore = [
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                      APP IDS                                                     #
+#                                        APPS                                                      #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def apps():
@@ -104,11 +109,16 @@ def mode():
     dotenv_file = dotenv.find_dotenv()
     dotenv.load_dotenv(dotenv_file)
     prior_mode = os.environ["MODE"]
+    prior_archive = os.environ["ARCHIVE"]
     os.environ["MODE"] = "test"
+    os.environ["ARCHIVE"] = os.environ["ARCHIVE_TEST"]
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
+    dotenv.set_key(dotenv_file, "ARCHIVE", os.environ["ARCHIVE"])
     yield
     os.environ["MODE"] = prior_mode
+    os.environ["ARCHIVE"] = prior_archive
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
+    dotenv.set_key(dotenv_file, "ARCHIVE", os.environ["ARCHIVE"])
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -151,7 +161,7 @@ def appdata_repo_zero(container):
     repo.delete_all()
     repo.save()
     yield repo
-    repo.add(data=df)
+    repo.load(data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -161,14 +171,6 @@ def appdata_repo_zero(container):
 def appdata_repo(container):
     repo = container.data.appdata_repo()
     yield repo
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                      RATING RESPONSE                                             #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def rating_response():
-    return responses
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -192,7 +194,11 @@ def job_df():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def job_repo(container):
-    return container.data.job_repo
+    repo = container.data.job_repo()
+    data = repo.getall()
+    repo.delete_all()
+    yield repo
+    repo.load(df=data)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -200,7 +206,11 @@ def job_repo(container):
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def review_jobrun_repo(container):
-    return container.data.review_jobrun_repo
+    repo = container.data.review_jobrun_repo()
+    data = repo.getall()
+    repo.delete_all()
+    yield repo
+    repo.load(df=data)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -208,10 +218,13 @@ def review_jobrun_repo(container):
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def rating_jobrun_repo(container):
-    return container.data.rating_jobrun_repo
+    repo = container.data.rating_jobrun_repo()
+    data = repo.getall()
+    repo.delete_all()
+    yield repo
+    repo.load(df=data)
 
 
-# -------------------
 # ------------------------------------------------------------------------------------------------ #
 #                                     RATING RESPONSES                                             #
 # ------------------------------------------------------------------------------------------------ #
@@ -302,7 +315,7 @@ def appstore_rating_repo(container):
     repo = container.data.rating_repo()
     repo.delete_all()
     df = IOService.read(RATINGS_FILEPATH)
-    repo.add(data=df)
+    repo.load(data=df)
     return repo
 
 

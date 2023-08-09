@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Wednesday August 2nd 2023 09:19:18 am                                               #
+# Modified   : Wednesday August 9th 2023 10:30:52 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -65,15 +65,35 @@ class JobRepo(Repo):
         super().__init__(name=self.__name, database=database)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def add(self, data: pd.DataFrame) -> None:
+    def add(self, job: Job) -> None:
+        """Adds a job to the repo.
+
+        Args:
+            job (Job): A Job object.
+        """
+        try:
+            if self.exists(id=job.id):
+                msg = f"Job {job.id} already exists."
+                self._logger.exception(msg)
+                raise ValueError(msg)  # noqa
+        except Exception:
+            pass  # noqa
+
+        df = job.as_df()
+        self.load(data=df)
+
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols="completed")
+
         self._database.insert(
             data=data, tablename=self._name, dtype=JOB_DATABASE_DTYPES, if_exists="append"
         )
+
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
 
@@ -85,14 +105,14 @@ class JobRepo(Repo):
         Args:
             id (Union[str,int]): The entity id.
         """
-        return super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
+        df = super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
+        return Job.from_df(df=df)
 
     def next(self, controller: str) -> Job:
         """Returns a randomly selected job not yet completed"""
 
         df = self.getall()
-        # First get any in-progress jobs
-        jobs = df[(df["complete"] == False) & (df["controller"] == controller)]  # noqa
+        jobs = df.loc[(df["complete"] == False) & (df["controller"] == controller)]  # noqa
         if len(jobs) == 0:
             return None
         else:
@@ -107,7 +127,9 @@ class JobRepo(Repo):
 
     def update(self, job: Job) -> None:
         """Updates a job in the database"""
-        query = f"UPDATE {self._name} SET {self._name}.complete = :complete, {self._name}.completed = :completed WHERE {self._name}.id = :id;"
+        query = (
+            f"UPDATE {self._name} SET complete = :complete, completed = :completed WHERE id = :id;"
+        )
         params = {
             "complete": job.complete,
             "completed": job.completed,
@@ -121,6 +143,8 @@ class JobRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols="completed")
+
         self._database.insert(
             data=data, tablename=self._name, dtype=JOB_DATABASE_DTYPES, if_exists="replace"
         )
@@ -151,6 +175,7 @@ RATING_JOBRUN_DATAFRAME_DTYPES = {
     "size_ave": np.float64,
     "apps": np.int64,
     "apps_per_second": np.float64,
+    "bytes_per_second": np.float64,
     "complete": bool,
 }
 RATING_JOBRUN_PARSE_DATES = {
@@ -162,7 +187,7 @@ RATING_JOBRUN_PARSE_DATES = {
 #                                  RATING DATABASE DATA TYPES                                      #
 # ------------------------------------------------------------------------------------------------ #
 RATING_JOBRUN_DATABASE_DTYPES = {
-    "id": VARCHAR(32),
+    "id": VARCHAR(64),
     "jobid": VARCHAR(32),
     "controller": VARCHAR(64),
     "category_id": VARCHAR(8),
@@ -178,7 +203,8 @@ RATING_JOBRUN_DATABASE_DTYPES = {
     "size_ave": FLOAT,
     "apps": BIGINT,
     "apps_per_second": FLOAT,
-    "completed": VARCHAR(64),
+    "bytes_per_second": FLOAT,
+    "completed": DATETIME,
     "complete": TINYINT,
 }
 
@@ -190,12 +216,31 @@ class RatingJobRunRepo(Repo):
     def __init__(self, database: Database) -> None:
         super().__init__(self.__name, database)
 
-    def add(self, data: pd.DataFrame) -> None:
+    def add(self, jobrun: RatingJobRun) -> None:
+        """Adds a job to the repo.
+
+        Args:
+            jobrun (RatingJobRun): A rating job run object.
+        """
+        try:
+            if self.exists(id=jobrun.id):
+                msg = f"Job run {jobrun.id} already exists."
+                self._logger.exception(msg)
+                raise ValueError(msg)  # noqa
+        except Exception:
+            pass  # noqa
+
+        df = jobrun.as_df()
+        self.load(data=df)
+
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols=["started", "ended", "completed"])
+
         self._database.insert(
             data=data,
             tablename=self._name,
@@ -210,7 +255,7 @@ class RatingJobRunRepo(Repo):
         id: Union[str, int],
         dtypes: dict = RATING_JOBRUN_DATAFRAME_DTYPES,
         parse_dates: dict = RATING_JOBRUN_PARSE_DATES,
-    ) -> Job:
+    ) -> RatingJobRun:
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
@@ -218,22 +263,10 @@ class RatingJobRunRepo(Repo):
         """
         query = f"SELECT * FROM {self._name} WHERE id = :id;"
         params = {"id": id}
-        job = self._database.query(
+        jobrun = self._database.query(
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
-        return RatingJobRun.from_df(df=job)
-
-    def next(self) -> Job:
-        """Returns a randomly selected job not yet completed"""
-
-        df = self.getall()
-        # First get any in-progress jobs
-        jobs = df[df["complete"] == False]  # noqa
-        if len(jobs) == 0:
-            return None
-        else:
-            job = jobs.sample(n=1)
-            return Job.from_df(df=job)
+        return RatingJobRun.from_df(df=jobrun)
 
     def getall(
         self,
@@ -257,6 +290,8 @@ class RatingJobRunRepo(Repo):
             size_ave =:size_ave,
             apps =:apps,
             apps_per_second =:apps_per_second,
+            bytes_per_second =:bytes_per_second,
+            complete = :complete,
             completed =:completed
             WHERE id = :id;"""
         params = {
@@ -271,6 +306,8 @@ class RatingJobRunRepo(Repo):
             "size_ave": jobrun.size_ave,
             "apps": jobrun.apps,
             "apps_per_second": jobrun.apps_per_second,
+            "bytes_per_second": jobrun.bytes_per_second,
+            "complete": jobrun.complete,
             "completed": jobrun.completed,
             "id": jobrun.id,
         }
@@ -282,6 +319,7 @@ class RatingJobRunRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols=["started", "ended", "completed"])
         self._database.insert(
             data=data,
             tablename=self._name,
@@ -310,6 +348,7 @@ REVIEW_JOBRUN_DATAFRAME_DTYPES = {
     "size_ave": np.float64,
     "apps": np.int64,
     "apps_per_second": np.float64,
+    "bytes_per_second": np.float64,
     "reviews": np.int64,
     "reviews_per_second": np.float64,
     "complete": bool,
@@ -323,7 +362,7 @@ REVIEW_JOBRUN_PARSE_DATES = {
 #                                  REVIEW DATABASE DATA TYPES                                      #
 # ------------------------------------------------------------------------------------------------ #
 REVIEW_JOBRUN_DATABASE_DTYPES = {
-    "id": VARCHAR(32),
+    "id": VARCHAR(64),
     "jobid": VARCHAR(32),
     "controller": VARCHAR(64),
     "category_id": VARCHAR(8),
@@ -339,6 +378,7 @@ REVIEW_JOBRUN_DATABASE_DTYPES = {
     "size_ave": FLOAT,
     "apps": BIGINT,
     "apps_per_second": FLOAT,
+    "bytes_per_second": FLOAT,
     "reviews": BIGINT,
     "reviews_per_second": FLOAT,
     "completed": VARCHAR(64),
@@ -353,12 +393,32 @@ class ReviewJobRunRepo(Repo):
     def __init__(self, database: Database) -> None:
         super().__init__(self.__name, database)
 
-    def add(self, data: pd.DataFrame) -> None:
+    def add(self, jobrun: ReviewJobRun) -> None:
+        """Adds a job to the repo.
+
+        Args:
+            jobrun (ReviewJobRun): A review job run object.
+        """
+        try:
+            if self.exists(id=jobrun.id):
+                msg = f"Job run {jobrun.id} already exists."
+                self._logger.exception(msg)
+                raise ValueError(msg)  # noqa
+        except Exception:
+            pass  # noqa
+
+        df = jobrun.as_df()
+
+        self.load(data=df)
+
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols=["started", "ended", "completed"])
+
         self._database.insert(
             data=data,
             tablename=self._name,
@@ -373,7 +433,7 @@ class ReviewJobRunRepo(Repo):
         id: Union[str, int],
         dtypes: dict = REVIEW_JOBRUN_DATAFRAME_DTYPES,
         parse_dates: dict = REVIEW_JOBRUN_PARSE_DATES,
-    ) -> Job:
+    ) -> ReviewJobRun:
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
@@ -381,22 +441,10 @@ class ReviewJobRunRepo(Repo):
         """
         query = f"SELECT * FROM {self._name} WHERE id = :id;"
         params = {"id": id}
-        job = self._database.query(
+        jobrun = self._database.query(
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
-        return ReviewJobRun.from_df(df=job)
-
-    def next(self) -> Job:
-        """Returns a randomly selected job not yet completed"""
-
-        df = self.getall()
-        # First get any in-progress jobs
-        jobs = df[df["complete"] == False]  # noqa
-        if len(jobs) == 0:
-            return None
-        else:
-            job = jobs.sample(n=1)
-            return Job.from_df(df=job)
+        return ReviewJobRun.from_df(df=jobrun)
 
     def getall(
         self,
@@ -420,8 +468,10 @@ class ReviewJobRunRepo(Repo):
             size_ave =:size_ave,
             apps =:apps,
             apps_per_second =:apps_per_second,
+            bytes_per_second =:bytes_per_second,
             reviews =:reviews,
             reviews_per_second =:reviews_per_second,
+            complete = :complete,
             completed =:completed
             WHERE id = :id;"""
         params = {
@@ -436,8 +486,10 @@ class ReviewJobRunRepo(Repo):
             "size_ave": jobrun.size_ave,
             "apps": jobrun.apps,
             "apps_per_second": jobrun.apps_per_second,
+            "bytes_per_second": jobrun.bytes_per_second,
             "reviews": jobrun.reviews,
             "reviews_per_second": jobrun.reviews_per_second,
+            "complete": jobrun.complete,
             "completed": jobrun.completed,
             "id": jobrun.id,
         }
@@ -449,6 +501,8 @@ class ReviewJobRunRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
+        data = self._parse_datetime(data=data, dtcols=["started", "ended", "completed"])
+
         self._database.insert(
             data=data,
             tablename=self._name,

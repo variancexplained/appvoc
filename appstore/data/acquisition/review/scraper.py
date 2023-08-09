@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 01:49:41 am                                               #
+# Modified   : Wednesday August 9th 2023 12:34:51 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -43,7 +43,6 @@ class ReviewScraper(Scraper):
         start: int = 0,
         max_results_per_page: int = 400,
         max_pages: int = sys.maxsize,
-        failure_threshold: int = 5,
     ) -> None:
         self._app = app
         self._session_handler = session_handler
@@ -51,10 +50,9 @@ class ReviewScraper(Scraper):
         self._end_index = start + max_results_per_page
         self._max_results_per_page = max_results_per_page
         self._max_pages = max_pages
-        self._failure_threshold = failure_threshold
 
         self._page = 0
-        self._failure_count = 0
+
         self._header = STOREFRONT["headers"]
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
@@ -71,18 +69,15 @@ class ReviewScraper(Scraper):
             validator = ReviewValidator()
             result = ReviewResult()
 
-            while self._failure_count < self._failure_threshold:
-                response = self._session_handler.get(url=url, header=self._header)
-                if validator.is_valid(response=response):
-                    self._failure_count = 0
-                    result.add_response(response=response, app=self._app)
-                    self._paginate_url()
-                    return result
-                elif validator.client_error or validator.server_error:
-                    self._failure_count += 1
-                    self._paginate_url()
-
-            raise StopIteration
+            response = self._session_handler.get(url=url, header=self._header)
+            self._paginate_url()
+            if validator.is_valid(response=response):
+                result.add_response(response=response, app=self._app)
+            else:  # pragma: no cover
+                result.data_errors += validator.data_error
+                result.client_errors += validator.client_error
+                result.server_errors += validator.server_error
+            return result
         else:
             raise StopIteration
 

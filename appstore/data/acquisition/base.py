@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 09:27:44 am                                               #
+# Modified   : Wednesday August 9th 2023 02:22:46 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,28 +29,19 @@ from typing import Any
 import pandas as pd
 
 from appstore.base import DTO
-from appstore.data.storage.base import Repo
+from appstore.data.storage.uow import UoW
 
 
 # ------------------------------------------------------------------------------------------------ #
 class Director(ABC):
     """Iterator serving jobs to the controller."""
 
-    def __init__(self, jobrun_repo: Repo, job_repo: Repo) -> None:
-        self._jobrun_repo = jobrun_repo
-        self._job_repo = job_repo
-        self._job = None
-
-    @property
-    def job(self) -> Job:
-        return self._job
+    def __init__(self, uow: UoW) -> None:
+        self._uow = uow
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @abstractmethod
-    def __iter__(self) -> None:
-        """Initializes the job iterator"""
-
-    @abstractmethod
-    def __next__(self) -> Director:
+    def next(self) -> JobRun:  # noqa
         """Sets the next job and returns an instance of this iterator"""
 
 
@@ -120,7 +111,6 @@ class Job(DTO):
     @classmethod
     def from_df(cls, df: pd.DataFrame) -> Job:
         df = df.iloc[0].T
-        logging.debug(df)
         return cls(
             id=df["id"],
             controller=df["controller"],
@@ -130,11 +120,9 @@ class Job(DTO):
             completed=datetime.strftime(df["completed"], "%Y-%m-%d %H:%M:%S"),
         )
 
-    def end(self) -> None:
-        self.completed = datetime.now()
+    def end(self, completed: datetime) -> None:
+        self.completed = completed
         self.complete = True
-        msg = f"\nJob Completed.{self.__str__()}"
-        self._logger.info(msg)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -159,7 +147,8 @@ class JobRun(DTO):
     completed: datetime = None
 
     def __post_init__(self) -> None:
-        self.id = uuid4()
+        if self.id is None:
+            self.id = str(uuid4())
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def start(self) -> None:
@@ -168,7 +157,6 @@ class JobRun(DTO):
         msg = f"\nJobRun for job {self.jobid} Started"
         self._logger.info(msg)
 
-    @abstractmethod
     def add_result(self, result: Result) -> None:
         """Updates the JobRun statistics."""
         now = datetime.now()
@@ -179,13 +167,13 @@ class JobRun(DTO):
         self.data_errors += result.data_errors
         self.errors += self.client_errors + self.server_errors + self.data_errors
         self.size += result.size
-        self.status = "in_progress"
 
     def end(self) -> None:
+        now = datetime.now()
         self.complete = True
-        self.completed = datetime.now()
-        msg = f"\nJobRun Completed.{self.__str__()}"
-        self._logger.info(msg)
+        self.ended = now
+        self.elapsed = (self.ended - self.started).total_seconds()
+        self.completed = now
 
     def announce(self) -> None:
         """Writes progress to the log"""
@@ -197,38 +185,43 @@ class JobRun(DTO):
         """Creates a JobRun from a Job object."""
 
     @abstractclassmethod
-    def from_jobrun(cls, jobrun: JobRun) -> JobRun:  # noqa
-        """Creates a JobRun from a JobRun object."""
-
-    @abstractclassmethod
     def from_df(cls, df: pd.DataFrame) -> JobRun:  # noqa
         """Creates a JobRun from a DataFrame."""
 
 
 # ------------------------------------------------------------------------------------------------ #
-@dataclass(frozen=True)
-class ErrorCodes:
-    no_response: int = 602
-    response_type_error: int = 605
-    data_error: int = 610
-
-
-# ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Validator(ABC):
+class Validator(DTO):
     """Validates response"""
 
     response: Any = None
     valid: bool = True
-    status_code: int = None
-    error_code: int = None
+    status_code: int = 200
     msg: str = None
+    data_error: bool = False
     client_error: bool = False
     server_error: bool = False
+
+    def __post_init__(self) -> None:
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @abstractmethod
     def is_valid(self, response: Any) -> bool:
         """Validates the response object"""
+
+    def _validate_status_code(self) -> bool:
+        """Validates the response return code"""
+        self.status_code = int(self.response.status_code)
+        if not int(self.response.status_code) == 200:
+            self.valid = False
+            if int(self.response.status_code) > 299 and int(self.response.status_code) < 400:
+                self.server_error = True
+            elif int(self.response.status_code) > 399 and int(self.response.status_code) < 500:
+                self.client_error = True
+            elif int(self.response.status_code) > 499:
+                self.server_error = True
+            self.msg = f"Invalid response. Status code = {int(self.response.status_code)}"
+            self._logger.debug(self.msg)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -245,7 +238,9 @@ class App(DTO):
 class Result(DTO):
     content: list[dict] = field(default_factory=list)
     size: int = 0
-    errors: int = 0
+    data_errors: int = 0
+    client_errors: int = 0
+    server_errors: int = 0
 
     def __post_init__(self) -> None:
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
@@ -259,4 +254,4 @@ class Result(DTO):
         return pd.DataFrame(self.content)
 
     def is_valid(self) -> bool:
-        return len(self.content) > self.errors
+        return len(self.content) > 0

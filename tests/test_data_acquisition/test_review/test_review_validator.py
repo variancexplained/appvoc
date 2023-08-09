@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 2nd 2023 02:57:06 am                                               #
-# Modified   : Wednesday August 2nd 2023 03:05:05 am                                               #
+# Modified   : Tuesday August 8th 2023 01:54:43 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,6 @@ import pytest
 import logging
 
 from appstore.data.acquisition.review.validator import ReviewValidator
-from appstore.data.acquisition.base import ErrorCodes
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -52,10 +51,10 @@ class TestReviewValidator:  # pragma: no cover
         for idx, response in enumerate(review_responses):
             if idx == 0:
                 assert not validator.is_valid(response)
-                assert validator.error_code == ErrorCodes.no_response
+                assert validator.server_error is True
             elif idx == 1:
                 assert not validator.is_valid(response)
-                assert validator.error_code == ErrorCodes.response_type_error
+                assert validator.server_error is True
             elif idx == 2:
                 assert not validator.is_valid(response)
                 assert validator.status_code == 300

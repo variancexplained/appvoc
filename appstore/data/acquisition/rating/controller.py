@@ -11,15 +11,13 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 07:20:21 am                                               #
+# Modified   : Wednesday August 9th 2023 05:10:25 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Rating Controller"""
 import logging
-from datetime import datetime
-import asyncio
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
@@ -50,19 +48,22 @@ class RatingController(Controller):
     @inject
     def __init__(
         self,
+        director: type[RatingDirector] = RatingDirector,
         scraper: type[RatingScraper] = RatingScraper,
         uow: UoW = Provide[AppstoreContainer.data.uow],
-        director: RatingDirector = Provide[AppstoreContainer.director.rating],
+        failure_threshold: int = 10,
         batchsize: int = 100,
-        verbose: int = 1000,
+        verbose: int = 10,
     ) -> None:
         super().__init__()
         self._scraper = scraper
         self._uow = uow
-        self._director = director
+        self._failure_threshold = failure_threshold
+        self._director = director(uow=uow)
         self._batchsize = batchsize
         self._verbose = verbose
         self._batch = 0
+        self._failures = 0
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -70,24 +71,29 @@ class RatingController(Controller):
         """Entry point for scraping operation"""
         if not super().is_locked():
             await self._scrape()
-        else:
+        else:  # pragma: no cover
             msg = f"Running {self.__class__.__name__} is not authorized at this time."
             self._logger.info(msg)
 
     async def _scrape(self) -> None:
-        for jobrun in self._director:
-            if jobrun is not None:
-                jobrun.start()
-                apps = self._get_apps(category_id=jobrun.category_id)
-                # Iterate over results returned from the scraper
-                async for result in self._scraper(apps=apps, batch_size=self._batchsize):
+        jobrun = self._director.next()
+        while jobrun is not None and self._failures < self._failure_threshold:
+            jobrun = self.start_jobrun(jobrun=jobrun)
+            apps = self._get_apps(category_id=jobrun.category_id)
+            scraper = self._scraper(apps=apps, batch_size=self._batchsize)
+            # Iterate over results returned from the scraper
+            async for result in scraper.scrape():
+                if result.is_valid():
+                    self._failures = 0
                     self._batch += 1
-                    if result.is_valid():
-                        await self.persist(result)
-                        self.update_jobrun(jobrun=jobrun, result=result)
-                        if self._batch % self._verbose == 0:
-                            jobrun.announce()
-                self.end_jobrun(jobrun=jobrun)
+                    self.persist(result)
+                    jobrun = self.update_jobrun(jobrun=jobrun, result=result)
+                    if self._batch % self._verbose == 0:
+                        jobrun.announce()
+                else:
+                    self._failures += 1
+            self.end_jobrun(jobrun=jobrun)
+            jobrun = self._director.next()
 
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         """Obtains apps for the category, removing any apps for which ratings exist."""
@@ -101,9 +107,9 @@ class RatingController(Controller):
             ratings = self._uow.rating_repo.get_by_category(category_id=category_id)
             apps_processed = ratings["id"].values
             msg += f"\nThere are {len(apps_processed)} apps in category {category_id} which have already been processed."
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             apps_processed = []
-            msg += f"\nException of type {type(e)} encountered. Assuming no apps processed for category.\n{e}"
+            msg += f"\nException of type {type(e)} encountered. Assuming no apps processed for category."
 
         # Remove apps already processed
         if len(apps_processed) > 0:
@@ -117,19 +123,44 @@ class RatingController(Controller):
             self._logger.info(msg)
         return apps
 
-    async def persist(self, result: RatingResult) -> None:
-        try:
-            await asyncio.gather(
-                self._uow.rating_repo.add(data=result.get_result()),
-            )
-            self._uow.save()
-        except Exception:
-            self._uow.rollback()
+    def persist(self, result: RatingResult) -> None:
+        """Persists the result from the scraping operation.
 
-    def update_jobrun(self, jobrun: RatingJobRun, result: RatingResult) -> None:
+        Args:
+            result (RatingResult): The result from the scraping operation
+        """
+        data = result.get_result()
+        if len(data) > 0:
+            try:
+                self._uow.rating_repo.load(data=data)
+                self._uow.save()
+            except Exception as e:  # pragma: no cover
+                msg = f"{type(e)} exception occurred in persist. Rolling back. \n{e}"
+                self._logger.exception(msg)
+                self._uow.rollback()
+
+    def start_jobrun(self, jobrun: RatingJobRun) -> RatingJobRun:
+        """Starts a jobrun and adds a jobrun to the repository.
+
+        Args:
+            jobrun (RatingJobRun): The current job run.
+
+        """
+        jobrun.start()
+        self._director.add_jobrun(jobrun=jobrun)
+        return jobrun
+
+    def update_jobrun(self, jobrun: RatingJobRun, result: RatingResult) -> RatingJobRun:
+        """Adds results to jobrun, and persists.
+
+        Args:
+            jobrun (RatingJobRun): The current job run.
+            result (RatingResult): The result from the scraping operation
+
+        """
         jobrun.add_result(result=result)
-        self._uow.review_jobrun_repo.update(jobrun=jobrun)
-        self._uow.save()
+        self._director.update_jobrun(jobrun=jobrun)
+        return jobrun
 
     def end_jobrun(self, jobrun: RatingJobRun) -> None:
         """Persists job to the Database
@@ -138,10 +169,11 @@ class RatingController(Controller):
             result (ReviewResult) -> Parsed result object
         """
         jobrun.end()
-        self._uow.rating_jobrun_repo.update(jobrun=jobrun)
+        # Get the associated job and end it.
         job = self._uow.job_repo.get(id=jobrun.jobid)
-        job.completed = datetime.now()
-        job.complete = True
-        self._uow.job_repo.update(job=job)
-        self._uow.review_repo.archive()
-        self._uow.save()
+        job.end(completed=jobrun.completed)
+        # Persist the jobrun and the job.
+        self._director.update_job(job=job)
+        self._director.update_jobrun(jobrun=jobrun)
+        # Archive the ratings
+        self._uow.rating_repo.archive()

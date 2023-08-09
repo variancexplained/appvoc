@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 2nd 2023 02:40:52 am                                               #
-# Modified   : Wednesday August 2nd 2023 02:56:29 am                                               #
+# Modified   : Tuesday August 8th 2023 01:54:03 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,6 @@ import pytest
 import logging
 
 from appstore.data.acquisition.rating.validator import RatingValidator
-from appstore.data.acquisition.base import ErrorCodes
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -55,13 +54,13 @@ class TestRatingValidator:  # pragma: no cover
                 assert validator.msg == "No response"
             elif idx == 1:
                 assert not validator.is_valid(response)
-                assert validator.error_code == ErrorCodes.response_type_error
+                assert validator.server_error is True
             elif idx == 2:
                 assert not validator.is_valid(response)
-                assert validator.error_code == ErrorCodes.data_error
+                assert validator.data_error is True
             elif idx == 3:
                 assert not validator.is_valid(response)
-                assert validator.error_code == ErrorCodes.data_error
+                assert validator.data_error is True
             elif idx == 4:
                 assert validator.is_valid(response)
         # ---------------------------------------------------------------------------------------- #

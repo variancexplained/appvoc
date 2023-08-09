@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:33:09 pm                                                 #
-# Modified   : Tuesday August 1st 2023 08:16:47 pm                                                 #
+# Modified   : Wednesday August 9th 2023 01:00:51 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,13 +19,24 @@
 from __future__ import annotations
 from abc import ABC
 from datetime import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
-
+import numpy as np
 import pandas as pd
 
 # ------------------------------------------------------------------------------------------------ #
-IMMUTABLE_TYPES: tuple = (str, int, float, bool, type(None), datetime)
+IMMUTABLE_TYPES: tuple = (
+    str,
+    int,
+    np.int32,
+    np.int64,
+    float,
+    np.float32,
+    np.float64,
+    bool,
+    type(None),
+    datetime,
+)
 SEQUENCE_TYPES: tuple = (list, tuple)
 # ------------------------------------------------------------------------------------------------ #
 
@@ -49,7 +60,8 @@ class DTO(ABC):  # noqa
         width = 32
         breadth = width * 2
         s = f"\n\n{self.__class__.__name__.center(breadth, ' ')}"
-        for k, v in self.__dict__.items():
+        d = asdict(self)
+        for k, v in d.items():
             if type(v) in IMMUTABLE_TYPES:
                 s += f"\n{k.rjust(width,' ')} | {v}"
         s += "\n\n"
@@ -57,7 +69,9 @@ class DTO(ABC):  # noqa
 
     def as_dict(self) -> dict:
         """Returns a dictionary representation of the the Config object."""
-        return {k: self._export_config(v) for k, v in self.__dict__.items()}
+        return {
+            k: self._export_config(v) for k, v in self.__dict__.items() if not k.startswith("_")
+        }
 
     @classmethod
     def _export_config(cls, v):  # pragma: no cover

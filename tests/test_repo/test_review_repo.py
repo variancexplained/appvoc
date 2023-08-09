@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_review_repo.py                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Wednesday July 26th 2023 12:04:29 pm                                                #
+# Modified   : Tuesday August 8th 2023 08:49:45 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -269,7 +269,7 @@ class TestReviewRepo:  # pragma: no cover
         db = container.data.db()
         repo = ReviewRepo(database=db)
         db.begin()
-        repo.add(data=review)
+        repo.load(data=review)
         assert repo.count() == 20
         db.rollback()
         assert repo.count() == 10

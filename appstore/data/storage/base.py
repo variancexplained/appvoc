@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Wednesday August 2nd 2023 07:41:33 am                                               #
+# Modified   : Tuesday August 8th 2023 04:39:35 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,13 +24,14 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Union
 
+from dotenv import load_dotenv
 import pandas as pd
 
 from appstore.infrastructure.database.base import Database
 from appstore.infrastructure.io.local import IOService
 
 # ------------------------------------------------------------------------------------------------ #
-ARCHIVE = "data/archive"
+load_dotenv()
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -48,7 +49,7 @@ class Repo(ABC):
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @abstractmethod
-    def add(self, data: pd.DataFrame) -> None:
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:
@@ -63,35 +64,43 @@ class Repo(ABC):
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
 
-    def reset(self) -> None:
+    def reset(self, force: bool = False) -> None:
         """Resets the repository by dropping the underlying table."""
-        x = input(
-            "This will delete the underlying table and commit the database. Type 'YES' to proceed."
-        )
-        if x == "YES":
-            query = f"DROP TABLE IF EXISTS {self._name};"
-            params = None
+        query = f"DROP TABLE IF EXISTS {self._name};"
+        params = None
+        x = "NO"
+        if not force:
+            x = input(
+                "This will delete the underlying table and commit the database. Type 'YES' to proceed."
+            )
+        if force is True or x == "YES":
             self._database.execute(query=query, params=params)
             self.save()
             msg = f"Repository {self.__class__.__name__} reset."
             self._logger.info(msg)
 
-    def sample(self, n: int = 5, frac: float = None, random_state: int = None) -> pd.DataFrame:
+    def sample(
+        self, n: int = 5, frac: float = None, category_id: str = None, random_state: int = None
+    ) -> pd.DataFrame:
         """Returns a random sample from the underlying dataset.
 
         Args:
-            n (int): Number of samples to return.
+            n (int): Number of samples to return. Optional, defaults to 1.
             frac (float): Proportion of the data to return. n is ignored
-                if this variable is non-null.
+                if this variable is non-null. Optional
+            category_id (str): Four character category_id. Optional
             random_state (int): Seed for pseudo random generation.
         """
-        df = self.getall()
-        return df.sample(n=n, frac=frac)
+        if category_id is None:
+            df = self.getall()
+        else:
+            df = self.get_by_category(category_id=category_id)
+        return df.sample(n=n, frac=frac, random_state=random_state)
 
     def info(self) -> pd.DataFrame:
         """Wrapper for pandas info method"""
         df = self.getall()
-        return df.info()
+        df.info()
 
     def get(
         self,
@@ -142,7 +151,7 @@ class Repo(ABC):
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
 
-    def exists(self, id: Union[str, int] = "appdata") -> bool:  # noqa
+    def exists(self, id: Union[str, int]) -> bool:  # noqa
         """Assesses the existence of an entity in the database.
 
         Args:
@@ -242,8 +251,23 @@ class Repo(ABC):
 
     def archive(self, directory: str = None) -> None:
         if directory is None:
-            directory = os.path.join(ARCHIVE, self._name)
+            basedir = os.getenv(key="ARCHIVE")
+            directory = os.path.join(basedir, self._name)
         os.makedirs(directory, exist_ok=True)
         filename = self._name + "_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
         filepath = os.path.join(directory, filename)
         IOService.write(filepath=filepath, data=self.getall())
+
+    def _parse_datetime(self, data: pd.DataFrame, dtcols: Union[str, list[str]]) -> pd.DataFrame:
+        """Converts strings to datetime objects for the designated column.
+
+        Args:
+            data (pd.DataFrame): Data containing datetime columns
+            dtcols ( Union[str, list[str]]): Columns or column containing datetime or string datetime data.
+        """
+        if isinstance(dtcols, str):
+            dtcols = [dtcols]
+        for dtcol in dtcols:
+            if pd.api.types.is_string_dtype(data[dtcol].dtype):
+                data[dtcol] = pd.to_datetime(data[dtcol])
+        return data

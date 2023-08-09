@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 1st 2023 10:52:26 pm                                                 #
-# Modified   : Wednesday August 2nd 2023 03:07:35 am                                               #
+# Modified   : Tuesday August 8th 2023 05:25:40 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,7 @@
 from dataclasses import dataclass
 import requests
 
-from appstore.data.acquisition.base import Validator, ErrorCodes
+from appstore.data.acquisition.base import Validator
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -41,53 +41,44 @@ class ReviewValidator(Validator):
         self.response = response
         self.valid = True
 
-        if self._is_valid_response_type():
-            if self._is_valid_response_code():
-                if self._is_valid_response_content():
-                    pass
+        self._validate_status_code()
+        if self.valid:
+            self._validate_response_type()
+            if self.valid:
+                self._validate_response_content()
         return self.valid
 
-    def _is_valid_response_type(self) -> bool:
+    def _validate_response_type(self) -> bool:
         """Ensures the response is the correct type"""
         if self.response is None:
-            self.error_code = ErrorCodes.no_response
-            self.msg = "No response"
             self.valid = False
+            self.data_error = True
+            self.msg = "No response"
+            self._logger.debug(self.msg)
 
         elif not isinstance(self.response, requests.Response):
-            self.error_code = ErrorCodes.response_type_error
-            self.msg = f"Invalid response type: Response is of type {type(self.response)}."
             self.valid = False
-
-        return self.valid
-
-    def _is_valid_response_code(self) -> bool:  # pragma: no cover
-        """Checks and sets status code, and error codes."""
-        self.status_code = int(self.response.status_code)
-        if self.status_code != 200:
-            self.msg = f"Invalid response status code: {self.status_code}."
-            self.valid = False
-        if self.status_code > 299 and self.status_code < 500:
-            self.client_error = True
-        elif self.status_code > 499 and self.status_code < 600:
             self.server_error = True
+            self.msg = f"Invalid response type: Response is of type {type(self.response)}."
+            self._logger.debug(self.msg)
+
         return self.valid
 
-    def _is_valid_response_content(self) -> bool:  # pragma: no cover
+    def _validate_response_content(self) -> bool:  # pragma: no cover
         if not isinstance(self.response.json(), dict):
-            self.error_code = ErrorCodes.data_error
+            self.data_error = True
             self.msg = f"Invalid Response: Response json is of type {type(self.response.json())}."
             self.valid = False
         elif "userReviewList" not in self.response.json():
-            self.error_code = ErrorCodes.data_error
+            self.data_error = True
             self.msg = "Invalid Response: Response json has no 'userReviewList' key."
             self.valid = False
         elif not isinstance(self.response.json()["userReviewList"], list):
-            self.error_code = ErrorCodes.data_error
+            self.data_error = True
             self.msg = f"Invalid Response: Response json 'userReviewList' is of type {type(self.response.json()['userReviewList'])}, not a list."
             self.valid = False
         elif len(self.response.json()["userReviewList"]) == 0:
-            self.error_code = ErrorCodes.data_error
+            self.data_error = True
             self.msg = "Invalid Response: Response json 'userReviewList' has zero length."
             self.valid = False
         return self.valid

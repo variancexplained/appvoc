@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Wednesday August 2nd 2023 02:34:56 am                                               #
+# Modified   : Tuesday August 8th 2023 07:25:48 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,12 +28,12 @@ from appstore.infrastructure.web.utils import getsize
 @dataclass
 class RatingResult(Result):
     """Encapsulates the review results. Inherits the following from Result base class:
-    content (list): List of dictionaries containing the response content
-    size: (int): Total size of response in bytes
-    requests (int): Number of requests. This will be one for syncronous requests,
-        async requests vary.
-    successes: (int): Number of successful responses
-    errors: (int): Number of errors.
+    content: list[dict] = field(default_factory=list)
+    size: int = 0
+    data_errors: int = 0
+    client_errors: int = 0
+    server_errors: int = 0
+
 
     """
 

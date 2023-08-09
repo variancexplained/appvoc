@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Wednesday August 2nd 2023 03:25:37 am                                               #
+# Modified   : Wednesday August 9th 2023 04:35:34 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -58,45 +58,41 @@ class RatingScraper:
         self._session_handler = session_handler
         self._batch_size = batch_size
         self._batch = 0
-        self._failure_count = 0
         self._batches = []
-
+        self._num_batches = 0
         self._url = None
         self._header = STOREFRONT["headers"]
 
+        self.create_batches()
+
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def __aiter__(self) -> RatingScraper:
-        self._batch = 0
-        self._failure_count = 0
+    def create_batches(self) -> None:
         self._batches = self._create_batches()
-        return self
+        self._num_batches = len(self._batches)
 
-    async def __anext__(self) -> RatingResult:
+    async def scrape(self) -> RatingResult:
         """Sends the next batch of urls to the session handler and parses the response.
 
         Return: RatingResult object, containing projects and results in DataFrame format.
         """
+        for batch_idx in range(self._num_batches):
+            validator = RatingValidator()
+            result = RatingResult()
 
-        if self._batch == len(self._batches):
-            raise StopAsyncIteration
+            responses = await self._session_handler.get(
+                urls=self._batches[batch_idx]["urls"], headers=self._header
+            )
 
-        validator = RatingValidator()
-        result = RatingResult()
-
-        responses = await self._session_handler.get(
-            urls=self._batches[self._batch]["urls"], headers=self._header
-        )
-
-        batch = self._batches[self._batch]["apps"]
-        for response in responses:
-            if validator.is_valid(response=response):
-                self._failure_count = 0
-                result.add_response(response=response, batch=batch)
-            else:
-                result.errors += 1
-        self._batch += 1
-        return result
+            batch = self._batches[batch_idx]["apps"]
+            for response in responses:
+                if validator.is_valid(response=response):
+                    result.add_response(response=response, batch=batch)
+                else:
+                    result.data_errors += validator.data_error
+                    result.client_errors += validator.client_error
+                    result.server_errors += validator.server_error
+            yield result
 
     def _create_batches(self) -> list:
         """Creates batches of URLs from a list of app ids"""
@@ -109,7 +105,7 @@ class RatingScraper:
             url = f"https://itunes.apple.com/us/customer-reviews/id{app['id']}?displayable-kind=11"
             apps.append(app)
             urls.append(url)
-            if idx % self._batch_size == 0:
+            if idx % self._batch_size == 0 or idx == len(app_dict):
                 batch = {"apps": apps, "urls": urls}
                 batches.append(batch)
                 apps = []

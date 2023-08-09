@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Sunday July 30th 2023 07:26:57 pm                                                   #
+# Modified   : Tuesday August 8th 2023 02:48:55 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -83,7 +83,7 @@ class AppDataRepo(Repo):
         super().__init__(name=self.__name, database=database)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
-    def add(self, data: pd.DataFrame) -> None:
+    def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
         Args:

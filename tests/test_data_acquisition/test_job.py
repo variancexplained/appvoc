@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:19:19 pm                                                 #
-# Modified   : Wednesday August 2nd 2023 05:48:19 am                                               #
+# Modified   : Tuesday August 8th 2023 08:49:45 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -128,7 +128,7 @@ class TestJob:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        job_repo.add(job_df)
+        job_repo.load(job_df)
         jobs = job_repo.getall()
         assert isinstance(jobs, pd.DataFrame)
         logger.debug(jobs)
@@ -161,7 +161,7 @@ class TestJob:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        job_repo.add(job_df)
+        job_repo.load(job_df)
         for i in range(10):
             job = job_repo.next(controller="RatingController")
             if i < 7:
