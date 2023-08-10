@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 02:36:49 am                                                   #
-# Modified   : Wednesday August 9th 2023 04:06:42 pm                                               #
+# Modified   : Wednesday August 9th 2023 08:33:27 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -59,8 +59,6 @@ class ReviewJobRun(JobRun):
 
     def add_result(self, result: ReviewResult) -> None:
         """Adds Iterate through responses to update metrics. Result will have a list of response objects."""
-        msg = f"\nAdding Result:\n{result.__str__()}"
-        self._logger.debug(msg)
         super().add_result(result=result)
         self.reviews += result.reviews
         self.apps_per_second = round(self.apps / self.elapsed, 2)

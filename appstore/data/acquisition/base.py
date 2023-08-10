@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Wednesday August 9th 2023 02:22:46 am                                               #
+# Modified   : Wednesday August 9th 2023 07:29:04 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -220,7 +220,7 @@ class Validator(DTO):
                 self.client_error = True
             elif int(self.response.status_code) > 499:
                 self.server_error = True
-            self.msg = f"Invalid response. Status code = {int(self.response.status_code)}"
+            self.msg = f"\nInvalid response. Status code = {int(self.response.status_code)}"
             self._logger.debug(self.msg)
 
 

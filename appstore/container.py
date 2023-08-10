@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Tuesday August 8th 2023 04:19:12 pm                                                 #
+# Modified   : Wednesday August 9th 2023 06:05:41 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -30,6 +30,7 @@ from appstore.data.storage.project import AppDataProjectRepo
 from appstore.data.storage.appdata import AppDataRepo
 from appstore.data.storage.review import ReviewRepo
 from appstore.data.storage.rating import RatingRepo
+from appstore.data.storage.request import ReviewRequestRepo
 from appstore.data.storage.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.data.storage.uow import UoW
@@ -71,6 +72,7 @@ class PersistenceContainer(containers.DeclarativeContainer):
     job_repo = providers.Singleton(JobRepo, database=db)
     rating_jobrun_repo = providers.Singleton(RatingJobRunRepo, database=db)
     review_jobrun_repo = providers.Singleton(ReviewJobRunRepo, database=db)
+    review_request_repo = providers.Singleton(ReviewRequestRepo, database=db)
 
     uow = providers.Singleton(
         UoW,
@@ -82,6 +84,7 @@ class PersistenceContainer(containers.DeclarativeContainer):
         job_repo=JobRepo,
         rating_jobrun_repo=RatingJobRunRepo,
         review_jobrun_repo=ReviewJobRunRepo,
+        review_request_repo=ReviewRequestRepo,
     )
 
 

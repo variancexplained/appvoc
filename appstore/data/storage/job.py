@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Wednesday August 9th 2023 10:30:52 am                                               #
+# Modified   : Wednesday August 9th 2023 05:58:12 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -266,7 +266,12 @@ class RatingJobRunRepo(Repo):
         jobrun = self._database.query(
             query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
         )
-        return RatingJobRun.from_df(df=jobrun)
+        try:
+            return RatingJobRun.from_df(df=jobrun)
+        except Exception as e:
+            msg = f"Exception of type {type(e)} occurred.\n{e}"
+            self._logger.debug(msg)
+            return None
 
     def getall(
         self,

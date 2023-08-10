@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 1st 2023 10:52:26 pm                                                 #
-# Modified   : Tuesday August 8th 2023 05:25:40 pm                                                 #
+# Modified   : Wednesday August 9th 2023 07:34:46 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -68,17 +68,21 @@ class ReviewValidator(Validator):
         if not isinstance(self.response.json(), dict):
             self.data_error = True
             self.msg = f"Invalid Response: Response json is of type {type(self.response.json())}."
+            self._logger.debug(msg=self.msg)
             self.valid = False
         elif "userReviewList" not in self.response.json():
             self.data_error = True
             self.msg = "Invalid Response: Response json has no 'userReviewList' key."
+            self._logger.debug(msg=self.msg)
             self.valid = False
         elif not isinstance(self.response.json()["userReviewList"], list):
             self.data_error = True
             self.msg = f"Invalid Response: Response json 'userReviewList' is of type {type(self.response.json()['userReviewList'])}, not a list."
+            self._logger.debug(msg=self.msg)
             self.valid = False
         elif len(self.response.json()["userReviewList"]) == 0:
             self.data_error = True
             self.msg = "Invalid Response: Response json 'userReviewList' has zero length."
+            self._logger.debug(msg=self.msg)
             self.valid = False
         return self.valid

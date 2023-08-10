@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 2nd 2023 01:27:54 am                                               #
-# Modified   : Wednesday August 9th 2023 02:12:32 pm                                               #
+# Modified   : Wednesday August 9th 2023 07:56:28 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,13 +27,17 @@ from appstore.data.acquisition.review.scraper import ReviewScraper
 from appstore.data.acquisition.review.result import ReviewResult
 
 KEYS = [
-    "userReviewId",
-    "name",
+    "id",
+    "app_id",
+    "app_name",
+    "category_id",
+    "category",
+    "author",
     "rating",
     "title",
-    "body",
-    "voteSum",
-    "voteCount",
+    "content",
+    "vote_sum",
+    "vote_count",
     "date",
 ]
 
@@ -91,16 +95,24 @@ class TestReviewScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
+        app_count = 0
+        page_count = 0
         for app in apps:
             if app.category_id == "6002":
-                for result in ReviewScraper(app=app, max_pages=2):
+                app_count += 1
+                msg = f"\n\nProcessing App #: {app_count}"
+                logger.debug(msg)
+                for result in ReviewScraper(app=app, max_pages=4):
+                    page_count += 1
+                    msg = f"\n\tProcessing Page #: {page_count}"
+                    logger.debug(msg)
                     assert isinstance(result, ReviewResult)
                     assert result.app == app
                     assert result.reviews > 0
                     assert isinstance(result.content, list)
                     assert isinstance(result.get_result(), pd.DataFrame)
+                    assert isinstance(result.index, int)
                     for review in result.content:
-                        logger.debug(review)
                         for key in KEYS:
                             assert key in review
 

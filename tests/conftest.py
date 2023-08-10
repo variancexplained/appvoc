@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Wednesday August 9th 2023 02:33:56 pm                                               #
+# Modified   : Wednesday August 9th 2023 07:49:28 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,6 +28,7 @@ from appstore.infrastructure.io.local import IOService
 from appstore.container import AppstoreContainer
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
+from appstore.data.acquisition.review.request import ReviewRequest
 from tests.data.rating.response import batch
 
 # ------------------------------------------------------------------------------------------------ #
@@ -50,10 +51,15 @@ APPS = [
     {"id": "297606951", "name": "amazon", "category_id": "6024", "category": "SHOPPING"},
     {"id": "544007664", "name": "youtube", "category_id": "6005", "category": "SOCIAL_NETWORKING"},
     {"id": "951937596", "name": "outlook", "category_id": "6000", "category": "BUSINESS"},
-    {"id": "6446212408", "name": "Cookie Blocker", "category_id": "6002", "category": "UTILITIES"},
     {
-        "id": "578119993",
-        "name": "SYSTEM UTIL Dashboard",
+        "id": "1288723196",
+        "name": "Microsoft Edge: Web Browser",
+        "category_id": "6002",
+        "category": "UTILITIES",
+    },
+    {
+        "id": "284815942",
+        "name": "Google",
         "category_id": "6002",
         "category": "UTILITIES",
     },
@@ -223,6 +229,15 @@ def rating_jobrun_repo(container):
     repo.delete_all()
     yield repo
     repo.load(df=data)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      REVIEW REQUEST                                              #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_request():
+    app = APPS[4]
+    return ReviewRequest(id=app["id"], category_id=app["category_id"])
 
 
 # ------------------------------------------------------------------------------------------------ #

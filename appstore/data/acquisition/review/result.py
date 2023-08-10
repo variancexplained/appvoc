@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Wednesday August 9th 2023 03:53:36 pm                                               #
+# Modified   : Wednesday August 9th 2023 05:06:25 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -42,14 +42,16 @@ class ReviewResult(Result):
 
     app: App = None
     reviews: int = 0
+    index: int = 0
 
-    def add_response(self, response: requests.Response, app: App) -> None:
+    def add_response(self, response: requests.Response, app: App, index: int = 0) -> None:
         """Adds a response to the instance
 
         Args:
            response (requests.Response): HTTP Response
         """
         self.app = app
+        self.index = index
 
         self.size += getsize(response=response)
 

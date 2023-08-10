@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:20:01 pm                                                  #
-# Modified   : Wednesday August 9th 2023 12:34:51 pm                                               #
+# Modified   : Wednesday August 9th 2023 08:03:48 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -70,13 +70,15 @@ class ReviewScraper(Scraper):
             result = ReviewResult()
 
             response = self._session_handler.get(url=url, header=self._header)
-            self._paginate_url()
+
             if validator.is_valid(response=response):
-                result.add_response(response=response, app=self._app)
+                result.add_response(response=response, app=self._app, index=self._start_index)
             else:  # pragma: no cover
+                result.app = self._app
                 result.data_errors += validator.data_error
                 result.client_errors += validator.client_error
                 result.server_errors += validator.server_error
+            self._paginate_url()
             return result
         else:
             raise StopIteration
@@ -87,6 +89,6 @@ class ReviewScraper(Scraper):
 
     def _paginate_url(self) -> None:
         self._page += 1
-        self._start_index += self._max_results_per_page  # results
+        self._start_index += self._max_results_per_page
         self._end_index += self._max_results_per_page
         self._setup_url()

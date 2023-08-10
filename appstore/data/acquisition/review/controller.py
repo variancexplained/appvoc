@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Wednesday August 9th 2023 04:11:04 pm                                               #
+# Modified   : Wednesday August 9th 2023 08:54:40 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -27,6 +27,7 @@ from appstore.data.acquisition.review.scraper import ReviewScraper
 from appstore.data.acquisition.review.director import ReviewDirector
 from appstore.data.acquisition.review.job import ReviewJobRun
 from appstore.data.acquisition.review.result import ReviewResult
+from appstore.data.acquisition.review.request import ReviewRequest
 from appstore.data.storage.uow import UoW
 from appstore.data.acquisition.base import Controller, App
 from appstore.container import AppstoreContainer
@@ -80,71 +81,92 @@ class ReviewController(Controller):
         """Entry point for scraping operation"""
         if not super().is_locked():
             self._scrape()
-        else:
+        else:  # pragma: no cover
             msg = f"Running {self.__class__.__name__} is not authorized at this time."
             self._logger.info(msg)
 
     def _scrape(self) -> None:
         """Driver for scraping operation."""
         jobrun = self._director.next()
-        while jobrun is not None and self._failures < self._failure_threshold:
+        while jobrun is not None:
             jobrun = self.start_jobrun(jobrun=jobrun)
             apps = self._get_apps(category_id=jobrun.category_id)
 
             if len(apps) > 0:
                 for app_idx, row in apps.iterrows():
-                    app = App(
-                        id=row["id"],
-                        name=row["name"],
-                        category_id=row["category_id"],
-                        category=row["category"],
-                    )
+                    app = self._get_app(row=row)
+                    request = self._get_or_create_request_log(app=app)
                     jobrun.apps += 1
+
                     for result in self._scraper(
                         app=app,
                         max_pages=self._max_pages,
                         max_results_per_page=self._max_results_per_page,
+                        start=request.last_index,
                     ):
                         if result.is_valid():
                             self._failures = 0
                             self.persist(result)
-
                             jobrun = self.update_jobrun(jobrun=jobrun, result=result)
+                            request.last_index = result.index
                         else:
                             self._failures += 1
+
+                        if self._failures >= self._failure_threshold:  # pragma: no cover
+                            self._failures = 0
+                            break
+
+                    self._uow.review_request_repo.update(request=request)
+
                     if app_idx % self._verbose == 0:
                         jobrun.announce()
 
             self.end_jobrun(jobrun=jobrun)
             jobrun = self._director.next()
 
+    def _get_app(self, row: pd.Series) -> App:
+        return App(
+            id=row["id"],
+            name=row["name"],
+            category_id=row["category_id"],
+            category=row["category"],
+        )
+
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         # Obtain all apps for the category from the repository.
         apps = self._uow.appdata_repo.get_by_category(category_id=category_id)
         msg = f"\n\nA total of {len(apps)} apps in category {category_id}."
 
-        # Filter the apps that have greater than 'min_ratings' ratings
+        # Filter the apps that have greater than 'min_ratings'
         # This is a proxy for number of potential reviews.
         apps = apps.loc[apps["ratings"] > self._min_ratings]
 
-        # Obtain apps for which we've already processed the reviews.
-        try:
-            reviews = self._uow.review_repo.get_by_category(category_id=category_id)
-            apps_with_reviews = reviews["app_id"].unique()
-        except Exception:
-            apps_with_reviews = []
-
-        # Remove apps for which reviews exist from the list of apps to process.
-        if len(apps_with_reviews) > 0:
-            apps = apps.loc[~apps["id"].isin(apps_with_reviews)]
-
         if len(apps) > 0:
-            msg += f"\nApps remaining: {len(apps)}"
+            msg += f"\nApps to process: {len(apps)}"
             self._logger.info(msg)
-        else:
-            msg += f"All apps have been processed for category: {category_id}"
+        else:  # pragma: no cover
+            msg += f"No apps meet minimum ratings criteria in category {category_id}"
             self._logger.info(msg)
         return apps
+
+    def _get_or_create_request_log(self, app: App) -> ReviewRequest:
+        """Gets existing or creates new review request object."""
+        try:
+            request = self._get_request_log(app=app)
+            if request is not None:
+                return request
+            else:
+                return self._create_request_log(app=app)
+        except Exception:
+            return self._create_request_log(app=app)
+
+    def _get_request_log(self, app: App) -> ReviewRequest:
+        return self._uow.review_request_repo.get(id=app.id)
+
+    def _create_request_log(self, app: App) -> ReviewRequest:
+        request = ReviewRequest(id=app.id, category_id=app.category_id)
+        self._uow.review_request_repo.add(request=request)
+        return request
 
     def persist(self, result: ReviewResult) -> None:
         """Persists results to Database
