@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Friday August 11th 2023 01:45:45 am                                                 #
+# Modified   : Friday August 11th 2023 03:15:48 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,7 @@ import logging
 
 import pandas as pd
 
+from appstore.data.dataset.review import ReviewDataset
 from appstore.data.repo.review import ReviewRepo
 from appstore.data.entity.review import Review
 
@@ -205,6 +206,38 @@ class TestReviewRepo:  # pragma: no cover
             repo = ReviewRepo(database=db)
             df = repo.get_by_category(category_id=CATEGORY_ID)
             assert df.shape[0] == 10
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+
+    # ============================================================================================ #
+    def test_get_dataset(self, container, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
+        with container.data.db() as db:
+            repo = ReviewRepo(database=db)
+            ds = repo.get_dataset()
+            assert isinstance(ds, ReviewDataset)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

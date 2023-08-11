@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:56:28 am                                                #
-# Modified   : Friday August 11th 2023 12:40:39 am                                                 #
+# Modified   : Friday August 11th 2023 03:01:23 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,6 +22,7 @@ import pandas as pd
 import numpy as np
 
 from appstore.data.entity.rating import Rating
+from appstore.data.dataset.rating import RatingDataset
 from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import (
@@ -113,6 +114,10 @@ class RatingRepo(Repo):
         """Returns all data in the repository."""
 
         return super().getall(dtypes=DATAFRAME_DTYPES)
+
+    def get_dataset(self) -> RatingDataset:
+        df = self.getall()
+        return RatingDataset(df=df)
 
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.

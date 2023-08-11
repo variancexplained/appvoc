@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Friday August 11th 2023 12:41:33 am                                                 #
+# Modified   : Friday August 11th 2023 03:00:31 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,7 @@ import pandas as pd
 
 from appstore.data.repo.base import Repo
 from appstore.data.entity.appdata import AppData
+from appstore.data.dataset.appdata import AppDataDataset
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import (
     LONGTEXT,
@@ -130,6 +131,10 @@ class AppDataRepo(Repo):
         params = {"category_id": category_id}
         ids = self._database.query(query=query, params=params)
         return list(ids["id"].values)
+
+    def get_dataset(self) -> AppDataDataset:
+        df = self.getall()
+        return AppDataDataset(df=df)
 
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.

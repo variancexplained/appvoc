@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Friday August 11th 2023 01:03:23 am                                                 #
+# Modified   : Friday August 11th 2023 03:02:13 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,6 +23,7 @@ import numpy as np
 
 from appstore.data.repo.base import Repo
 from appstore.data.entity.review import Review
+from appstore.data.dataset.review import ReviewDataset
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import (
     LONGTEXT,
@@ -131,6 +132,10 @@ class ReviewRepo(Repo):
         )
         msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
+
+    def get_dataset(self) -> ReviewDataset:
+        df = self.getall()
+        return ReviewDataset(df=df)
 
     @property
     def summary(self) -> pd.DataFrame:
