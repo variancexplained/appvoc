@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/storage/project.py                                                   #
+# Filename   : /appstore/data/repo/project.py                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Saturday July 29th 2023 04:38:08 pm                                                 #
+# Modified   : Thursday August 10th 2023 11:32:55 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ from typing import Union
 import pandas as pd
 
 from appstore.data.acquisition.appdata.project import AppDataProject
-from appstore.data.storage.base import Repo
+from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
 
 

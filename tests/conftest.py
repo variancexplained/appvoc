@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Wednesday August 9th 2023 07:49:28 pm                                               #
+# Modified   : Friday August 11th 2023 02:32:47 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -30,6 +30,9 @@ from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
 from appstore.data.acquisition.review.request import ReviewRequest
 from tests.data.rating.response import batch
+from appstore.data.dataset.appdata import AppDataDataset
+from appstore.data.dataset.rating import RatingDataset
+from appstore.data.dataset.review import ReviewDataset
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -45,6 +48,11 @@ REVIEWS_FILEPATH = "tests/data/reviews.csv"
 RATINGS_FILEPATH = "tests/data/appstore_ratings.csv"
 RESET_SCRIPT = "tests/scripts/reset.sh"
 JOBS_FILEPATH = "tests/data/job/jobs.csv"
+
+APPDATA_DATASET = "tests/data/dataset/appdata.pkl"
+RATING_DATASET = "tests/data/dataset/rating.pkl"
+REVIEW_DATASET = "tests/data/dataset/review.pkl"
+
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
 
 APPS = [
@@ -134,7 +142,7 @@ def mode():
 def container():
     container = AppstoreContainer()
     container.init_resources()
-    container.wire(packages=["appstore.data.acquisition", "appstore.data.analysis"])
+    container.wire(packages=["appstore.data.acquisition", "appstore.data.dataset"])
 
     return container
 
@@ -158,6 +166,36 @@ def appdata():
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                                  APPDATA DATASET                                                 #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def appdata_dataset():
+    df = IOService.read(APPDATA_DATASET)
+    ds = AppDataDataset(df=df)
+    return ds
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  RATING DATASET                                                  #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_dataset():
+    df = IOService.read(RATING_DATASET)
+    ds = RatingDataset(df=df)
+    return ds
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  REVIEW DATASET                                                  #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_dataset():
+    df = IOService.read(REVIEW_DATASET)
+    ds = ReviewDataset(df=df)
+    return ds
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                    APPDATA REPO ZERO                                             #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
@@ -176,7 +214,10 @@ def appdata_repo_zero(container):
 @pytest.fixture(scope="module", autouse=False)
 def appdata_repo(container):
     repo = container.data.appdata_repo()
+    data = repo.getall()
+    repo.delete_all()
     yield repo
+    repo.load(data)
 
 
 # ------------------------------------------------------------------------------------------------ #

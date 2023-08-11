@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appstore/data/storage/request.py                                                   #
+# Filename   : /appstore/data/repo/request.py                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 9th 2023 04:55:46 pm                                               #
-# Modified   : Wednesday August 9th 2023 08:55:39 pm                                               #
+# Modified   : Thursday August 10th 2023 11:32:52 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,7 +22,7 @@ import pandas as pd
 import numpy as np
 
 from appstore.data.acquisition.review.request import ReviewRequest
-from appstore.data.storage.base import Repo
+from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import (
     VARCHAR,

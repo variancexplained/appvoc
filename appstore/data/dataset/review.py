@@ -3,34 +3,44 @@
 # ================================================================================================ #
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
-# Python     : 3.10.12                                                                             #
-# Filename   : /appstore/data/acquisition/review/request.py                                        #
+# Python     : 3.10.11                                                                             #
+# Filename   : /appstore/data/dataset/review.py                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday August 9th 2023 04:52:24 pm                                               #
-# Modified   : Thursday August 10th 2023 12:10:41 am                                               #
+# Created    : Sunday May 21st 2023 03:53:33 am                                                    #
+# Modified   : Friday August 11th 2023 12:24:53 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from __future__ import annotations
-from dataclasses import dataclass
-
 import pandas as pd
-from appstore.base import Entity
+from d8analysis.data.base import Dataset
+
+from appstore.data.entity.review import Review
 
 
 # ------------------------------------------------------------------------------------------------ #
-@dataclass
-class ReviewRequest(Entity):
-    id: str = None
-    category_id: str = None
-    last_index: int = 0
+class ReviewDataset(Dataset):
+    """An in-memory dataset containing app data
 
-    @classmethod
-    def from_df(cls, df: pd.DataFrame) -> ReviewRequest:
-        df = df.loc[0]
-        return cls(id=df["id"], category_id=df["category_id"], last_index=df["last_index"])
+    Args:
+        repo (Repo): The dataset repository
+    """
+
+    def __init__(self, df: pd.DataFrame) -> None:
+        super().__init__(df=df)
+
+    def __getitem__(self, idx: int) -> Review:
+        df = self._df.iloc[[idx]]
+        return Review.from_df(df=df)
+
+    def summary(self) -> pd.DataFrame:
+        """Summarizes the app data by category"""
+        df2 = self._df.groupby(["category"])["id"].nunique().to_frame()
+        df3 = self._df.groupby(["category"])["app_id"].nunique().to_frame()
+        summary = df2.join(df3, on="category").reset_index()
+        summary.columns = ["Category", "Reviews", "Apps"]
+        return summary

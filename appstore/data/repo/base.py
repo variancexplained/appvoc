@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/storage/base.py                                                      #
+# Filename   : /appstore/data/repo/base.py                                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Tuesday August 8th 2023 04:39:35 pm                                                 #
+# Modified   : Friday August 11th 2023 01:43:37 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -249,7 +249,13 @@ class Repo(ABC):
         """Saves the repository to file located in the designated directory."""
         self._database.commit()
 
-    def archive(self, directory: str = None) -> None:
+    def archive(self, directory: str = None) -> str:
+        """Archives the data
+        Args:
+            directory (str): The base directory into which the archive is created.
+                Optional. Defaults to the archive directory in an environment
+                variable.
+        """
         if directory is None:
             basedir = os.getenv(key="ARCHIVE")
             directory = os.path.join(basedir, self._name)
@@ -257,6 +263,7 @@ class Repo(ABC):
         filename = self._name + "_" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".pkl"
         filepath = os.path.join(directory, filename)
         IOService.write(filepath=filepath, data=self.getall())
+        return filepath
 
     def _parse_datetime(self, data: pd.DataFrame, dtcols: Union[str, list[str]]) -> pd.DataFrame:
         """Converts strings to datetime objects for the designated column.

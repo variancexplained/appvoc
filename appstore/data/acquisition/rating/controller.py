@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Wednesday August 9th 2023 05:10:25 am                                               #
+# Modified   : Thursday August 10th 2023 11:33:09 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ from dependency_injector.wiring import Provide, inject
 
 
 from appstore.data.acquisition.rating.scraper import RatingScraper
-from appstore.data.storage.uow import UoW
+from appstore.data.repo.uow import UoW
 from appstore.data.acquisition.rating.job import RatingJobRun
 from appstore.data.acquisition.rating.result import RatingResult
 from appstore.data.acquisition.base import Controller

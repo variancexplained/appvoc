@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Wednesday August 9th 2023 06:05:41 pm                                               #
+# Modified   : Friday August 11th 2023 12:19:15 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,14 +26,14 @@ from appstore.infrastructure.io.local import IOService
 from appstore.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appstore.infrastructure.web.throttle import LatencyThrottle, AThrottle
 from appstore.infrastructure.database.mysql import MySQLDatabase
-from appstore.data.storage.project import AppDataProjectRepo
-from appstore.data.storage.appdata import AppDataRepo
-from appstore.data.storage.review import ReviewRepo
-from appstore.data.storage.rating import RatingRepo
-from appstore.data.storage.request import ReviewRequestRepo
-from appstore.data.storage.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
+from appstore.data.repo.project import AppDataProjectRepo
+from appstore.data.repo.appdata import AppDataRepo
+from appstore.data.repo.review import ReviewRepo
+from appstore.data.repo.rating import RatingRepo
+from appstore.data.repo.request import ReviewRequestRepo
+from appstore.data.repo.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
 from appstore.infrastructure.web.base import PROXY_SERVERS
-from appstore.data.storage.uow import UoW
+from appstore.data.repo.uow import UoW
 from appstore.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
 from appstore.infrastructure.web.session import SessionHandler
 from appstore.infrastructure.web.asession import ASessionHandler
@@ -178,4 +178,4 @@ class AppstoreContainer(containers.DeclarativeContainer):
 # ------------------------------------------------------------------------------------------------ #
 if __name__ == "__main__":
     container = AppstoreContainer()
-    container.wire(packages=["appstore.data.acquisition.scraper", "appstore.data.analysis"])
+    container.wire(packages=["appstore.data.acquisition.scraper", "appstore.data.dataset"])

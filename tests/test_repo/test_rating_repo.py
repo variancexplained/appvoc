@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Tuesday August 8th 2023 08:49:46 am                                                 #
+# Modified   : Friday August 11th 2023 01:37:30 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,8 @@ import shutil
 
 import pandas as pd
 
-from appstore.data.storage.rating import RatingRepo
+from appstore.data.repo.rating import RatingRepo
+from appstore.data.entity.rating import Rating
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -95,8 +96,8 @@ class TestRatingRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
             repo = RatingRepo(database=db)
-            df = repo.get(id=ID)
-            assert df.shape[0] == 1
+            rating = repo.get(id=ID)
+            assert isinstance(rating, Rating)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -397,8 +398,8 @@ class TestRatingRepo:  # pragma: no cover
         with container.data.db() as db:
             repo = RatingRepo(database=db)
             repo.delete(id=ID)
-            df = repo.get(id=ID)
-            assert len(df) == 0
+            rating = repo.get(id=ID)
+            assert rating is None
             assert repo.count() == 9
 
         # ---------------------------------------------------------------------------------------- #

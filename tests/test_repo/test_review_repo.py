@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Tuesday August 8th 2023 08:49:45 am                                                 #
+# Modified   : Friday August 11th 2023 01:45:45 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,11 +21,11 @@ import inspect
 from datetime import datetime
 import pytest
 import logging
-import shutil
 
 import pandas as pd
 
-from appstore.data.storage.review import ReviewRepo
+from appstore.data.repo.review import ReviewRepo
+from appstore.data.entity.review import Review
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -137,8 +137,9 @@ class TestReviewRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
-            df = repo.get(id=ID)
-            assert df.shape[0] == 1
+            review = repo.get(id=ID)
+            assert isinstance(review, Review)
+            logger.debug(review.__str__())
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -340,7 +341,6 @@ class TestReviewRepo:  # pragma: no cover
             assert "Category" in summary.columns
             assert "Reviews" in summary.columns
             assert "Apps" in summary.columns
-            assert "Average Rating" in summary.columns
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -358,7 +358,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_export_review(self, container, caplog):
+    def test_archive_review(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -370,12 +370,11 @@ class TestReviewRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        DIRECTORY = "tests/data/repo/export/"
-        shutil.rmtree(DIRECTORY, ignore_errors=True)
+
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
-            repo.export(directory=DIRECTORY)
-            assert len(os.listdir(DIRECTORY)) == 1
+            fp = repo.archive()
+            assert os.path.exists(fp)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -407,8 +406,8 @@ class TestReviewRepo:  # pragma: no cover
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
             repo.delete(id=ID)
-            df = repo.get(id=ID)
-            assert len(df) == 0
+            review = repo.get(id=ID)
+            assert review is None
             assert repo.count() == 9
 
         # ---------------------------------------------------------------------------------------- #

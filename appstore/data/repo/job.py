@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.10                                                                             #
-# Filename   : /appstore/data/storage/job.py                                                       #
+# Filename   : /appstore/data/repo/job.py                                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Wednesday August 9th 2023 05:58:12 pm                                               #
+# Modified   : Thursday August 10th 2023 11:32:57 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import numpy as np
 from appstore.data.acquisition.base import Job
 from appstore.data.acquisition.review.job import ReviewJobRun
 from appstore.data.acquisition.rating.job import RatingJobRun
-from appstore.data.storage.base import Repo
+from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BIGINT, FLOAT, TINYINT
 

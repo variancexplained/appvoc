@@ -4,28 +4,27 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/storage/appdata.py                                                   #
+# Filename   : /appstore/data/repo/rating.py                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Tuesday August 8th 2023 02:48:55 pm                                                 #
+# Created    : Saturday April 29th 2023 05:56:28 am                                                #
+# Modified   : Friday August 11th 2023 12:40:39 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Repository Implementation Module"""
 import logging
 
-import numpy as np
 import pandas as pd
+import numpy as np
 
-from appstore.data.storage.base import Repo
+from appstore.data.entity.rating import Rating
+from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
 from sqlalchemy.dialects.mysql import (
-    LONGTEXT,
     BIGINT,
     VARCHAR,
     FLOAT,
@@ -37,18 +36,16 @@ from sqlalchemy.dialects.mysql import (
 DATAFRAME_DTYPES = {
     "id": "string",
     "name": "string",
-    "description": "string",
     "category_id": "category",
     "category": "category",
-    "price": np.float64,
-    "developer_id": "string",
-    "developer": "string",
     "rating": np.float64,
+    "reviews": np.int64,
     "ratings": np.int64,
-}
-
-PARSE_DATES = {
-    "released": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    "onestar": np.int64,
+    "twostar": np.int64,
+    "threestar": np.int64,
+    "fourstar": np.int64,
+    "fivestar": np.int64,
 }
 
 # ------------------------------------------------------------------------------------------------ #
@@ -56,28 +53,29 @@ PARSE_DATES = {
 # ------------------------------------------------------------------------------------------------ #
 DATABASE_DTYPES = {
     "id": VARCHAR(24),
-    "name": VARCHAR(256),
-    "description": LONGTEXT,
+    "name": VARCHAR(128),
     "category_id": VARCHAR(8),
-    "category": VARCHAR(128),
-    "price": FLOAT,
-    "developer_id": VARCHAR(24),
-    "developer": VARCHAR(256),
+    "category": VARCHAR(64),
     "rating": FLOAT,
+    "reviews": BIGINT,
     "ratings": BIGINT,
-    "released": VARCHAR(32),
+    "onestar": BIGINT,
+    "twostar": BIGINT,
+    "threestar": BIGINT,
+    "fourstar": BIGINT,
+    "fivestar": BIGINT,
 }
 
 
 # ------------------------------------------------------------------------------------------------ #
-class AppDataRepo(Repo):
-    """Repository for App Data
+class RatingRepo(Repo):
+    """Repository for rating data
 
     Args:
         database(Database): Database containing data to access.
     """
 
-    __name = "appdata"
+    __name = "rating"
 
     def __init__(self, database: Database) -> None:
         super().__init__(name=self.__name, database=database)
@@ -96,11 +94,8 @@ class AppDataRepo(Repo):
         self._logger.debug(msg)
 
     def get(
-        self,
-        id: str,  # noqa
-        dtypes: dict = DATAFRAME_DTYPES,
-        parse_dates: dict = PARSE_DATES,  # noqa
-    ) -> pd.DataFrame:
+        self, id: str, dtypes: dict = DATAFRAME_DTYPES, parse_dates: dict = None  # noqa
+    ) -> Rating:
         """Returns data for the entity designated by the 'id' parameter.
 
         Args:
@@ -108,23 +103,16 @@ class AppDataRepo(Repo):
             dtypes (dict): Dictionary mapping of column to data types
             parse_dates (dict): Dictionary of columns and keyword arguments for datetime parsing.
         """
-        return super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
+        df = super().get(id=id, dtypes=dtypes, parse_dates=parse_dates)
+        if len(df) > 0:
+            return Rating.from_df(df=df)
+        else:
+            return None
 
     def getall(self) -> pd.DataFrame:
         """Returns all data in the repository."""
 
-        return super().getall(dtypes=DATAFRAME_DTYPES, parse_dates=PARSE_DATES)
-
-    def get_ids(self, category_id: str) -> list:
-        """Returns the list of app ids for the category
-
-        Args:
-            category_id (str): The four character AppStore category identifier.
-        """
-        query = f"SELECT id FROM {self._name} WHERE category_id = :category_id;"
-        params = {"category_id": category_id}
-        ids = self._database.query(query=query, params=params)
-        return list(ids["id"].values)
+        return super().getall(dtypes=DATAFRAME_DTYPES)
 
     def replace(self, data: pd.DataFrame) -> None:
         """Replaces the data in a repository with that of the data parameter.
@@ -135,22 +123,17 @@ class AppDataRepo(Repo):
         self._database.insert(
             data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="replace"
         )
-        msg = f"Replaced {self._name} repository data with {data.shape[0]} rows."
+        msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
 
     @property
-    def summary(self) -> None:
-        """Summarizes the data"""
+    def summary(self) -> pd.DataFrame:
+        """Summarizes the app data by category"""
         df = self.getall()
-
         summary = df["category"].value_counts().reset_index()
-        summary.columns = ["category", "Examples"]
         df2 = df.groupby(by="category")["id"].nunique().to_frame()
         df3 = df.groupby(by="category")["rating"].mean().to_frame()
-        df4 = df.groupby(by="category")["ratings"].sum().to_frame()
-
         summary = summary.join(df2, on="category")
         summary = summary.join(df3, on="category")
-        summary = summary.join(df4, on="category")
-        summary.columns = ["Category", "Examples", "Apps", "Average Rating", "Rating Count"]
+        summary.columns = ["Category", "Reviews", "Apps", "Average Rating"]
         return summary

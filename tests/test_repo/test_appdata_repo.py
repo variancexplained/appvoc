@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Tuesday August 8th 2023 08:49:46 am                                                 #
+# Modified   : Friday August 11th 2023 01:31:59 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,7 +25,7 @@ import shutil
 
 import pandas as pd
 
-from appstore.data.storage.appdata import AppDataRepo
+from appstore.data.repo.appdata import AppDataRepo
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -187,9 +187,8 @@ class TestAppDataRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         repo = appdata_repo
         logger.debug(repo.getall())
-        df = repo.get(id=ID)
-        logger.debug(f"\nResult for {ID}:\n{df}")
-        assert df.shape[0] == 1
+        appdata = repo.get(id=ID)
+        logger.debug(f"\nResult for {ID}:\n{appdata.__str__()}")
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -584,8 +583,8 @@ class TestAppDataRepo:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         repo = appdata_repo
         repo.delete(id=ID)
-        df = repo.get(id=ID)
-        assert len(df) == 0
+        appdata = repo.get(id=ID)
+        assert appdata is None
         assert repo.count() == 9
 
         # ---------------------------------------------------------------------------------------- #

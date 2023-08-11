@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appstore/data/acquisition/appdata/entity.py                                        #
+# Filename   : /appstore/data/entity/review.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Tuesday August 8th 2023 02:25:19 pm                                                 #
-# Modified   : Tuesday August 8th 2023 02:33:04 pm                                                 #
+# Created    : Thursday August 10th 2023 11:46:15 pm                                               #
+# Modified   : Friday August 11th 2023 01:04:49 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,37 +22,39 @@ from datetime import datetime
 
 import pandas as pd
 
-from appstore.base import DTO
+from appstore.base import Entity
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class AppData(DTO):
+class Review(Entity):
     id: str
-    name: str
-    description: str
+    app_id: str
+    app_name: str
     category_id: str
     category: str
-    price: float
-    developer_id: str
-    developer: str
+    author: str
     rating: float
-    ratings: int
-    released: datetime
+    title: str
+    content: str
+    vote_sum: int
+    vote_count: int
+    date: datetime
 
     @classmethod
-    def from_df(cls, df: pd.DataFrame) -> AppData:
+    def from_df(cls, df: pd.DataFrame) -> Review:
         df = df.iloc[0]
-        cls(
+        return cls(
             id=df["id"],
-            name=df["name"],
-            description=df["description"],
+            app_id=df["app_id"],
+            app_name=df["app_name"],
             category_id=df["category_id"],
             category=df["category"],
-            price=df["price"],
-            developer_id=df["developer_id"],
-            developer=df["developer"],
+            author=df["author"],
             rating=df["rating"],
-            ratings=df["ratings"],
-            released=df["released"],
+            title=df["title"],
+            content=df["content"],
+            vote_sum=df["vote_sum"],
+            vote_count=df["vote_count"],
+            date=pd.to_datetime(df["date"]),
         )

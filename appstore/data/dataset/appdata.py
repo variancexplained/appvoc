@@ -4,33 +4,50 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appstore/data/acquisition/review/request.py                                        #
+# Filename   : /appstore/data/dataset/appdata.py                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Wednesday August 9th 2023 04:52:24 pm                                               #
-# Modified   : Thursday August 10th 2023 12:10:41 am                                               #
+# Created    : Sunday May 21st 2023 03:53:33 am                                                    #
+# Modified   : Friday August 11th 2023 12:05:31 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-from __future__ import annotations
-from dataclasses import dataclass
-
 import pandas as pd
-from appstore.base import Entity
+from d8analysis.data.base import Dataset
+
+from appstore.data.entity.appdata import AppData
 
 
 # ------------------------------------------------------------------------------------------------ #
-@dataclass
-class ReviewRequest(Entity):
-    id: str = None
-    category_id: str = None
-    last_index: int = 0
+class AppDataDataset(Dataset):
+    """An in-memory dataset containing app data
 
-    @classmethod
-    def from_df(cls, df: pd.DataFrame) -> ReviewRequest:
-        df = df.loc[0]
-        return cls(id=df["id"], category_id=df["category_id"], last_index=df["last_index"])
+    Args:
+        repo (Repo): The dataset repository
+    """
+
+    def __init__(self, df: pd.DataFrame) -> None:
+        super().__init__(df=df)
+
+    def __getitem__(self, idx: int) -> AppData:
+        df = self._df.iloc[[idx]]
+        return AppData.from_df(df=df)
+
+    def summary(self) -> None:
+        """Summarizes the data"""
+
+        summary = self._df["category"].value_counts().reset_index()
+        summary.columns = ["category", "Examples"]
+        df2 = self._df.groupby(by="category")["id"].nunique().to_frame()
+        df3 = self._df.groupby(by="category")["rating"].mean().to_frame()
+        df4 = self._df.groupby(by="category")["ratings"].sum().to_frame()
+
+        summary = summary.join(df2, on="category")
+        summary = summary.join(df3, on="category")
+        summary = summary.join(df4, on="category")
+        summary.columns = ["Category", "Examples", "Apps", "Average Rating", "Rating Count"]
+        return summary

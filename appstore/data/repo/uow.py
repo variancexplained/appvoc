@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appstore/data/storage/uow.py                                                       #
+# Filename   : /appstore/data/repo/uow.py                                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Wednesday August 9th 2023 08:05:46 pm                                               #
+# Modified   : Thursday August 10th 2023 11:32:39 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,7 @@
 import logging
 
 from appstore.infrastructure.database.base import Database
-from appstore.data.storage.base import Repo
+from appstore.data.repo.base import Repo
 
 
 # ------------------------------------------------------------------------------------------------ #

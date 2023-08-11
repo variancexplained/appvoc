@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:23:40 pm                                                  #
-# Modified   : Sunday July 30th 2023 11:59:23 am                                                   #
+# Modified   : Thursday August 10th 2023 11:33:10 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,7 +28,7 @@ from appstore.data.acquisition.base import Controller
 from appstore.data.acquisition.appdata.scraper import AppDataScraper
 from appstore.data.acquisition.appdata.project import AppDataProject
 from appstore.data.acquisition.appdata.result import AppDataResult
-from appstore.data.storage.uow import UoW
+from appstore.data.repo.uow import UoW
 from appstore.container import AppstoreContainer
 
 

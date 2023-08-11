@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Wednesday August 9th 2023 07:29:04 pm                                               #
+# Modified   : Thursday August 10th 2023 11:33:11 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,8 +28,8 @@ from typing import Any
 
 import pandas as pd
 
-from appstore.base import DTO
-from appstore.data.storage.uow import UoW
+from appstore.base import Entity
+from appstore.data.repo.uow import UoW
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -87,7 +87,7 @@ class Scraper(ABC):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Project(DTO):
+class Project(Entity):
     """Project"""
 
     @abstractclassmethod
@@ -97,7 +97,7 @@ class Project(DTO):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Job(DTO):
+class Job(Entity):
     id: str = None
     controller: str = None
     category_id: str = None
@@ -127,7 +127,7 @@ class Job(DTO):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class JobRun(DTO):
+class JobRun(Entity):
     """Encapsulates a job run entity"""
 
     id: str = None
@@ -191,7 +191,7 @@ class JobRun(DTO):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Validator(DTO):
+class Validator(Entity):
     """Validates response"""
 
     response: Any = None
@@ -226,7 +226,7 @@ class Validator(DTO):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class App(DTO):
+class App(Entity):
     id: str
     name: str
     category_id: str
@@ -235,7 +235,7 @@ class App(DTO):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Result(DTO):
+class Result(Entity):
     content: list[dict] = field(default_factory=list)
     size: int = 0
     data_errors: int = 0

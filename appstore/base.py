@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:33:09 pm                                                 #
-# Modified   : Wednesday August 9th 2023 01:00:51 am                                               #
+# Modified   : Friday August 11th 2023 12:51:49 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,7 @@
 from __future__ import annotations
 from abc import ABC
 from datetime import datetime
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
@@ -43,7 +43,7 @@ SEQUENCE_TYPES: tuple = (list, tuple)
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class DTO(ABC):  # noqa
+class Entity(ABC):  # noqa
     """Base Class for Data Transfer Objects"""
 
     def __repr__(self) -> str:
@@ -60,7 +60,7 @@ class DTO(ABC):  # noqa
         width = 32
         breadth = width * 2
         s = f"\n\n{self.__class__.__name__.center(breadth, ' ')}"
-        d = asdict(self)
+        d = self.as_dict()
         for k, v in d.items():
             if type(v) in IMMUTABLE_TYPES:
                 s += f"\n{k.rjust(width,' ')} | {v}"
