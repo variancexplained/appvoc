@@ -10,7 +10,8 @@ kernelspec:jb
   language: python
   name: python3
 ---
-## Exploratory Data Analysis Stage One: App Performance Overview
+# Exploratory Data Analysis
+## Stage One: App Performance Overview
 
 Stage one of our exploratory data analysis aims to expose patterns and yield insight into the nature and intensity of the customer experience within the IOS app user community.
 

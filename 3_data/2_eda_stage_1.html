@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>2. Exploratory Data Analysis Stage One: App Performance Overview &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>2. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -169,7 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">3. Data</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Exploratory Data Analysis Stage One: App Performance Overview</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Exploratory Data Analysis</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -374,7 +374,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Exploratory Data Analysis Stage One: App Performance Overview</h1>
+    <h1>Exploratory Data Analysis</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -384,21 +384,24 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1. The Dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.2. EDA Approach</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.3. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">2.4.1. Numeric Variable Data Quality</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">2.4.2. Categorical Variable Data Quality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">2.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1.1. The Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.1.2. EDA Approach</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1.3. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">Numeric Variable Data Quality</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">Categorical Variable Data Quality</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">2.5.1. Quantitative Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">Quantitative Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ratings">2.5.2. Ratings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ratings">Ratings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -412,11 +415,13 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="exploratory-data-analysis-stage-one-app-performance-overview">
-<h1><span class="section-number">2. </span>Exploratory Data Analysis Stage One: App Performance Overview<a class="headerlink" href="#exploratory-data-analysis-stage-one-app-performance-overview" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis">
+<h1><span class="section-number">2. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<section id="stage-one-app-performance-overview">
+<h2><span class="section-number">2.1. </span>Stage One: App Performance Overview<a class="headerlink" href="#stage-one-app-performance-overview" title="Permalink to this heading">#</a></h2>
 <p>Stage one of our exploratory data analysis aims to expose patterns and yield insight into the nature and intensity of the customer experience within the IOS app user community.</p>
 <section id="the-dataset">
-<h2><span class="section-number">2.1. </span>The Dataset<a class="headerlink" href="#the-dataset" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">2.1.1. </span>The Dataset<a class="headerlink" href="#the-dataset" title="Permalink to this heading">#</a></h3>
 <p>The dataset contains the following product descriptive, rating, price, and developer data for some 475,132 apps from the App Store.</p>
 <table class="table">
 <thead>
@@ -486,7 +491,7 @@ document.write(`
 </table>
 </section>
 <section id="eda-approach">
-<h2><span class="section-number">2.2. </span>EDA Approach<a class="headerlink" href="#eda-approach" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">2.1.2. </span>EDA Approach<a class="headerlink" href="#eda-approach" title="Permalink to this heading">#</a></h3>
 <p>Our exploration will comprise the following five analyses.</p>
 <ol class="arabic simple">
 <li><p>Structural Analysis: Examine the overall shape, structure, and type of the data.</p></li>
@@ -500,13 +505,13 @@ document.write(`
 <p><strong>Obtain the Dataset</strong></p>
 </section>
 <section id="structural-analysis">
-<h2><span class="section-number">2.3. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">2.1.3. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
 <p>The structure and characteristics of the AppData dataset are as follows:</p>
 <p>As indicated above, we have approximately 475,000 apps in our dataset, described by 11 features. Let’s take a quick look.</p>
 <p>Identity variables, specifically (app) id and developer_id will be retained for data processing purposes, but have no other value and will be largely ignored during this analysis.</p>
 </section>
 <section id="data-quality-analysis">
-<h2><span class="section-number">2.4. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">2.1.4. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
 <p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
 <p><strong>Observations</strong></p>
 <ul class="simple">
@@ -515,7 +520,7 @@ document.write(`
 <li><p>Category id and label are low-cardinality with 26 unique values, each.</p></li>
 </ul>
 <section id="numeric-variable-data-quality">
-<h3><span class="section-number">2.4.1. </span>Numeric Variable Data Quality<a class="headerlink" href="#numeric-variable-data-quality" title="Permalink to this heading">#</a></h3>
+<h4>Numeric Variable Data Quality<a class="headerlink" href="#numeric-variable-data-quality" title="Permalink to this heading">#</a></h4>
 <p>Each feature has been cast to an appropriate data type and missing data are not extant for the dataset. Valid values for the numeric variables are:</p>
 <table class="table">
 <thead>
@@ -547,15 +552,15 @@ document.write(`
 <p>All numeric and datetime values are within range.</p>
 </section>
 <section id="categorical-variable-data-quality">
-<h3><span class="section-number">2.4.2. </span>Categorical Variable Data Quality<a class="headerlink" href="#categorical-variable-data-quality" title="Permalink to this heading">#</a></h3>
+<h4>Categorical Variable Data Quality<a class="headerlink" href="#categorical-variable-data-quality" title="Permalink to this heading">#</a></h4>
 <p>The id, name, description, developer_id, and developer variables are nominal, high cardinality strings. Category and category_id; in contrast, must contain one of 26 category id / category values selected for this analysis.</p>
 <p>Category and category_id values are as expected.</p>
 </section>
 </section>
 <section id="univariate-analysis">
-<h2><span class="section-number">2.5. </span>Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">2.1.5. </span>Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this heading">#</a></h3>
 <section id="quantitative-data">
-<h3><span class="section-number">2.5.1. </span>Quantitative Data<a class="headerlink" href="#quantitative-data" title="Permalink to this heading">#</a></h3>
+<h4>Quantitative Data<a class="headerlink" href="#quantitative-data" title="Permalink to this heading">#</a></h4>
 <p>We’ll begin the univariate analysis with an examination of the quantitative variables, namely:</p>
 <ul class="simple">
 <li><p>Average User Rating</p></li>
@@ -565,7 +570,7 @@ document.write(`
 </ul>
 <p>Using quantitative and qualititative methods, we’ll discover the central tendency of the data (arithmetic mean, median, mode), its spread (variance, standard deviation, interquartile range, maximum and minimum value) and some features of its distribution (skewness, kurtosis).</p>
 <section id="average-user-rating">
-<h4>Average User Rating<a class="headerlink" href="#average-user-rating" title="Permalink to this heading">#</a></h4>
+<h5>Average User Rating<a class="headerlink" href="#average-user-rating" title="Permalink to this heading">#</a></h5>
 <p>Since the rating scale is in [1,5], its clear that the probability density and histogram above contain apps that have not been rated. To get a sense of the actual ratings, we’ll create a new dataset without the non-reviewed apps.</p>
 <p>Ok, let’s examine the frequency distribution of the ratings.</p>
 <p><strong>Key Observations:</strong></p>
@@ -580,7 +585,7 @@ document.write(`
 </ul>
 </section>
 <section id="rating-count">
-<h4>Rating Count<a class="headerlink" href="#rating-count" title="Permalink to this heading">#</a></h4>
+<h5>Rating Count<a class="headerlink" href="#rating-count" title="Permalink to this heading">#</a></h5>
 <p>Rating count can be a harbinger of the intensity of opinion. We’ll use the same rated dataset as above.</p>
 <p><strong>Key Observations:</strong></p>
 <ul class="simple">
@@ -601,8 +606,9 @@ document.write(`
 </section>
 </section>
 <section id="ratings">
-<h3><span class="section-number">2.5.2. </span>Ratings<a class="headerlink" href="#ratings" title="Permalink to this heading">#</a></h3>
+<h4>Ratings<a class="headerlink" href="#ratings" title="Permalink to this heading">#</a></h4>
 <p>Next, we explore the distribution of rating counts in the dataset.</p>
+</section>
 </section>
 </section>
 </section>
@@ -674,21 +680,24 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1. The Dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.2. EDA Approach</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.3. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">2.4.1. Numeric Variable Data Quality</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">2.4.2. Categorical Variable Data Quality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">2.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1.1. The Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.1.2. EDA Approach</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1.3. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">Numeric Variable Data Quality</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">Categorical Variable Data Quality</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">2.5.1. Quantitative Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">Quantitative Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ratings">2.5.2. Ratings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ratings">Ratings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
