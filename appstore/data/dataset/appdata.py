@@ -11,13 +11,13 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Friday August 11th 2023 12:05:31 am                                                 #
+# Modified   : Sunday August 20th 2023 01:07:50 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import pandas as pd
-from d8analysis.data.base import Dataset
+from d8analysis.data.dataset import Dataset
 
 from appstore.data.entity.appdata import AppData
 

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Thursday August 10th 2023 11:33:09 pm                                               #
+# Modified   : Friday August 11th 2023 03:29:05 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -77,7 +77,7 @@ class RatingController(Controller):
 
     async def _scrape(self) -> None:
         jobrun = self._director.next()
-        while jobrun is not None and self._failures < self._failure_threshold:
+        while jobrun is not None:
             jobrun = self.start_jobrun(jobrun=jobrun)
             apps = self._get_apps(category_id=jobrun.category_id)
             scraper = self._scraper(apps=apps, batch_size=self._batchsize)
@@ -92,6 +92,10 @@ class RatingController(Controller):
                         jobrun.announce()
                 else:
                     self._failures += 1
+                    if self._failures > self._failure_threshold:
+                        msg = f"\nFailures exceeded the failure threshold. Ending job run for job {jobrun.jobid}.\n"
+                        self._logger.exception(msg)
+                        break
             self.end_jobrun(jobrun=jobrun)
             jobrun = self._director.next()
 
