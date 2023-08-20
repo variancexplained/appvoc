@@ -587,7 +587,7 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">10</span>
 <span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
@@ -595,35 +595,7 @@ document.write(`
 <span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
 <span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.appdata</span> <span class="kn">import</span> <span class="n">AppDataDataset</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">d8analysis</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">22</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="kn">from</span> <span class="nn">d8analysis.container</span> <span class="kn">import</span> <span class="n">D8AnalysisContainer</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span> <span class="n">container</span> <span class="o">=</span> <span class="n">D8AnalysisContainer</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">22</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;d8analysis&quot;</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># Data Package</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="c1"># Generation</span>
-
-<span class="nn">File src/dependency_injector/containers.pyx:343,</span> in <span class="ni">dependency_injector.containers.DynamicContainer.init_resources</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:3786,</span> in <span class="ni">dependency_injector.providers.Resource.init</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:225,</span> in <span class="ni">dependency_injector.providers.Provider.__call__</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:3894,</span> in <span class="ni">dependency_injector.providers.Resource._provide</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pxd:608,</span> in <span class="ni">dependency_injector.providers.__call</span><span class="nt">()</span>
-
-<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:811,</span> in <span class="ni">dictConfig</span><span class="nt">(config)</span>
-<span class="g g-Whitespace">    </span><span class="mi">809</span> <span class="k">def</span> <span class="nf">dictConfig</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">810</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Configure logging using a dictionary.&quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">811</span>     <span class="n">dictConfigClass</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
-
-<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:375,</span> in <span class="ni">BaseConfigurator.__init__</span><span class="nt">(self, config)</span>
-<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">375</span>     <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">ConvertingDict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">376</span>     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">configurator</span> <span class="o">=</span> <span class="bp">self</span>
-
-<span class="ne">TypeError</span>: &#39;NoneType&#39; object is not iterable
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;d8analysis&#39;
 </pre></div>
 </div>
 </div>
