@@ -5,12 +5,13 @@ jupytext:
     format_name: myst
     format_version: 0.13
     jupytext_version: 1.15.0
-kernelspec:jb
+kernelspec:
   display_name: appstore
   language: python
   name: python3
 ---
 # Exploratory Data Analysis
+
 ## Stage One: App Performance Overview
 
 Stage one of our exploratory data analysis aims to expose patterns and yield insight into the nature and intensity of the customer experience within the IOS app user community.
