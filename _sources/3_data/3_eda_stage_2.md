@@ -47,6 +47,11 @@ container.init_resources()
 container.wire(packages=["appstore.data.dataset"])
 ```
 
+```{code-cell}
+repo = container.data.rating_repo()
+dataset = repo.get_dataset()
+```
+
 ### Structural Analysis
 
 The structure and characteristics of the Rating dataset are as follows:
