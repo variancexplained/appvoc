@@ -15,28 +15,16 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import os
-import sys
-module_path = os.path.abspath(os.path.join('..'))
-if module_path not in sys.path:
-    sys.path.append(module_path)
-
-import numpy as np
-import pandas as pd
-from IPython.display import HTML, display_html
-import seaborn as sns
-
-import d8analysis as eda
-from appstore.data.dataset.appdata import AppDataDataset
+repo = container.data.appdata_repo()
+dataset = repo.get_dataset()
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[1], line 13[0m
-[1;32m     10[0m [38;5;28;01mimport[39;00m [38;5;21;01mseaborn[39;00m [38;5;28;01mas[39;00m [38;5;21;01msns[39;00m
-[1;32m     12[0m [38;5;28;01mimport[39;00m [38;5;21;01md8analysis[39;00m [38;5;28;01mas[39;00m [38;5;21;01meda[39;00m
-[0;32m---> 13[0m [38;5;28;01mfrom[39;00m [38;5;21;01mappstore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdata[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdataset[39;00m[38;5;21;01m.[39;00m[38;5;21;01mappdata[39;00m [38;5;28;01mimport[39;00m AppDataDataset
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[3], line 1[0m
+[0;32m----> 1[0m repo [38;5;241m=[39m [43mcontainer[49m[38;5;241m.[39mdata[38;5;241m.[39mappdata_repo()
+[1;32m      2[0m dataset [38;5;241m=[39m repo[38;5;241m.[39mget_dataset()
 
-[0;31mModuleNotFoundError[0m: No module named 'appstore'
+[0;31mNameError[0m: name 'container' is not defined
 
