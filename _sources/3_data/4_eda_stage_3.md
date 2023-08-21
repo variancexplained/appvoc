@@ -15,17 +15,11 @@ kernelspec:
 
 ```{code-cell} ipython3
 import os
-import sys
-sys.path.append("/home/john/projects/appstore/appstore")
 
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
 
-from appstore.container import AppstoreContainer
-
-container = AppstoreContainer()
-container.init_resources()
 pd.set_option("max_colwidth", 400)
 ```
 

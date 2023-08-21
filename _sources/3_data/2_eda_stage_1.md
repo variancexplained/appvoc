@@ -51,25 +51,14 @@ Our exploration will comprise the following five analyses.
 
 ```{code-cell}
 import os
-import sys
-sys.path.append("/home/john/projects/appstore/appstore")
 
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
-import warnings
 import seaborn as sns
-warnings.filterwarnings(action='ignore', category=UserWarning)
 
 import d8analysis as eda
-from appstore.container import AppstoreContainer
 from appstore.data.dataset.appdata import AppDataDataset
-```
-
-```{code-cell}
-container = AppstoreContainer()
-container.init_resources()
-container.wire(packages=['appstore'])
 ```
 
 **Obtain the Dataset**
