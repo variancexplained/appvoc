@@ -58,7 +58,6 @@ import pandas as pd
 from IPython.display import HTML, display_html
 import seaborn as sns
 
-%run d8analysis
 import d8analysis as eda
 
 from appstore.container import AppstoreContainer

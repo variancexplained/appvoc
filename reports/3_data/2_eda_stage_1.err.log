@@ -15,66 +15,343 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import dependency
-import sys
-print(sys.path)
-import numpy as np
-import pandas as pd
-from IPython.display import HTML, display_html
-import seaborn as sns
-
-%run d8analysis
-import d8analysis as eda
-
-from appstore.container import AppstoreContainer
-from appstore.data.dataset.appdata import AppDataDataset
+container = AppstoreContainer()
+repo = container.data.appdata_repo()
+dataset = repo.get_dataset()
 ------------------
 
------ stdout -----
-Added /home/john/projects/appstore to sys.path
------ stdout -----
-/home/john/projects/appstore/config/logging.yml
-['/home/john/projects/appstore/jbook/3_data', '/home/john/anaconda3/envs/appstore/lib/python310.zip', '/home/john/anaconda3/envs/appstore/lib/python3.10', '/home/john/anaconda3/envs/appstore/lib/python3.10/lib-dynload', '', '/home/john/anaconda3/envs/appstore/lib/python3.10/site-packages', '/home/john/anaconda3/envs/appstore/lib/python3.10/site-packages/PyQt5_sip-12.11.0-py3.10-linux-x86_64.egg', '/home/john/projects/appstore']
+----- stderr -----
+[08/21/2023 02:23:38 PM] [INFO] [MySQLDatabase] [connect] : Database is not started. Starting database...
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mOSError[0m                                   Traceback (most recent call last)
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/IPython/core/magics/execution.py:701[0m, in [0;36mExecutionMagics.run[0;34m(self, parameter_s, runner, file_finder)[0m
-[1;32m    700[0m     fpath [38;5;241m=[39m arg_lst[[38;5;241m0[39m]
-[0;32m--> 701[0m     filename [38;5;241m=[39m [43mfile_finder[49m[43m([49m[43mfpath[49m[43m)[49m
-[1;32m    702[0m [38;5;28;01mexcept[39;00m [38;5;167;01mIndexError[39;00m [38;5;28;01mas[39;00m e:
+[0;31mConnectionRefusedError[0m                    Traceback (most recent call last)
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/pymysql/connections.py:613[0m, in [0;36mConnection.connect[0;34m(self, sock)[0m
+[1;32m    612[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 613[0m     sock [38;5;241m=[39m [43msocket[49m[38;5;241;43m.[39;49m[43mcreate_connection[49m[43m([49m
+[1;32m    614[0m [43m        [49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mhost[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mport[49m[43m)[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconnect_timeout[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m
+[1;32m    615[0m [43m    [49m[43m)[49m
+[1;32m    616[0m     [38;5;28;01mbreak[39;00m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/IPython/utils/path.py:90[0m, in [0;36mget_py_filename[0;34m(name)[0m
-[1;32m     89[0m         [38;5;28;01mreturn[39;00m py_name
-[0;32m---> 90[0m [38;5;28;01mraise[39;00m [38;5;167;01mIOError[39;00m([38;5;124m"[39m[38;5;124mFile `[39m[38;5;132;01m%r[39;00m[38;5;124m` not found.[39m[38;5;124m"[39m [38;5;241m%[39m name)
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/socket.py:845[0m, in [0;36mcreate_connection[0;34m(address, timeout, source_address)[0m
+[1;32m    844[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 845[0m     [38;5;28;01mraise[39;00m err
+[1;32m    846[0m [38;5;28;01mfinally[39;00m:
+[1;32m    847[0m     [38;5;66;03m# Break explicitly a reference cycle[39;00m
 
-[0;31mOSError[0m: File `'d8analysis'` not found.
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/socket.py:833[0m, in [0;36mcreate_connection[0;34m(address, timeout, source_address)[0m
+[1;32m    832[0m     sock[38;5;241m.[39mbind(source_address)
+[0;32m--> 833[0m [43msock[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43msa[49m[43m)[49m
+[1;32m    834[0m [38;5;66;03m# Break explicitly a reference cycle[39;00m
+
+[0;31mConnectionRefusedError[0m: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+[0;31mOperationalError[0m                          Traceback (most recent call last)
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:145[0m, in [0;36mConnection.__init__[0;34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[0m
+[1;32m    144[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 145[0m     [38;5;28mself[39m[38;5;241m.[39m_dbapi_connection [38;5;241m=[39m [43mengine[49m[38;5;241;43m.[39;49m[43mraw_connection[49m[43m([49m[43m)[49m
+[1;32m    146[0m [38;5;28;01mexcept[39;00m dialect[38;5;241m.[39mloaded_dbapi[38;5;241m.[39mError [38;5;28;01mas[39;00m err:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:3288[0m, in [0;36mEngine.raw_connection[0;34m(self)[0m
+[1;32m   3267[0m [38;5;250m[39m[38;5;124;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
+[1;32m   3268[0m 
+[1;32m   3269[0m [38;5;124;03mThe returned object is a proxied version of the DBAPI[39;00m
+[0;32m   (...)[0m
+[1;32m   3286[0m 
+[1;32m   3287[0m [38;5;124;03m"""[39;00m
+[0;32m-> 3288[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mpool[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:452[0m, in [0;36mPool.connect[0;34m(self)[0m
+[1;32m    445[0m [38;5;250m[39m[38;5;124;03m"""Return a DBAPI connection from the pool.[39;00m
+[1;32m    446[0m 
+[1;32m    447[0m [38;5;124;03mThe connection is instrumented such that when its[39;00m
+[0;32m   (...)[0m
+[1;32m    450[0m 
+[1;32m    451[0m [38;5;124;03m"""[39;00m
+[0;32m--> 452[0m [38;5;28;01mreturn[39;00m [43m_ConnectionFairy[49m[38;5;241;43m.[39;49m[43m_checkout[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:1267[0m, in [0;36m_ConnectionFairy._checkout[0;34m(cls, pool, threadconns, fairy)[0m
+[1;32m   1266[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m fairy:
+[0;32m-> 1267[0m     fairy [38;5;241m=[39m [43m_ConnectionRecord[49m[38;5;241;43m.[39;49m[43mcheckout[49m[43m([49m[43mpool[49m[43m)[49m
+[1;32m   1269[0m     [38;5;28;01mif[39;00m threadconns [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:716[0m, in [0;36m_ConnectionRecord.checkout[0;34m(cls, pool)[0m
+[1;32m    715[0m [38;5;28;01melse[39;00m:
+[0;32m--> 716[0m     rec [38;5;241m=[39m [43mpool[49m[38;5;241;43m.[39;49m[43m_do_get[49m[43m([49m[43m)[49m
+[1;32m    718[0m [38;5;28;01mtry[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/impl.py:169[0m, in [0;36mQueuePool._do_get[0;34m(self)[0m
+[1;32m    168[0m [38;5;28;01mexcept[39;00m:
+[0;32m--> 169[0m     [38;5;28;01mwith[39;00m util[38;5;241m.[39msafe_reraise():
+[1;32m    170[0m         [38;5;28mself[39m[38;5;241m.[39m_dec_overflow()
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py:147[0m, in [0;36msafe_reraise.__exit__[0;34m(self, type_, value, traceback)[0m
+[1;32m    146[0m     [38;5;28mself[39m[38;5;241m.[39m_exc_info [38;5;241m=[39m [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[0;32m--> 147[0m     [38;5;28;01mraise[39;00m exc_value[38;5;241m.[39mwith_traceback(exc_tb)
+[1;32m    148[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/impl.py:167[0m, in [0;36mQueuePool._do_get[0;34m(self)[0m
+[1;32m    166[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 167[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_create_connection[49m[43m([49m[43m)[49m
+[1;32m    168[0m [38;5;28;01mexcept[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:393[0m, in [0;36mPool._create_connection[0;34m(self)[0m
+[1;32m    391[0m [38;5;250m[39m[38;5;124;03m"""Called by subclasses to create a new ConnectionRecord."""[39;00m
+[0;32m--> 393[0m [38;5;28;01mreturn[39;00m [43m_ConnectionRecord[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:678[0m, in [0;36m_ConnectionRecord.__init__[0;34m(self, pool, connect)[0m
+[1;32m    677[0m [38;5;28;01mif[39;00m connect:
+[0;32m--> 678[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m__connect[49m[43m([49m[43m)[49m
+[1;32m    679[0m [38;5;28mself[39m[38;5;241m.[39mfinalize_callback [38;5;241m=[39m deque()
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:902[0m, in [0;36m_ConnectionRecord.__connect[0;34m(self)[0m
+[1;32m    901[0m [38;5;28;01mexcept[39;00m [38;5;167;01mBaseException[39;00m [38;5;28;01mas[39;00m e:
+[0;32m--> 902[0m     [38;5;28;01mwith[39;00m util[38;5;241m.[39msafe_reraise():
+[1;32m    903[0m         pool[38;5;241m.[39mlogger[38;5;241m.[39mdebug([38;5;124m"[39m[38;5;124mError on connect(): [39m[38;5;132;01m%s[39;00m[38;5;124m"[39m, e)
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py:147[0m, in [0;36msafe_reraise.__exit__[0;34m(self, type_, value, traceback)[0m
+[1;32m    146[0m     [38;5;28mself[39m[38;5;241m.[39m_exc_info [38;5;241m=[39m [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[0;32m--> 147[0m     [38;5;28;01mraise[39;00m exc_value[38;5;241m.[39mwith_traceback(exc_tb)
+[1;32m    148[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:898[0m, in [0;36m_ConnectionRecord.__connect[0;34m(self)[0m
+[1;32m    897[0m [38;5;28mself[39m[38;5;241m.[39mstarttime [38;5;241m=[39m time[38;5;241m.[39mtime()
+[0;32m--> 898[0m [38;5;28mself[39m[38;5;241m.[39mdbapi_connection [38;5;241m=[39m connection [38;5;241m=[39m [43mpool[49m[38;5;241;43m.[39;49m[43m_invoke_creator[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+[1;32m    899[0m pool[38;5;241m.[39mlogger[38;5;241m.[39mdebug([38;5;124m"[39m[38;5;124mCreated new connection [39m[38;5;132;01m%r[39;00m[38;5;124m"[39m, connection)
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/create.py:637[0m, in [0;36mcreate_engine.<locals>.connect[0;34m(connection_record)[0m
+[1;32m    635[0m             [38;5;28;01mreturn[39;00m connection
+[0;32m--> 637[0m [38;5;28;01mreturn[39;00m [43mdialect[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[38;5;241;43m*[39;49m[43mcargs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mcparams[49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/default.py:615[0m, in [0;36mDefaultDialect.connect[0;34m(self, *cargs, **cparams)[0m
+[1;32m    613[0m [38;5;28;01mdef[39;00m [38;5;21mconnect[39m([38;5;28mself[39m, [38;5;241m*[39mcargs, [38;5;241m*[39m[38;5;241m*[39mcparams):
+[1;32m    614[0m     [38;5;66;03m# inherits the docstring from interfaces.Dialect.connect[39;00m
+[0;32m--> 615[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mloaded_dbapi[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[38;5;241;43m*[39;49m[43mcargs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mcparams[49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/pymysql/connections.py:353[0m, in [0;36mConnection.__init__[0;34m(self, user, password, host, database, unix_socket, port, charset, sql_mode, read_default_file, conv, use_unicode, client_flag, cursorclass, init_command, connect_timeout, read_default_group, autocommit, local_infile, max_allowed_packet, defer_connect, auth_plugin_map, read_timeout, write_timeout, bind_address, binary_prefix, program_name, server_public_key, ssl, ssl_ca, ssl_cert, ssl_disabled, ssl_key, ssl_verify_cert, ssl_verify_identity, compress, named_pipe, passwd, db)[0m
+[1;32m    352[0m [38;5;28;01melse[39;00m:
+[0;32m--> 353[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/pymysql/connections.py:664[0m, in [0;36mConnection.connect[0;34m(self, sock)[0m
+[1;32m    663[0m         [38;5;28mprint[39m(exc[38;5;241m.[39mtraceback)
+[0;32m--> 664[0m     [38;5;28;01mraise[39;00m exc
+[1;32m    666[0m [38;5;66;03m# If e is neither DatabaseError or IOError, It's a bug.[39;00m
+[1;32m    667[0m [38;5;66;03m# But raising AssertionError hides original error.[39;00m
+[1;32m    668[0m [38;5;66;03m# So just reraise it.[39;00m
+
+[0;31mOperationalError[0m: (2003, "Can't connect to MySQL server on 'localhost' ([Errno 111] Connection refused)")
 
 The above exception was the direct cause of the following exception:
 
-[0;31mException[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[1], line 9[0m
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mIPython[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdisplay[39;00m [38;5;28;01mimport[39;00m HTML, display_html
-[1;32m      7[0m [38;5;28;01mimport[39;00m [38;5;21;01mseaborn[39;00m [38;5;28;01mas[39;00m [38;5;21;01msns[39;00m
-[0;32m----> 9[0m [43mget_ipython[49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[43mrun_line_magic[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mrun[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43md8analysis[39;49m[38;5;124;43m'[39;49m[43m)[49m
-[1;32m     10[0m [38;5;28;01mimport[39;00m [38;5;21;01md8analysis[39;00m [38;5;28;01mas[39;00m [38;5;21;01meda[39;00m
-[1;32m     12[0m [38;5;28;01mfrom[39;00m [38;5;21;01mappstore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcontainer[39;00m [38;5;28;01mimport[39;00m AppstoreContainer
+[0;31mOperationalError[0m                          Traceback (most recent call last)
+File [0;32m~/projects/appstore/appstore/infrastructure/database/mysql.py:56[0m, in [0;36mMySQLDatabase.connect[0;34m(self, autocommit)[0m
+[1;32m     55[0m [38;5;28mself[39m[38;5;241m.[39m_engine [38;5;241m=[39m sqlalchemy[38;5;241m.[39mcreate_engine([38;5;28mself[39m[38;5;241m.[39m_connection_string)
+[0;32m---> 56[0m [38;5;28mself[39m[38;5;241m.[39m_connection [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_engine[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+[1;32m     57[0m [38;5;28;01mif[39;00m autocommit [38;5;129;01mis[39;00m [38;5;28;01mTrue[39;00m:
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/IPython/core/interactiveshell.py:2417[0m, in [0;36mInteractiveShell.run_line_magic[0;34m(self, magic_name, line, _stack_depth)[0m
-[1;32m   2415[0m     kwargs[[38;5;124m'[39m[38;5;124mlocal_ns[39m[38;5;124m'[39m] [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mget_local_scope(stack_depth)
-[1;32m   2416[0m [38;5;28;01mwith[39;00m [38;5;28mself[39m[38;5;241m.[39mbuiltin_trap:
-[0;32m-> 2417[0m     result [38;5;241m=[39m [43mfn[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-[1;32m   2419[0m [38;5;66;03m# The code below prevents the output from being displayed[39;00m
-[1;32m   2420[0m [38;5;66;03m# when using magics with decodator @output_can_be_silenced[39;00m
-[1;32m   2421[0m [38;5;66;03m# when the last Python token in the expression is a ';'.[39;00m
-[1;32m   2422[0m [38;5;28;01mif[39;00m [38;5;28mgetattr[39m(fn, magic[38;5;241m.[39mMAGIC_OUTPUT_CAN_BE_SILENCED, [38;5;28;01mFalse[39;00m):
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:3264[0m, in [0;36mEngine.connect[0;34m(self)[0m
+[1;32m   3242[0m [38;5;250m[39m[38;5;124;03m"""Return a new :class:`_engine.Connection` object.[39;00m
+[1;32m   3243[0m 
+[1;32m   3244[0m [38;5;124;03mThe :class:`_engine.Connection` acts as a Python context manager, so[39;00m
+[0;32m   (...)[0m
+[1;32m   3261[0m 
+[1;32m   3262[0m [38;5;124;03m"""[39;00m
+[0;32m-> 3264[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_connection_cls[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/IPython/core/magics/execution.py:712[0m, in [0;36mExecutionMagics.run[0;34m(self, parameter_s, runner, file_finder)[0m
-[1;32m    710[0m     [38;5;28;01mif[39;00m os[38;5;241m.[39mname [38;5;241m==[39m [38;5;124m'[39m[38;5;124mnt[39m[38;5;124m'[39m [38;5;129;01mand[39;00m re[38;5;241m.[39mmatch([38;5;124mr[39m[38;5;124m"[39m[38;5;124m^[39m[38;5;124m'[39m[38;5;124m.*[39m[38;5;124m'[39m[38;5;124m$[39m[38;5;124m"[39m,fpath):
-[1;32m    711[0m         warn([38;5;124m'[39m[38;5;124mFor Windows, use double quotes to wrap a filename: [39m[38;5;132;01m%r[39;00m[38;5;124mun [39m[38;5;124m"[39m[38;5;124mmypath[39m[38;5;130;01m\\[39;00m[38;5;124mmyfile.py[39m[38;5;124m"[39m[38;5;124m'[39m)
-[0;32m--> 712[0m     [38;5;28;01mraise[39;00m [38;5;167;01mException[39;00m(msg) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
-[1;32m    713[0m [38;5;28;01mexcept[39;00m [38;5;167;01mTypeError[39;00m:
-[1;32m    714[0m     [38;5;28;01mif[39;00m fpath [38;5;129;01min[39;00m sys[38;5;241m.[39mmeta_path:
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:147[0m, in [0;36mConnection.__init__[0;34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[0m
+[1;32m    146[0m [38;5;28;01mexcept[39;00m dialect[38;5;241m.[39mloaded_dbapi[38;5;241m.[39mError [38;5;28;01mas[39;00m err:
+[0;32m--> 147[0m     [43mConnection[49m[38;5;241;43m.[39;49m[43m_handle_dbapi_exception_noconnection[49m[43m([49m
+[1;32m    148[0m [43m        [49m[43merr[49m[43m,[49m[43m [49m[43mdialect[49m[43m,[49m[43m [49m[43mengine[49m
+[1;32m    149[0m [43m    [49m[43m)[49m
+[1;32m    150[0m     [38;5;28;01mraise[39;00m
 
-[0;31mException[0m: File `'d8analysis'` not found.
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:2426[0m, in [0;36mConnection._handle_dbapi_exception_noconnection[0;34m(cls, e, dialect, engine, is_disconnect, invalidate_pool_on_disconnect, is_pre_ping)[0m
+[1;32m   2425[0m     [38;5;28;01massert[39;00m sqlalchemy_exception [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[0;32m-> 2426[0m     [38;5;28;01mraise[39;00m sqlalchemy_exception[38;5;241m.[39mwith_traceback(exc_info[[38;5;241m2[39m]) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+[1;32m   2427[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:145[0m, in [0;36mConnection.__init__[0;34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[0m
+[1;32m    144[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 145[0m     [38;5;28mself[39m[38;5;241m.[39m_dbapi_connection [38;5;241m=[39m [43mengine[49m[38;5;241;43m.[39;49m[43mraw_connection[49m[43m([49m[43m)[49m
+[1;32m    146[0m [38;5;28;01mexcept[39;00m dialect[38;5;241m.[39mloaded_dbapi[38;5;241m.[39mError [38;5;28;01mas[39;00m err:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:3288[0m, in [0;36mEngine.raw_connection[0;34m(self)[0m
+[1;32m   3267[0m [38;5;250m[39m[38;5;124;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
+[1;32m   3268[0m 
+[1;32m   3269[0m [38;5;124;03mThe returned object is a proxied version of the DBAPI[39;00m
+[0;32m   (...)[0m
+[1;32m   3286[0m 
+[1;32m   3287[0m [38;5;124;03m"""[39;00m
+[0;32m-> 3288[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mpool[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:452[0m, in [0;36mPool.connect[0;34m(self)[0m
+[1;32m    445[0m [38;5;250m[39m[38;5;124;03m"""Return a DBAPI connection from the pool.[39;00m
+[1;32m    446[0m 
+[1;32m    447[0m [38;5;124;03mThe connection is instrumented such that when its[39;00m
+[0;32m   (...)[0m
+[1;32m    450[0m 
+[1;32m    451[0m [38;5;124;03m"""[39;00m
+[0;32m--> 452[0m [38;5;28;01mreturn[39;00m [43m_ConnectionFairy[49m[38;5;241;43m.[39;49m[43m_checkout[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:1267[0m, in [0;36m_ConnectionFairy._checkout[0;34m(cls, pool, threadconns, fairy)[0m
+[1;32m   1266[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m fairy:
+[0;32m-> 1267[0m     fairy [38;5;241m=[39m [43m_ConnectionRecord[49m[38;5;241;43m.[39;49m[43mcheckout[49m[43m([49m[43mpool[49m[43m)[49m
+[1;32m   1269[0m     [38;5;28;01mif[39;00m threadconns [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:716[0m, in [0;36m_ConnectionRecord.checkout[0;34m(cls, pool)[0m
+[1;32m    715[0m [38;5;28;01melse[39;00m:
+[0;32m--> 716[0m     rec [38;5;241m=[39m [43mpool[49m[38;5;241;43m.[39;49m[43m_do_get[49m[43m([49m[43m)[49m
+[1;32m    718[0m [38;5;28;01mtry[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/impl.py:169[0m, in [0;36mQueuePool._do_get[0;34m(self)[0m
+[1;32m    168[0m [38;5;28;01mexcept[39;00m:
+[0;32m--> 169[0m     [38;5;28;01mwith[39;00m util[38;5;241m.[39msafe_reraise():
+[1;32m    170[0m         [38;5;28mself[39m[38;5;241m.[39m_dec_overflow()
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py:147[0m, in [0;36msafe_reraise.__exit__[0;34m(self, type_, value, traceback)[0m
+[1;32m    146[0m     [38;5;28mself[39m[38;5;241m.[39m_exc_info [38;5;241m=[39m [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[0;32m--> 147[0m     [38;5;28;01mraise[39;00m exc_value[38;5;241m.[39mwith_traceback(exc_tb)
+[1;32m    148[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/impl.py:167[0m, in [0;36mQueuePool._do_get[0;34m(self)[0m
+[1;32m    166[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 167[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_create_connection[49m[43m([49m[43m)[49m
+[1;32m    168[0m [38;5;28;01mexcept[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:393[0m, in [0;36mPool._create_connection[0;34m(self)[0m
+[1;32m    391[0m [38;5;250m[39m[38;5;124;03m"""Called by subclasses to create a new ConnectionRecord."""[39;00m
+[0;32m--> 393[0m [38;5;28;01mreturn[39;00m [43m_ConnectionRecord[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:678[0m, in [0;36m_ConnectionRecord.__init__[0;34m(self, pool, connect)[0m
+[1;32m    677[0m [38;5;28;01mif[39;00m connect:
+[0;32m--> 678[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m__connect[49m[43m([49m[43m)[49m
+[1;32m    679[0m [38;5;28mself[39m[38;5;241m.[39mfinalize_callback [38;5;241m=[39m deque()
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:902[0m, in [0;36m_ConnectionRecord.__connect[0;34m(self)[0m
+[1;32m    901[0m [38;5;28;01mexcept[39;00m [38;5;167;01mBaseException[39;00m [38;5;28;01mas[39;00m e:
+[0;32m--> 902[0m     [38;5;28;01mwith[39;00m util[38;5;241m.[39msafe_reraise():
+[1;32m    903[0m         pool[38;5;241m.[39mlogger[38;5;241m.[39mdebug([38;5;124m"[39m[38;5;124mError on connect(): [39m[38;5;132;01m%s[39;00m[38;5;124m"[39m, e)
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py:147[0m, in [0;36msafe_reraise.__exit__[0;34m(self, type_, value, traceback)[0m
+[1;32m    146[0m     [38;5;28mself[39m[38;5;241m.[39m_exc_info [38;5;241m=[39m [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[0;32m--> 147[0m     [38;5;28;01mraise[39;00m exc_value[38;5;241m.[39mwith_traceback(exc_tb)
+[1;32m    148[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/pool/base.py:898[0m, in [0;36m_ConnectionRecord.__connect[0;34m(self)[0m
+[1;32m    897[0m [38;5;28mself[39m[38;5;241m.[39mstarttime [38;5;241m=[39m time[38;5;241m.[39mtime()
+[0;32m--> 898[0m [38;5;28mself[39m[38;5;241m.[39mdbapi_connection [38;5;241m=[39m connection [38;5;241m=[39m [43mpool[49m[38;5;241;43m.[39;49m[43m_invoke_creator[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+[1;32m    899[0m pool[38;5;241m.[39mlogger[38;5;241m.[39mdebug([38;5;124m"[39m[38;5;124mCreated new connection [39m[38;5;132;01m%r[39;00m[38;5;124m"[39m, connection)
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/create.py:637[0m, in [0;36mcreate_engine.<locals>.connect[0;34m(connection_record)[0m
+[1;32m    635[0m             [38;5;28;01mreturn[39;00m connection
+[0;32m--> 637[0m [38;5;28;01mreturn[39;00m [43mdialect[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[38;5;241;43m*[39;49m[43mcargs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mcparams[49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/default.py:615[0m, in [0;36mDefaultDialect.connect[0;34m(self, *cargs, **cparams)[0m
+[1;32m    613[0m [38;5;28;01mdef[39;00m [38;5;21mconnect[39m([38;5;28mself[39m, [38;5;241m*[39mcargs, [38;5;241m*[39m[38;5;241m*[39mcparams):
+[1;32m    614[0m     [38;5;66;03m# inherits the docstring from interfaces.Dialect.connect[39;00m
+[0;32m--> 615[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mloaded_dbapi[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[38;5;241;43m*[39;49m[43mcargs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mcparams[49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/pymysql/connections.py:353[0m, in [0;36mConnection.__init__[0;34m(self, user, password, host, database, unix_socket, port, charset, sql_mode, read_default_file, conv, use_unicode, client_flag, cursorclass, init_command, connect_timeout, read_default_group, autocommit, local_infile, max_allowed_packet, defer_connect, auth_plugin_map, read_timeout, write_timeout, bind_address, binary_prefix, program_name, server_public_key, ssl, ssl_ca, ssl_cert, ssl_disabled, ssl_key, ssl_verify_cert, ssl_verify_identity, compress, named_pipe, passwd, db)[0m
+[1;32m    352[0m [38;5;28;01melse[39;00m:
+[0;32m--> 353[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/pymysql/connections.py:664[0m, in [0;36mConnection.connect[0;34m(self, sock)[0m
+[1;32m    663[0m         [38;5;28mprint[39m(exc[38;5;241m.[39mtraceback)
+[0;32m--> 664[0m     [38;5;28;01mraise[39;00m exc
+[1;32m    666[0m [38;5;66;03m# If e is neither DatabaseError or IOError, It's a bug.[39;00m
+[1;32m    667[0m [38;5;66;03m# But raising AssertionError hides original error.[39;00m
+[1;32m    668[0m [38;5;66;03m# So just reraise it.[39;00m
+
+[0;31mOperationalError[0m: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'localhost' ([Errno 111] Connection refused)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+During handling of the above exception, another exception occurred:
+
+[0;31mTypeError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[2], line 2[0m
+[1;32m      1[0m container [38;5;241m=[39m AppstoreContainer()
+[0;32m----> 2[0m repo [38;5;241m=[39m [43mcontainer[49m[38;5;241;43m.[39;49m[43mdata[49m[38;5;241;43m.[39;49m[43mappdata_repo[49m[43m([49m[43m)[49m
+[1;32m      3[0m dataset [38;5;241m=[39m repo[38;5;241m.[39mget_dataset()
+
+File [0;32msrc/dependency_injector/providers.pyx:225[0m, in [0;36mdependency_injector.providers.Provider.__call__[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pyx:3049[0m, in [0;36mdependency_injector.providers.Singleton._provide[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:650[0m, in [0;36mdependency_injector.providers.__factory_call[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:577[0m, in [0;36mdependency_injector.providers.__call[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:445[0m, in [0;36mdependency_injector.providers.__provide_keyword_args[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:365[0m, in [0;36mdependency_injector.providers.__get_value[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pyx:225[0m, in [0;36mdependency_injector.providers.Provider.__call__[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pyx:3049[0m, in [0;36mdependency_injector.providers.Singleton._provide[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:650[0m, in [0;36mdependency_injector.providers.__factory_call[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:608[0m, in [0;36mdependency_injector.providers.__call[0;34m()[0m
+
+File [0;32m~/projects/appstore/appstore/infrastructure/database/mysql.py:46[0m, in [0;36mMySQLDatabase.__init__[0;34m(self, name)[0m
+[1;32m     44[0m [38;5;28mself[39m[38;5;241m.[39m_name [38;5;241m=[39m name
+[1;32m     45[0m [38;5;28mself[39m[38;5;241m.[39m_connection_string [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_get_connection_string()
+[0;32m---> 46[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+
+File [0;32m~/projects/appstore/appstore/infrastructure/database/mysql.py:69[0m, in [0;36mMySQLDatabase.connect[0;34m(self, autocommit)[0m
+[1;32m     67[0m msg [38;5;241m=[39m [38;5;124m"[39m[38;5;124mDatabase is not started. Starting database...[39m[38;5;124m"[39m
+[1;32m     68[0m [38;5;28mself[39m[38;5;241m.[39m_logger[38;5;241m.[39minfo(msg)
+[0;32m---> 69[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_start_db[49m[43m([49m[43m)[49m
+[1;32m     70[0m database_started [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+[1;32m     71[0m sleep([38;5;241m3[39m)
+
+File [0;32m~/projects/appstore/appstore/infrastructure/database/mysql.py:91[0m, in [0;36mMySQLDatabase._start_db[0;34m(self)[0m
+[1;32m     89[0m [38;5;28;01mdef[39;00m [38;5;21m_start_db[39m([38;5;28mself[39m) [38;5;241m-[39m[38;5;241m>[39m [38;5;28;01mNone[39;00m:
+[1;32m     90[0m     filepath [38;5;241m=[39m os[38;5;241m.[39mgetenv([38;5;124m"[39m[38;5;124mMYSSQL_STARTUP_SCRIPT[39m[38;5;124m"[39m)
+[0;32m---> 91[0m     [43msubprocess[49m[38;5;241;43m.[39;49m[43mrun[49m[43m([49m[43m[[49m[43mfilepath[49m[43m][49m[43m,[49m[43m [49m[43mshell[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/subprocess.py:503[0m, in [0;36mrun[0;34m(input, capture_output, timeout, check, *popenargs, **kwargs)[0m
+[1;32m    500[0m     kwargs[[38;5;124m'[39m[38;5;124mstdout[39m[38;5;124m'[39m] [38;5;241m=[39m PIPE
+[1;32m    501[0m     kwargs[[38;5;124m'[39m[38;5;124mstderr[39m[38;5;124m'[39m] [38;5;241m=[39m PIPE
+[0;32m--> 503[0m [38;5;28;01mwith[39;00m [43mPopen[49m[43m([49m[38;5;241;43m*[39;49m[43mpopenargs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m [38;5;28;01mas[39;00m process:
+[1;32m    504[0m     [38;5;28;01mtry[39;00m:
+[1;32m    505[0m         stdout, stderr [38;5;241m=[39m process[38;5;241m.[39mcommunicate([38;5;28minput[39m, timeout[38;5;241m=[39mtimeout)
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/subprocess.py:971[0m, in [0;36mPopen.__init__[0;34m(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize)[0m
+[1;32m    967[0m         [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39mtext_mode:
+[1;32m    968[0m             [38;5;28mself[39m[38;5;241m.[39mstderr [38;5;241m=[39m io[38;5;241m.[39mTextIOWrapper([38;5;28mself[39m[38;5;241m.[39mstderr,
+[1;32m    969[0m                     encoding[38;5;241m=[39mencoding, errors[38;5;241m=[39merrors)
+[0;32m--> 971[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_execute_child[49m[43m([49m[43margs[49m[43m,[49m[43m [49m[43mexecutable[49m[43m,[49m[43m [49m[43mpreexec_fn[49m[43m,[49m[43m [49m[43mclose_fds[49m[43m,[49m
+[1;32m    972[0m [43m                        [49m[43mpass_fds[49m[43m,[49m[43m [49m[43mcwd[49m[43m,[49m[43m [49m[43menv[49m[43m,[49m
+[1;32m    973[0m [43m                        [49m[43mstartupinfo[49m[43m,[49m[43m [49m[43mcreationflags[49m[43m,[49m[43m [49m[43mshell[49m[43m,[49m
+[1;32m    974[0m [43m                        [49m[43mp2cread[49m[43m,[49m[43m [49m[43mp2cwrite[49m[43m,[49m
+[1;32m    975[0m [43m                        [49m[43mc2pread[49m[43m,[49m[43m [49m[43mc2pwrite[49m[43m,[49m
+[1;32m    976[0m [43m                        [49m[43merrread[49m[43m,[49m[43m [49m[43merrwrite[49m[43m,[49m
+[1;32m    977[0m [43m                        [49m[43mrestore_signals[49m[43m,[49m
+[1;32m    978[0m [43m                        [49m[43mgid[49m[43m,[49m[43m [49m[43mgids[49m[43m,[49m[43m [49m[43muid[49m[43m,[49m[43m [49m[43mumask[49m[43m,[49m
+[1;32m    979[0m [43m                        [49m[43mstart_new_session[49m[43m)[49m
+[1;32m    980[0m [38;5;28;01mexcept[39;00m:
+[1;32m    981[0m     [38;5;66;03m# Cleanup if the child failed starting.[39;00m
+[1;32m    982[0m     [38;5;28;01mfor[39;00m f [38;5;129;01min[39;00m [38;5;28mfilter[39m([38;5;28;01mNone[39;00m, ([38;5;28mself[39m[38;5;241m.[39mstdin, [38;5;28mself[39m[38;5;241m.[39mstdout, [38;5;28mself[39m[38;5;241m.[39mstderr)):
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/subprocess.py:1796[0m, in [0;36mPopen._execute_child[0;34m(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session)[0m
+[1;32m   1794[0m     fds_to_keep [38;5;241m=[39m [38;5;28mset[39m(pass_fds)
+[1;32m   1795[0m     fds_to_keep[38;5;241m.[39madd(errpipe_write)
+[0;32m-> 1796[0m     [38;5;28mself[39m[38;5;241m.[39mpid [38;5;241m=[39m [43m_posixsubprocess[49m[38;5;241;43m.[39;49m[43mfork_exec[49m[43m([49m
+[1;32m   1797[0m [43m            [49m[43margs[49m[43m,[49m[43m [49m[43mexecutable_list[49m[43m,[49m
+[1;32m   1798[0m [43m            [49m[43mclose_fds[49m[43m,[49m[43m [49m[38;5;28;43mtuple[39;49m[43m([49m[38;5;28;43msorted[39;49m[43m([49m[38;5;28;43mmap[39;49m[43m([49m[38;5;28;43mint[39;49m[43m,[49m[43m [49m[43mfds_to_keep[49m[43m)[49m[43m)[49m[43m)[49m[43m,[49m
+[1;32m   1799[0m [43m            [49m[43mcwd[49m[43m,[49m[43m [49m[43menv_list[49m[43m,[49m
+[1;32m   1800[0m [43m            [49m[43mp2cread[49m[43m,[49m[43m [49m[43mp2cwrite[49m[43m,[49m[43m [49m[43mc2pread[49m[43m,[49m[43m [49m[43mc2pwrite[49m[43m,[49m
+[1;32m   1801[0m [43m            [49m[43merrread[49m[43m,[49m[43m [49m[43merrwrite[49m[43m,[49m
+[1;32m   1802[0m [43m            [49m[43merrpipe_read[49m[43m,[49m[43m [49m[43merrpipe_write[49m[43m,[49m
+[1;32m   1803[0m [43m            [49m[43mrestore_signals[49m[43m,[49m[43m [49m[43mstart_new_session[49m[43m,[49m
+[1;32m   1804[0m [43m            [49m[43mgid[49m[43m,[49m[43m [49m[43mgids[49m[43m,[49m[43m [49m[43muid[49m[43m,[49m[43m [49m[43mumask[49m[43m,[49m
+[1;32m   1805[0m [43m            [49m[43mpreexec_fn[49m[43m)[49m
+[1;32m   1806[0m     [38;5;28mself[39m[38;5;241m.[39m_child_created [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+[1;32m   1807[0m [38;5;28;01mfinally[39;00m:
+[1;32m   1808[0m     [38;5;66;03m# be sure the FD is closed no matter what[39;00m
+
+[0;31mTypeError[0m: expected str, bytes or os.PathLike object, not NoneType
 
