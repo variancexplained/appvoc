@@ -56,26 +56,7 @@ dataset = repo.get_dataset()
 
 The structure and characteristics of the Rating dataset are as follows:
 
-```{code-cell}
-df1 = dataset.structure
-df2 = dataset.dtypes
-
-df1_style = df1.style.set_table_attributes("style='display:inline; margin-right:220px;'").set_caption("Dataset Structure").format(thousands=",")
-df2_style = df2.style.set_table_attributes("style='display:inline; margin-right:120px'").set_caption("Dataset Data Types").format(thousands=",")
-
-display_html(df1_style._repr_html_() + df2_style._repr_html_(), raw=True)
-```
-
 ### Data Quality Analysis
 
-Data type, cardinality, validity, duplication, and size data are summarized at the variable level.
 
-```{code-cell}
-dataset.quality.style.format(**formatting)
-```
-
-## Content Analysis
-
-```{code-cell}
-dataset.summary.style.format(**formatting)
-```
+### Content Analysis

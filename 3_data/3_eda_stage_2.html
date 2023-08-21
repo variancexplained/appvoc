@@ -455,9 +455,9 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.1.3. Content Analysis</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.2. Content Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -586,53 +586,13 @@ document.write(`
 <section id="structural-analysis">
 <h3><span class="section-number">3.1.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
 <p>The structure and characteristics of the Rating dataset are as follows:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">structure</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dtypes</span>
-
-<span class="n">df1_style</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:220px;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Structure&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-<span class="n">df2_style</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:120px&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Data Types&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-<span class="n">display_html</span><span class="p">(</span><span class="n">df1_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span> <span class="o">+</span> <span class="n">df2_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">(),</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">structure</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dtypes</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">df1_style</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:220px;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Structure&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-<span class="ne">AttributeError</span>: &#39;RatingDataset&#39; object has no attribute &#39;structure&#39;
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="data-quality-analysis">
 <h3><span class="section-number">3.1.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
-<p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">quality</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="content-analysis">
-<h2><span class="section-number">3.2. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<h3><span class="section-number">3.1.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 </section>
 
@@ -706,9 +666,9 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.1.3. Content Analysis</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.2. Content Analysis</a></li>
 </ul>
   </nav></div>
 
