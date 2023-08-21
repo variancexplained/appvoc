@@ -31,6 +31,8 @@ pd.set_option("max_colwidth", 400)
 
 ----- stdout -----
 Added /home/john/projects/appstore to sys.path
+----- stdout -----
+/home/john/projects/appstore/jbook/config/logging.yml
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m

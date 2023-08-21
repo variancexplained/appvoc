@@ -27,6 +27,8 @@ formatting = {"thousands":",", "precision":2}
 
 ----- stdout -----
 Added /home/john/projects/appstore to sys.path
+----- stdout -----
+/home/john/projects/appstore/jbook/config/logging.yml
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
