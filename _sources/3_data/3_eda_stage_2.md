@@ -41,7 +41,6 @@ import pandas as pd
 from IPython.display import HTML, display_html
 
 from appstore.data.dataset.rating import RatingDataset
-dataset = RatingDataset()
 formatting = {"thousands":",", "precision":2}
 ```
 

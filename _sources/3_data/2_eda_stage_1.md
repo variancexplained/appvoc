@@ -66,12 +66,15 @@ from IPython.display import HTML, display_html
 import seaborn as sns
 
 import d8analysis as eda
+
+from appstore.container import AppstoreContainer
 from appstore.data.dataset.appdata import AppDataDataset
 ```
 
 **Obtain the Dataset**
 
 ```{code-cell}
+
 repo = container.data.appdata_repo()
 dataset = repo.get_dataset()
 ```

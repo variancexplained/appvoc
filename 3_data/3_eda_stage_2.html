@@ -554,24 +554,12 @@ document.write(`
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
 
 <span class="kn">from</span> <span class="nn">appstore.data.dataset.rating</span> <span class="kn">import</span> <span class="n">RatingDataset</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">RatingDataset</span><span class="p">()</span>
 <span class="n">formatting</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thousands&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/john/projects/appstore
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">14</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.rating</span> <span class="kn">import</span> <span class="n">RatingDataset</span>
-<span class="ne">---&gt; </span><span class="mi">14</span> <span class="n">dataset</span> <span class="o">=</span> <span class="n">RatingDataset</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="n">formatting</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thousands&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
-
-<span class="ne">TypeError</span>: RatingDataset.__init__() missing 1 required positional argument: &#39;df&#39;
 </pre></div>
 </div>
 </div>
@@ -588,6 +576,18 @@ document.write(`
 <span class="n">df2_style</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:120px&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Data Types&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
 <span class="n">display_html</span><span class="p">(</span><span class="n">df1_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span> <span class="o">+</span> <span class="n">df2_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">(),</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">structure</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">df1_style</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:220px;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Structure&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;dataset&#39; is not defined
 </pre></div>
 </div>
 </div>
