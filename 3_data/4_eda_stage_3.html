@@ -544,17 +544,17 @@ Added config path: /home/john/projects/appstore/config to sys.path.
 <span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="n">container</span> <span class="o">=</span> <span class="n">D8AnalysisContainer</span><span class="p">()</span>
 <span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
 
-<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:48,</span> in <span class="ni">LoggingConfig.set_level</span><span class="nt">(cls, level)</span>
-<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="nd">@classmethod</span>
-<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="k">def</span> <span class="nf">set_level</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Sets logging level for the console.</span>
-<span class="g g-Whitespace">     </span><span class="mi">43</span><span class="sd"> </span>
-<span class="g g-Whitespace">     </span><span class="mi">44</span><span class="sd">     Args:</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span><span class="sd">         level (str): The logging level in all caps.</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">---&gt; </span><span class="mi">48</span>     <span class="n">config</span> <span class="o">=</span> <span class="n">IOService</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span>     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;logging&quot;</span><span class="p">][</span><span class="s2">&quot;handlers&quot;</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">][</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">IOService</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:49,</span> in <span class="ni">LoggingConfig.set_level</span><span class="nt">(cls, level)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span> <span class="k">def</span> <span class="nf">set_level</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Sets logging level for the console.</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span><span class="sd"> </span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span><span class="sd">     Args:</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span><span class="sd">         level (str): The logging level in all caps.</span>
+<span class="g g-Whitespace">     </span><span class="mi">47</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">49</span>     <span class="n">config</span> <span class="o">=</span> <span class="n">IOService</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;logging&quot;</span><span class="p">][</span><span class="s2">&quot;handlers&quot;</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">][</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span>
+<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="n">IOService</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
 <span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:321,</span> in <span class="ni">IOService.read</span><span class="nt">(cls, filepath, **kwargs)</span>
 <span class="g g-Whitespace">    </span><span class="mi">318</span> <span class="nd">@classmethod</span>
@@ -575,7 +575,7 @@ Added config path: /home/john/projects/appstore/config to sys.path.
 <span class="g g-Whitespace">    </span><span class="mi">177</span>         <span class="k">try</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">178</span>             <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;config/logging.yml&#39;
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;/home/john/projects/appstore/jbook/3_data/config/logging.yml&#39;
 </pre></div>
 </div>
 </div>

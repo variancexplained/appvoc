@@ -84,17 +84,17 @@ File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/__
 [1;32m     26[0m container [38;5;241m=[39m D8AnalysisContainer()
 [1;32m     27[0m container[38;5;241m.[39minit_resources()
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:48[0m, in [0;36mLoggingConfig.set_level[0;34m(cls, level)[0m
-[1;32m     40[0m [38;5;129m@classmethod[39m
-[1;32m     41[0m [38;5;28;01mdef[39;00m [38;5;21mset_level[39m([38;5;28mcls[39m, level: [38;5;28mstr[39m [38;5;241m=[39m [38;5;124m"[39m[38;5;124mDEBUG[39m[38;5;124m"[39m) [38;5;241m-[39m[38;5;241m>[39m [38;5;28;01mNone[39;00m:
-[1;32m     42[0m [38;5;250m    [39m[38;5;124;03m"""Sets logging level for the console.[39;00m
-[1;32m     43[0m 
-[1;32m     44[0m [38;5;124;03m    Args:[39;00m
-[1;32m     45[0m [38;5;124;03m        level (str): The logging level in all caps.[39;00m
-[1;32m     46[0m [38;5;124;03m    """[39;00m
-[0;32m---> 48[0m     config [38;5;241m=[39m [43mIOService[49m[38;5;241;43m.[39;49m[43mread[49m[43m([49m[38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m__filepath[49m[43m)[49m
-[1;32m     49[0m     config[[38;5;124m"[39m[38;5;124mlogging[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mhandlers[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mconsole[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mlevel[39m[38;5;124m"[39m] [38;5;241m=[39m level
-[1;32m     50[0m     IOService[38;5;241m.[39mwrite([38;5;28mcls[39m[38;5;241m.[39m__filepath, data[38;5;241m=[39mconfig)
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:49[0m, in [0;36mLoggingConfig.set_level[0;34m(cls, level)[0m
+[1;32m     41[0m [38;5;129m@classmethod[39m
+[1;32m     42[0m [38;5;28;01mdef[39;00m [38;5;21mset_level[39m([38;5;28mcls[39m, level: [38;5;28mstr[39m [38;5;241m=[39m [38;5;124m"[39m[38;5;124mDEBUG[39m[38;5;124m"[39m) [38;5;241m-[39m[38;5;241m>[39m [38;5;28;01mNone[39;00m:
+[1;32m     43[0m [38;5;250m    [39m[38;5;124;03m"""Sets logging level for the console.[39;00m
+[1;32m     44[0m 
+[1;32m     45[0m [38;5;124;03m    Args:[39;00m
+[1;32m     46[0m [38;5;124;03m        level (str): The logging level in all caps.[39;00m
+[1;32m     47[0m [38;5;124;03m    """[39;00m
+[0;32m---> 49[0m     config [38;5;241m=[39m [43mIOService[49m[38;5;241;43m.[39;49m[43mread[49m[43m([49m[38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m__filepath[49m[43m)[49m
+[1;32m     50[0m     config[[38;5;124m"[39m[38;5;124mlogging[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mhandlers[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mconsole[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mlevel[39m[38;5;124m"[39m] [38;5;241m=[39m level
+[1;32m     51[0m     IOService[38;5;241m.[39mwrite([38;5;28mcls[39m[38;5;241m.[39m__filepath, data[38;5;241m=[39mconfig)
 
 File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:321[0m, in [0;36mIOService.read[0;34m(cls, filepath, **kwargs)[0m
 [1;32m    318[0m [38;5;129m@classmethod[39m
@@ -115,5 +115,5 @@ File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/se
 [1;32m    177[0m         [38;5;28;01mtry[39;00m:
 [1;32m    178[0m             [38;5;28;01mreturn[39;00m yaml[38;5;241m.[39msafe_load(f)
 
-[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: 'config/logging.yml'
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: '/home/john/projects/appstore/jbook/3_data/config/logging.yml'
 
