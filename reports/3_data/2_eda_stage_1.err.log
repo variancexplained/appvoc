@@ -29,27 +29,9 @@ from appstore.container import AppstoreContainer
 from appstore.data.dataset.appdata import AppDataDataset
 ------------------
 
------ stderr -----
-Filepath is None
-------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mTypeError[0m                                 Traceback (most recent call last)
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:332[0m, in [0;36mIOService._get_io[0;34m(cls, filepath)[0m
-[1;32m    331[0m [38;5;28;01mtry[39;00m:
-[0;32m--> 332[0m     file_format [38;5;241m=[39m [43mos[49m[38;5;241;43m.[39;49m[43mpath[49m[38;5;241;43m.[39;49m[43msplitext[49m[43m([49m[43mfilepath[49m[43m)[49m[[38;5;241m1[39m][38;5;241m.[39mreplace([38;5;124m"[39m[38;5;124m.[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124m"[39m)
-[1;32m    333[0m     [38;5;28;01mreturn[39;00m IOService[38;5;241m.[39m__io[file_format]
-
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/posixpath.py:118[0m, in [0;36msplitext[0;34m(p)[0m
-[1;32m    117[0m [38;5;28;01mdef[39;00m [38;5;21msplitext[39m(p):
-[0;32m--> 118[0m     p [38;5;241m=[39m [43mos[49m[38;5;241;43m.[39;49m[43mfspath[49m[43m([49m[43mp[49m[43m)[49m
-[1;32m    119[0m     [38;5;28;01mif[39;00m [38;5;28misinstance[39m(p, [38;5;28mbytes[39m):
-
-[0;31mTypeError[0m: expected str, bytes or os.PathLike object, not NoneType
-
-During handling of the above exception, another exception occurred:
-
-[0;31mValueError[0m                                Traceback (most recent call last)
 Cell [0;32mIn[1], line 1[0m
 [0;32m----> 1[0m [38;5;28;01mimport[39;00m [38;5;21;01mdependency[39;00m
 [1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01msys[39;00m
@@ -95,37 +77,33 @@ File [0;32m~/projects/appstore/appstore/data/dataset/appdata.py:20[0m
 [1;32m     22[0m [38;5;28;01mfrom[39;00m [38;5;21;01mappstore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdata[39;00m[38;5;21;01m.[39;00m[38;5;21;01mentity[39;00m[38;5;21;01m.[39;00m[38;5;21;01mappdata[39;00m [38;5;28;01mimport[39;00m AppData
 [1;32m     25[0m [38;5;66;03m# ------------------------------------------------------------------------------------------------ #[39;00m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/__init__.py:25[0m
-[1;32m     21[0m [38;5;28;01mfrom[39;00m [38;5;21;01md8analysis[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcontainer[39;00m [38;5;28;01mimport[39;00m D8AnalysisContainer
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/__init__.py:27[0m
 [1;32m     24[0m [38;5;66;03m# ------------------------------------------------------------------------------------------------ #[39;00m
-[0;32m---> 25[0m [43mLoggingConfig[49m[38;5;241;43m.[39;49m[43mset_level[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mINFO[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m     25[0m [38;5;66;03m# LoggingConfig.set_level("INFO")[39;00m
 [1;32m     26[0m container [38;5;241m=[39m D8AnalysisContainer()
-[1;32m     27[0m container[38;5;241m.[39minit_resources()
+[0;32m---> 27[0m [43mcontainer[49m[38;5;241;43m.[39;49m[43minit_resources[49m[43m([49m[43m)[49m
+[1;32m     28[0m container[38;5;241m.[39mwire(modules[38;5;241m=[39m[[38;5;18m__name__[39m], packages[38;5;241m=[39m[[38;5;124m"[39m[38;5;124md8analysis[39m[38;5;124m"[39m])
+[1;32m     29[0m [38;5;66;03m# Data Package[39;00m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:54[0m, in [0;36mLoggingConfig.set_level[0;34m(cls, level)[0m
-[1;32m     46[0m [38;5;129m@classmethod[39m
-[1;32m     47[0m [38;5;28;01mdef[39;00m [38;5;21mset_level[39m([38;5;28mcls[39m, level: [38;5;28mstr[39m [38;5;241m=[39m [38;5;124m"[39m[38;5;124mDEBUG[39m[38;5;124m"[39m) [38;5;241m-[39m[38;5;241m>[39m [38;5;28;01mNone[39;00m:
-[1;32m     48[0m [38;5;250m    [39m[38;5;124;03m"""Sets logging level for the console.[39;00m
-[1;32m     49[0m 
-[1;32m     50[0m [38;5;124;03m    Args:[39;00m
-[1;32m     51[0m [38;5;124;03m        level (str): The logging level in all caps.[39;00m
-[1;32m     52[0m [38;5;124;03m    """[39;00m
-[0;32m---> 54[0m     config [38;5;241m=[39m [43mIOService[49m[38;5;241;43m.[39;49m[43mread[49m[43m([49m[43mLoggingConfig[49m[38;5;241;43m.[39;49m[43m__filepath[49m[43m)[49m
-[1;32m     55[0m     config[[38;5;124m"[39m[38;5;124mlogging[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mhandlers[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mconsole[39m[38;5;124m"[39m][[38;5;124m"[39m[38;5;124mlevel[39m[38;5;124m"[39m] [38;5;241m=[39m level
-[1;32m     56[0m     IOService[38;5;241m.[39mwrite(filepath[38;5;241m=[39mLoggingConfig[38;5;241m.[39m__filepath, data[38;5;241m=[39mconfig)
+File [0;32msrc/dependency_injector/containers.pyx:343[0m, in [0;36mdependency_injector.containers.DynamicContainer.init_resources[0;34m()[0m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:320[0m, in [0;36mIOService.read[0;34m(cls, filepath, **kwargs)[0m
-[1;32m    318[0m [38;5;129m@classmethod[39m
-[1;32m    319[0m [38;5;28;01mdef[39;00m [38;5;21mread[39m([38;5;28mcls[39m, filepath: [38;5;28mstr[39m, [38;5;241m*[39m[38;5;241m*[39mkwargs) [38;5;241m-[39m[38;5;241m>[39m Any:
-[0;32m--> 320[0m     io [38;5;241m=[39m [38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m_get_io[49m[43m([49m[43mfilepath[49m[43m)[49m
-[1;32m    321[0m     [38;5;28;01mreturn[39;00m io[38;5;241m.[39mread(filepath, [38;5;241m*[39m[38;5;241m*[39mkwargs)
+File [0;32msrc/dependency_injector/providers.pyx:3786[0m, in [0;36mdependency_injector.providers.Resource.init[0;34m()[0m
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:338[0m, in [0;36mIOService._get_io[0;34m(cls, filepath)[0m
-[1;32m    336[0m         msg [38;5;241m=[39m [38;5;124m"[39m[38;5;124mFilepath is None[39m[38;5;124m"[39m
-[1;32m    337[0m         [38;5;28mcls[39m[38;5;241m.[39m_logger[38;5;241m.[39merror(msg)
-[0;32m--> 338[0m         [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(msg)
-[1;32m    339[0m [38;5;28;01mexcept[39;00m [38;5;167;01mKeyError[39;00m:
-[1;32m    340[0m     msg [38;5;241m=[39m [38;5;124m"[39m[38;5;124mFile type [39m[38;5;132;01m{}[39;00m[38;5;124m is not supported.[39m[38;5;124m"[39m[38;5;241m.[39mformat(file_format)
+File [0;32msrc/dependency_injector/providers.pyx:225[0m, in [0;36mdependency_injector.providers.Provider.__call__[0;34m()[0m
 
-[0;31mValueError[0m: Filepath is None
+File [0;32msrc/dependency_injector/providers.pyx:3894[0m, in [0;36mdependency_injector.providers.Resource._provide[0;34m()[0m
+
+File [0;32msrc/dependency_injector/providers.pxd:608[0m, in [0;36mdependency_injector.providers.__call[0;34m()[0m
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:811[0m, in [0;36mdictConfig[0;34m(config)[0m
+[1;32m    809[0m [38;5;28;01mdef[39;00m [38;5;21mdictConfig[39m(config):
+[1;32m    810[0m [38;5;250m    [39m[38;5;124;03m"""Configure logging using a dictionary."""[39;00m
+[0;32m--> 811[0m     [43mdictConfigClass[49m[43m([49m[43mconfig[49m[43m)[49m[38;5;241m.[39mconfigure()
+
+File [0;32m~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:375[0m, in [0;36mBaseConfigurator.__init__[0;34m(self, config)[0m
+[1;32m    374[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, config):
+[0;32m--> 375[0m     [38;5;28mself[39m[38;5;241m.[39mconfig [38;5;241m=[39m [43mConvertingDict[49m[43m([49m[43mconfig[49m[43m)[49m
+[1;32m    376[0m     [38;5;28mself[39m[38;5;241m.[39mconfig[38;5;241m.[39mconfigurator [38;5;241m=[39m [38;5;28mself[39m
+
+[0;31mTypeError[0m: 'NoneType' object is not iterable
 
