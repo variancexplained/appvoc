@@ -563,44 +563,76 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.rating</span> <span class="kn">import</span> <span class="n">RatingDataset</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">formatting</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thousands&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dataset</span><span class="o">/</span><span class="n">rating</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">20</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#!/usr/bin/env python3</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># ================================================================================================ #</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="c1"># Copyright  : (c) 2023 John James                                                                 #</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="c1"># ================================================================================================ #</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="ne">---&gt; </span><span class="mi">20</span> <span class="kn">from</span> <span class="nn">d8analysis.data.dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.rating</span> <span class="kn">import</span> <span class="n">Rating</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
+
+<span class="n">File</span> <span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">d8analysis</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">25</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span> <span class="kn">from</span> <span class="nn">d8analysis.container</span> <span class="kn">import</span> <span class="n">D8AnalysisContainer</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
+<span class="ne">---&gt; </span><span class="mi">25</span> <span class="n">LoggingConfig</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="s2">&quot;WARNING&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="n">container</span> <span class="o">=</span> <span class="n">D8AnalysisContainer</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/config.py:48,</span> in <span class="ni">LoggingConfig.set_level</span><span class="nt">(cls, level)</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="k">def</span> <span class="nf">set_level</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Sets logging level for the console.</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span><span class="sd"> </span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span><span class="sd">     Args:</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span><span class="sd">         level (str): The logging level in all caps.</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">48</span>     <span class="n">config</span> <span class="o">=</span> <span class="n">IOService</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span>     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;logging&quot;</span><span class="p">][</span><span class="s2">&quot;handlers&quot;</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">][</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">IOService</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__filepath</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:321,</span> in <span class="ni">IOService.read</span><span class="nt">(cls, filepath, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">318</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">    </span><span class="mi">319</span> <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">320</span>     <span class="n">io</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_io</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">321</span>     <span class="k">return</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:60,</span> in <span class="ni">IO.read</span><span class="nt">(cls, filepath, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">58</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">60</span>     <span class="n">data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="k">return</span> <span class="n">data</span>
+
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/service/io.py:176,</span> in <span class="ni">YamlIO._read</span><span class="nt">(cls, filepath, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">174</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span> <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">176</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">177</span>         <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">178</span>             <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;config/logging.yml&#39;
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
 <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
 <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore.data.dataset&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore.data.dataset&quot;</span><span class="p">])</span>
-
-<span class="nn">File src/dependency_injector/containers.pyx:343,</span> in <span class="ni">dependency_injector.containers.DynamicContainer.init_resources</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:3786,</span> in <span class="ni">dependency_injector.providers.Resource.init</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:225,</span> in <span class="ni">dependency_injector.providers.Provider.__call__</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pyx:3894,</span> in <span class="ni">dependency_injector.providers.Resource._provide</span><span class="nt">()</span>
-
-<span class="nn">File src/dependency_injector/providers.pxd:608,</span> in <span class="ni">dependency_injector.providers.__call</span><span class="nt">()</span>
-
-<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:811,</span> in <span class="ni">dictConfig</span><span class="nt">(config)</span>
-<span class="g g-Whitespace">    </span><span class="mi">809</span> <span class="k">def</span> <span class="nf">dictConfig</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">810</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Configure logging using a dictionary.&quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">811</span>     <span class="n">dictConfigClass</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
-
-<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/logging/config.py:375,</span> in <span class="ni">BaseConfigurator.__init__</span><span class="nt">(self, config)</span>
-<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">375</span>     <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">ConvertingDict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">376</span>     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">configurator</span> <span class="o">=</span> <span class="bp">self</span>
-
-<span class="ne">TypeError</span>: &#39;NoneType&#39; object is not iterable
 </pre></div>
 </div>
 </div>
