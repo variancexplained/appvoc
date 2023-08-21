@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>3. AppStore Rating Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>3. Appstore Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -170,7 +170,7 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">2. Exploratory Data Analysis</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. AppStore Rating Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Appstore Exploratory Data Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Reviews</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
@@ -442,7 +442,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>AppStore Rating Exploratory Data Analysis</h1>
+    <h1>Appstore Exploratory Data Analysis</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -452,9 +452,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-rating-and-review-statistics">3.1. Stage II: Rating and Review Statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.2. Structural Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.3. Data Quality Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.4. Content Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -466,8 +467,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="appstore-rating-exploratory-data-analysis">
-<h1><span class="section-number">3. </span>AppStore Rating Exploratory Data Analysis<a class="headerlink" href="#appstore-rating-exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="appstore-exploratory-data-analysis">
+<h1><span class="section-number">3. </span>Appstore Exploratory Data Analysis<a class="headerlink" href="#appstore-exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<section id="stage-ii-rating-and-review-statistics">
+<h2><span class="section-number">3.1. </span>Stage II: Rating and Review Statistics<a class="headerlink" href="#stage-ii-rating-and-review-statistics" title="Permalink to this heading">#</a></h2>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>#</p></th>
@@ -564,55 +567,15 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 <section id="structural-analysis">
-<h2><span class="section-number">3.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
-<p>The structure and characteristics of the Rating dataset are as follows:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">structure</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dtypes</span>
-
-<span class="n">df1_style</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:220px;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Structure&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-<span class="n">df2_style</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:120px&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Data Types&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-<span class="n">display_html</span><span class="p">(</span><span class="n">df1_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span> <span class="o">+</span> <span class="n">df2_style</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">(),</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">structure</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dtypes</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">df1_style</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style=&#39;display:inline; margin-right:220px;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Dataset Structure&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thousands</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;dataset&#39; is not defined
-</pre></div>
-</div>
-</div>
-</div>
+<h2><span class="section-number">3.2. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="data-quality-analysis">
-<h2><span class="section-number">3.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
-<p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">quality</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<h2><span class="section-number">3.3. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="content-analysis">
-<h2><span class="section-number">3.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<h2><span class="section-number">3.4. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -683,9 +646,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-rating-and-review-statistics">3.1. Stage II: Rating and Review Statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.2. Structural Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.3. Data Quality Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.4. Content Analysis</a></li>
 </ul>
   </nav></div>
 
