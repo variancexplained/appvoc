@@ -60,13 +60,14 @@ import seaborn as sns
 warnings.filterwarnings(action='ignore', category=UserWarning)
 
 import d8analysis as eda
-from appstore.container import AppstoreContainer
-from appstore.data.dataset.appdata import AppDataDataset
+from appstore.appstore.container import AppstoreContainer
+from appstore.appstore.data.dataset.appdata import AppDataDataset
 ```
 
 ```{code-cell}
 container = AppstoreContainer()
 container.init_resources()
+container.wire(packages=['appstore'])
 ```
 
 **Obtain the Dataset**
