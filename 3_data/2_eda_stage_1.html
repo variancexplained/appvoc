@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>2. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>1. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -66,8 +66,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="References" href="../99_references.html" />
-    <link rel="prev" title="1. Apple App Store Exploratory Data Analysis (EDA)" href="1_intro.html" />
+    <link rel="next" title="2. AppStore Rating Exploratory Data Analysis" href="3_eda_stage_2.html" />
+    <link rel="prev" title="1. Voice of the Customer via Generative AI" href="../2_background/1_voc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,8 +168,8 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">3. Data</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_eda_stage_2.html">2. AppStore Rating Exploratory Data Analysis</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -450,16 +450,16 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">2.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1.1. The Dataset</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.1.2. EDA Approach</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1.3. Structural Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">1.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">1.1.1. The Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">1.1.2. EDA Approach</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">1.1.3. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">1.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">Numeric Variable Data Quality</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">Categorical Variable Data Quality</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">1.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">Quantitative Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
@@ -482,12 +482,12 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis">
-<h1><span class="section-number">2. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">1. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
 <section id="stage-one-app-performance-overview">
-<h2><span class="section-number">2.1. </span>Stage One: App Performance Overview<a class="headerlink" href="#stage-one-app-performance-overview" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.1. </span>Stage One: App Performance Overview<a class="headerlink" href="#stage-one-app-performance-overview" title="Permalink to this heading">#</a></h2>
 <p>Stage one of our exploratory data analysis aims to expose patterns and yield insight into the nature and intensity of the customer experience within the IOS app user community.</p>
 <section id="the-dataset">
-<h3><span class="section-number">2.1.1. </span>The Dataset<a class="headerlink" href="#the-dataset" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.1.1. </span>The Dataset<a class="headerlink" href="#the-dataset" title="Permalink to this heading">#</a></h3>
 <p>The dataset contains the following product descriptive, rating, price, and developer data for some 475,132 apps from the App Store.</p>
 <table class="table">
 <thead>
@@ -557,7 +557,7 @@ document.write(`
 </table>
 </section>
 <section id="eda-approach">
-<h3><span class="section-number">2.1.2. </span>EDA Approach<a class="headerlink" href="#eda-approach" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.1.2. </span>EDA Approach<a class="headerlink" href="#eda-approach" title="Permalink to this heading">#</a></h3>
 <p>Our exploration will comprise the following five analyses.</p>
 <ol class="arabic simple">
 <li><p>Structural Analysis: Examine the overall shape, structure, and type of the data.</p></li>
@@ -621,7 +621,7 @@ document.write(`
 </div>
 </section>
 <section id="structural-analysis">
-<h3><span class="section-number">2.1.3. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.1.3. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
 <p>The structure and characteristics of the AppData dataset are as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -647,7 +647,7 @@ document.write(`
 <p>Identity variables, specifically (app) id and developer_id will be retained for data processing purposes, but have no other value and will be largely ignored during this analysis.</p>
 </section>
 <section id="data-quality-analysis">
-<h3><span class="section-number">2.1.4. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.1.4. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
 <p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -717,7 +717,7 @@ document.write(`
 </section>
 </section>
 <section id="univariate-analysis">
-<h3><span class="section-number">2.1.5. </span>Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.1.5. </span>Univariate Analysis<a class="headerlink" href="#univariate-analysis" title="Permalink to this heading">#</a></h3>
 <section id="quantitative-data">
 <h4>Quantitative Data<a class="headerlink" href="#quantitative-data" title="Permalink to this heading">#</a></h4>
 <p>We’ll begin the univariate analysis with an examination of the quantitative variables, namely:</p>
@@ -881,20 +881,20 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="1_intro.html"
+       href="../2_background/1_voc.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">1. </span>Apple App Store Exploratory Data Analysis (EDA)</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Voice of the Customer via Generative AI</p>
       </div>
     </a>
     <a class="right-next"
-       href="../99_references.html"
+       href="3_eda_stage_2.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">References</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>AppStore Rating Exploratory Data Analysis</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -916,16 +916,16 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">2.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">2.1.1. The Dataset</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">2.1.2. EDA Approach</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1.3. Structural Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-one-app-performance-overview">1.1. Stage One: App Performance Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">1.1.1. The Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eda-approach">1.1.2. EDA Approach</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">1.1.3. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">1.1.4. Data Quality Analysis</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-variable-data-quality">Numeric Variable Data Quality</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-variable-data-quality">Categorical Variable Data Quality</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">2.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-analysis">1.1.5. Univariate Analysis</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quantitative-data">Quantitative Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#average-user-rating">Average User Rating</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#rating-count">Rating Count</a></li>
