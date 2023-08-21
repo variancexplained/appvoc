@@ -51,6 +51,8 @@ Our exploration will comprise the following five analyses.
 
 ```{code-cell}
 import os
+import sys
+sys.path.append("/home/john/projects/appstore/appstore")
 
 import numpy as np
 import pandas as pd
