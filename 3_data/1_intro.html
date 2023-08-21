@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>1. Apple App Store Exploratory Data Analysis (EDA) &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>1. Data &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2. Exploratory Data Analysis" href="2_eda_stage_1.html" />
+    <link rel="next" title="2. Exploratory Data Analysis" href="2_appdata.html" />
     <link rel="prev" title="1. Voice of the Customer via Generative AI" href="../2_background/1_voc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -168,10 +168,19 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">3. Data</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">2. Exploratory Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3_eda_stage_2.html">3. Exploratory Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_appdata.html">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_appstats.html">3. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_reviews.html">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_summary.html">5. Summary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">4. Exploratory Data Analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/2_appdata.html">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/3_appstats.html">3. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/4_reviews.html">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/5_summary.html">5. Summary</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -442,7 +451,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Apple App Store Exploratory Data Analysis (EDA)</h1>
+    <h1>Data</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -465,8 +474,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="apple-app-store-exploratory-data-analysis-eda">
-<h1><span class="section-number">1. </span>Apple App Store Exploratory Data Analysis (EDA)<a class="headerlink" href="#apple-app-store-exploratory-data-analysis-eda" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="data">
+<h1><span class="section-number">1. </span>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h1>
 <p>As of May 2023, Apple’s App Store offered over 1.76 million apps across 70 categories, accounting for over 62% of the global revenue share in 2022. This iterative, yet lean, exploratory data analysis (EDA) of over 300,000 apps across 26 categories aims to discover patterns, trends and clusters of opinion, and to generate actionable, high-impact insights for opportunity discover and analysis.</p>
 <blockquote>
 <div><p>“Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” — John Tukey</p>
@@ -513,11 +522,6 @@ document.write(`
 <section id="eda-approach">
 <h2><span class="section-number">1.2. </span>EDA Approach<a class="headerlink" href="#eda-approach" title="Permalink to this heading">#</a></h2>
 <p>Our analysis will traverse three stages, with three datasets, each providing progressively deeper insight into the voice of the mobile app customer.</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="2_eda_stage_1.html"><span class="doc std std-doc">Stage one</span></a> is a high-level examination of the basic product descriptive information, as well as price, average rating, rating count and developer data.</p></li>
-<li><p><a class="reference internal" href="3_eda_stage_2.html"><span class="doc std std-doc">stage two</span></a>, a subset of the data will provide review count and rating histograms of the distribution of ratings and rating counts, evincing the range and intensity of customer opinion.</p></li>
-<li><p><a class="reference internal" href="4_eda_stage_3.html"><span class="doc std std-doc">stage three</span></a>, the analysis turns qualitative as we analyze customer sentiment from reviews, vis-a-vis ratings.</p></li>
-</ul>
 </section>
 </section>
 
@@ -562,7 +566,7 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="2_eda_stage_1.html"
+       href="2_appdata.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>

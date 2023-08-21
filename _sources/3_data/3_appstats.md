@@ -29,9 +29,7 @@ kernelspec:
 | 11 | fourstar    | Four Star Rating Count           | Discrete    |
 | 12 | fivestar    | Five Star Rating Count           | Discrete    |
 
-
 ```{code-cell}
-import dependency
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
@@ -57,6 +55,5 @@ dataset = repo.get_dataset()
 The structure and characteristics of the Rating dataset are as follows:
 
 ### Data Quality Analysis
-
 
 ### Content Analysis

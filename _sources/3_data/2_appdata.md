@@ -45,29 +45,33 @@ Our exploration will comprise the following five analyses.
 5. Multivariate Analysis: Cluster, factor, and correspondence analysis of three or more variables simultaneously.
 6. Conclusions, insights and questions for stage two.
 
-+++
+### Preliminaries
 
-**Import Python Libraries and Provision Dependencies** # noqa
+**Import Dependencies** # noqa
 
 ```{code-cell}
-import dependency
-import sys
-print(sys.path)
+from jbook import dependency
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
 import seaborn as sns
-
 import d8analysis as eda
 
-from appstore.container import AppstoreContainer
 from appstore.data.dataset.appdata import AppDataDataset
+from appstore.container import AppstoreContainer
+```
+
+**Wire and Initialize Dependencies** # noqa
+
+```{code-cell}
+container = AppstoreContainer()
+container.init_resources()
+container.wire(packages=["appstore"])
 ```
 
 **Obtain the Dataset** # noqa
 
 ```{code-cell}
-container = AppstoreContainer()
 repo = container.data.appdata_repo()
 dataset = repo.get_dataset()
 ```
@@ -140,83 +144,3 @@ dataset.unique(columns=columns).style.hide(axis="index")
 ```
 
 Category and category_id values are as expected.
-
-+++
-
-### Univariate Analysis
-
-#### Quantitative Data
-
-We'll begin the univariate analysis with an examination of the quantitative variables, namely:
-
-- Average User Rating
-- Rating Count
-- Price
-- Release Date
-
-Using quantitative and qualititative methods, we'll discover the central tendency of the data (arithmetic mean, median, mode), its spread (variance, standard deviation, interquartile range, maximum and minimum value) and some features of its distribution (skewness, kurtosis).
-
-##### Average User Rating
-
-```{code-cell}
-dataset.plot.pdfcdfplot(x='rating', title='Average User Rating Distribution')
-
-```
-
- Since the rating scale is in [1,5], its clear that the probability density and histogram above contain apps that have not been rated. To get a sense of the actual ratings, we'll create a new dataset without the non-reviewed apps.
-
-```{code-cell}
-df = dataset.as_df()
-df = df.loc[df['rating'] != 0]
-rated = AppDataDataset(df=df)
-```
-
-Ok, let's examine the frequency distribution of the ratings.
-
-```{code-cell}
-rated.frequency(x='rating', bins=4)
-stats = rated.describe(x='rating')
-stats.numeric
-rated.plot.pdfcdfplot(x='rating', bins=4, title='Distribution of User Ratings')
-rated.plot.histpdfplot(x='rating', title='Distribution of User Ratings')
-```
-
-**Key Observations:**
-
-- The long left tail reveals a tendency towards ratings in the 4-5 star range.
-- Five star ratings make up 67% of all ratings.
-- Multiple peaks are also observed at one star and three star ratings and to a lesser degree with two stars.
-- Ratings up to one, two, and three stars, correspond to approximately 8%, 20% and 33% of the cumulative ratings respectively.
-- There is no assumption of normality in the distribution of ratings.
-- In short, five star ratings dominate customer opinion at this level by a significant margin.
-- Note: Taking the average of ordinal values, such as user ratings, is not among the *permissible* statistical transformations whose meanings are preserved when applied to the data, according to measurement theorists, most notably, Harvard psychologist S.S Stevens, who coined the terms *nominal*, *ordinal*, *interval*, and *ratio*. Fortunately, permission is not required in data analysis
-
-+++
-
-##### Rating Count
-
-Rating count can be a harbinger of the intensity of opinion. We'll use the same rated dataset as above.
-
-```{code-cell}
-stats = rated.describe(x='ratings')
-stats.numeric
-rated.plot.histogram(x='ratings',bins=5, title='Distribution of User Rating Count')
-```
-
-```{code-cell}
-rated.top_n(x='ratings', n=10)
-```
-
-```{code-cell}
-topn = np.array([10,20,35,50,75,100,200,500,1000])
-rated.plot.topn_plot(x='ratings', n=topn)
-```
-
-**Key Observations:**
-
-- The distribution of rating counts has a long right tail, with a range from 1 to nearly 31 m ratings.
-- The central tendency is placed at a median of 10 ratings per app. The average is pulled in the direction of the outliers.
-- Giants of big-tech, social-media, an e-commerce, such as YouTube, Tik-Tok, Spotify, WhatsApp and DoorDash are among the most rated apps in the App Store.
-- The top-10 most-rated apps account for nearly 14% of all ratings and less than 1/10th of a percent of all apps. Moreover, the most-rated 1000 apps, who represent 1/3rd of a percent of all apps, consume nearly 75% of all ratings.
-- Takeaway: Rating counts are vastly disproportionate.
-- Note: Apps with earlier release dates may have higher rating counts. Ratings per day since release will remove the temporal dimension from the rating counts.

@@ -11,7 +11,7 @@ kernelspec:
   name: python3
 ---
 
-# Data
+# Apple App Store Exploratory Data Analysis (EDA)
 As of May 2023, Apple's App Store offered over 1.76 million apps across 70 categories, accounting for over 62% of the global revenue share in 2022. This iterative, yet lean, exploratory data analysis (EDA) of over 300,000 apps across 26 categories aims to discover patterns, trends and clusters of opinion, and to generate actionable, high-impact insights for opportunity discover and analysis.
 
 > “Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” — John Tukey
@@ -36,3 +36,4 @@ This effort centers around three datasets comprising data obtained from the Appl
 
 ## EDA Approach
 Our analysis will traverse three stages, with three datasets, each providing progressively deeper insight into the voice of the mobile app customer.
+

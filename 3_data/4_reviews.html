@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>3. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>4. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -62,12 +62,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '3_data/3_eda_stage_2';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '3_data/4_reviews';</script>
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="4. Exploratory Data Analysis" href="4_eda_stage_3.html" />
-    <link rel="prev" title="2. Exploratory Data Analysis" href="2_eda_stage_1.html" />
+    <link rel="next" title="5. Summary" href="5_summary.html" />
+    <link rel="prev" title="3. Exploratory Data Analysis" href="3_appstats.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,10 +168,19 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">3. Data</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">2. Exploratory Data Analysis</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Exploratory Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_appdata.html">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_appstats.html">3. Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_summary.html">5. Summary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">4. Exploratory Data Analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/2_appdata.html">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/3_appstats.html">3. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/4_reviews.html">4. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_eda/5_summary.html">5. Summary</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -230,7 +239,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://mybinder.org/v2/gh/john-james-ai/appstore/main?urlpath=tree/jbook/3_data/3_eda_stage_2.md" target="_blank"
+      <li><a href="https://mybinder.org/v2/gh/john-james-ai/appstore/main?urlpath=tree/jbook/3_data/4_reviews.md" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch onBinder"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -248,7 +257,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://colab.research.google.com/github/john-james-ai/appstore/blob/main/jbook/3_data/3_eda_stage_2.md" target="_blank"
+      <li><a href="https://colab.research.google.com/github/john-james-ai/appstore/blob/main/jbook/3_data/4_reviews.md" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch onColab"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -296,7 +305,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/john-james-ai/appstore/edit/main/jbook/3_data/3_eda_stage_2.md" target="_blank"
+      <li><a href="https://github.com/john-james-ai/appstore/edit/main/jbook/3_data/4_reviews.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -313,7 +322,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/john-james-ai/appstore/issues/new?title=Issue%20on%20page%20%2F3_data/3_eda_stage_2.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/john-james-ai/appstore/issues/new?title=Issue%20on%20page%20%2F3_data/4_reviews.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -343,7 +352,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/3_data/3_eda_stage_2.ipynb" target="_blank"
+      <li><a href="../_sources/3_data/4_reviews.ipynb" target="_blank"
    class="btn btn-sm btn-download-notebook-button dropdown-item"
    title="Download notebook file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -360,7 +369,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/3_data/3_eda_stage_2.md" target="_blank"
+      <li><a href="../_sources/3_data/4_reviews.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -452,12 +461,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.1.3. Content Analysis</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-iii-reviews">4.1. Stage III: Reviews</a></li>
 </ul>
             </nav>
         </div>
@@ -470,129 +474,39 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis">
-<h1><span class="section-number">3. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
-<section id="stage-ii-ratings">
-<h2><span class="section-number">3.1. </span>Stage II: Ratings<a class="headerlink" href="#stage-ii-ratings" title="Permalink to this heading">#</a></h2>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>#</p></th>
-<th class="head"><p>Variable</p></th>
-<th class="head"><p>Description</p></th>
-<th class="head"><p>Data Type</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>id</p></td>
-<td><p>App Identifier</p></td>
-<td><p>Nominal</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>name</p></td>
-<td><p>App Name</p></td>
-<td><p>Nominal</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>category_id</p></td>
-<td><p>Four Digit Category Id</p></td>
-<td><p>Categorical</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>category</p></td>
-<td><p>Category Name</p></td>
-<td><p>Categorical</p></td>
-</tr>
-<tr class="row-even"><td><p>5</p></td>
-<td><p>rating</p></td>
-<td><p>Average Customer Rating</p></td>
-<td><p>Interval</p></td>
-</tr>
-<tr class="row-odd"><td><p>6</p></td>
-<td><p>reviews</p></td>
-<td><p>Total Number Of Customer Reviews</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-even"><td><p>7</p></td>
-<td><p>ratings</p></td>
-<td><p>Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-odd"><td><p>8</p></td>
-<td><p>onestar</p></td>
-<td><p>One Star Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-even"><td><p>9</p></td>
-<td><p>twostar</p></td>
-<td><p>Two Star Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-odd"><td><p>10</p></td>
-<td><p>threestar</p></td>
-<td><p>Three Star Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-even"><td><p>11</p></td>
-<td><p>fourstar</p></td>
-<td><p>Four Star Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-<tr class="row-odd"><td><p>12</p></td>
-<td><p>fivestar</p></td>
-<td><p>Five Star Rating Count</p></td>
-<td><p>Discrete</p></td>
-</tr>
-</tbody>
-</table>
+<h1><span class="section-number">4. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<section id="stage-iii-reviews">
+<h2><span class="section-number">4.1. </span>Stage III: Reviews<a class="headerlink" href="#stage-iii-reviews" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dependency</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
 
-<span class="kn">from</span> <span class="nn">appstore.data.dataset.rating</span> <span class="kn">import</span> <span class="n">RatingDataset</span>
 <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
-<span class="n">formatting</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thousands&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+
+<span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
+<span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;max_colwidth&quot;</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Added /home/john/projects/appstore to sys.path
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/john/projects/appstore/config/logging.yml
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
-<span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-<span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore.data.dataset&quot;</span><span class="p">])</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">6</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;appstore&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">repo</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">rating_repo</span><span class="p">()</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="structural-analysis">
-<h3><span class="section-number">3.1.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
-<p>The structure and characteristics of the Rating dataset are as follows:</p>
-</section>
-<section id="data-quality-analysis">
-<h3><span class="section-number">3.1.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
-</section>
-<section id="content-analysis">
-<h3><span class="section-number">3.1.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h3>
-</section>
 </section>
 </section>
 
@@ -628,20 +542,20 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="2_eda_stage_1.html"
+       href="3_appstats.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">2. </span>Exploratory Data Analysis</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Exploratory Data Analysis</p>
       </div>
     </a>
     <a class="right-next"
-       href="4_eda_stage_3.html"
+       href="5_summary.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">4. </span>Exploratory Data Analysis</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Summary</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -663,12 +577,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.1.3. Content Analysis</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-iii-reviews">4.1. Stage III: Reviews</a></li>
 </ul>
   </nav></div>
 

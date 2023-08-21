@@ -10,15 +10,11 @@ kernelspec:
   language: python
   name: python3
 ---
-
 # Exploratory Data Analysis
 
 ## Stage III: Reviews
 
 ```{code-cell}
-import dependency
-
-import os
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
@@ -29,4 +25,3 @@ container = AppstoreContainer()
 container.init_resources()
 pd.set_option("max_colwidth", 400)
 ```
-
