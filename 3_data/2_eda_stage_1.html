@@ -605,7 +605,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/sh: 1: start.sh: not found
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/sh: 1: appstore/infrastructure/database/start.sh: not found
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Database connection failed.
@@ -662,7 +662,7 @@ pymysql.err.OperationalError: (1049, &quot;Unknown database &#39;None&#39;&quot;
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File &quot;/home/john/projects/appstore/appstore/infrastructure/database/mysql.py&quot;, line 57, in connect
+  File &quot;/home/john/projects/appstore/appstore/infrastructure/database/mysql.py&quot;, line 65, in connect
     self._connection = self._engine.connect()
   File &quot;/home/john/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py&quot;, line 3264, in connect
     return self._connection_cls(self)
@@ -867,17 +867,17 @@ sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1049, &quot;Unk
 
 <span class="nn">File src/dependency_injector/providers.pxd:608,</span> in <span class="ni">dependency_injector.providers.__call</span><span class="nt">()</span>
 
-<span class="nn">File ~/projects/appstore/appstore/infrastructure/database/mysql.py:47,</span> in <span class="ni">MySQLDatabase.__init__</span><span class="nt">(self, name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_connection_string</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">47</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="nn">File ~/projects/appstore/appstore/infrastructure/database/mysql.py:55,</span> in <span class="ni">MySQLDatabase.__init__</span><span class="nt">(self, name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_connection_string</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">55</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
 
-<span class="nn">File ~/projects/appstore/appstore/infrastructure/database/mysql.py:57,</span> in <span class="ni">MySQLDatabase.connect</span><span class="nt">(self, autocommit)</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_string</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">57</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>     <span class="k">if</span> <span class="n">autocommit</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execution_options</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span>
+<span class="nn">File ~/projects/appstore/appstore/infrastructure/database/mysql.py:65,</span> in <span class="ni">MySQLDatabase.connect</span><span class="nt">(self, autocommit)</span>
+<span class="g g-Whitespace">     </span><span class="mi">63</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">64</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_string</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">65</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">66</span>     <span class="k">if</span> <span class="n">autocommit</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execution_options</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span>
 
 <span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/sqlalchemy/engine/base.py:3264,</span> in <span class="ni">Engine.connect</span><span class="nt">(self)</span>
 <span class="g g-Whitespace">   </span><span class="mi">3241</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
