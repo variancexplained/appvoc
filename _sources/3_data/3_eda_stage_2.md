@@ -10,12 +10,10 @@ kernelspec:
   language: python
   name: python3
 ---
-
 # AppStore Rating Exploratory Data Analysis
 
-
 | #  | Variable    | Description                      | Data Type   |
-|----|-------------|----------------------------------|-------------|
+| -- | ----------- | -------------------------------- | ----------- |
 | 1  | id          | App Identifier                   | Nominal     |
 | 2  | name        | App Name                         | Nominal     |
 | 3  | category_id | Four Digit Category Id           | Categorical |
@@ -29,8 +27,12 @@ kernelspec:
 | 11 | fourstar    | Four Star Rating Count           | Discrete    |
 | 12 | fivestar    | Five Star Rating Count           | Discrete    |
 
-```{code-cell} ipython3
+```{code-cell}
 import os
+import sys
+module_path = os.path.abspath(os.path.join('..'))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 
 import numpy as np
 import pandas as pd
@@ -42,9 +44,10 @@ formatting = {"thousands":",", "precision":2}
 ```
 
 ## Structural Analysis
+
 The structure and characteristics of the Rating dataset are as follows:
 
-```{code-cell} ipython3
+```{code-cell}
 df1 = dataset.structure
 df2 = dataset.dtypes
 
@@ -55,14 +58,15 @@ display_html(df1_style._repr_html_() + df2_style._repr_html_(), raw=True)
 ```
 
 ## Data Quality Analysis
+
 Data type, cardinality, validity, duplication, and size data are summarized at the variable level.
 
-```{code-cell} ipython3
+```{code-cell}
 dataset.quality.style.format(**formatting)
 ```
 
 ## Content Analysis
 
-```{code-cell} ipython3
+```{code-cell}
 dataset.summary.style.format(**formatting)
 ```
