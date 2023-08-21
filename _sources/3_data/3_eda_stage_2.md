@@ -30,7 +30,7 @@ kernelspec:
 ```{code-cell}
 import os
 import sys
-module_path = os.path.abspath(..)
+module_path = os.path.abspath('....')
 print(module_path)
 if module_path not in sys.path:
     sys.path.append(module_path)
