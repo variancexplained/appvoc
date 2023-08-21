@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>2. AppStore Rating Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>3. AppStore Rating Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -66,8 +66,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="References" href="../99_references.html" />
-    <link rel="prev" title="1. Exploratory Data Analysis" href="2_eda_stage_1.html" />
+    <link rel="next" title="4. Reviews" href="4_eda_stage_3.html" />
+    <link rel="prev" title="2. Exploratory Data Analysis" href="2_eda_stage_1.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,8 +168,10 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">3. Data</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">1. Exploratory Data Analysis</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. AppStore Rating Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">2. Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. AppStore Rating Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Reviews</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -450,9 +452,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">2.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -465,7 +467,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="appstore-rating-exploratory-data-analysis">
-<h1><span class="section-number">2. </span>AppStore Rating Exploratory Data Analysis<a class="headerlink" href="#appstore-rating-exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">3. </span>AppStore Rating Exploratory Data Analysis<a class="headerlink" href="#appstore-rating-exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>#</p></th>
@@ -574,7 +576,7 @@ document.write(`
 </div>
 </div>
 <section id="structural-analysis">
-<h2><span class="section-number">2.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">3.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
 <p>The structure and characteristics of the Rating dataset are as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -591,7 +593,7 @@ document.write(`
 </div>
 </section>
 <section id="data-quality-analysis">
-<h2><span class="section-number">2.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">3.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
 <p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -602,7 +604,7 @@ document.write(`
 </div>
 </section>
 <section id="content-analysis">
-<h2><span class="section-number">2.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">3.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
@@ -650,15 +652,15 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">1. </span>Exploratory Data Analysis</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Exploratory Data Analysis</p>
       </div>
     </a>
     <a class="right-next"
-       href="../99_references.html"
+       href="4_eda_stage_3.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">References</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Reviews</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -680,9 +682,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">2.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">2.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">2.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
 </ul>
   </nav></div>
 
