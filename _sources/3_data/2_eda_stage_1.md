@@ -74,7 +74,7 @@ from appstore.data.dataset.appdata import AppDataDataset
 **Obtain the Dataset**
 
 ```{code-cell}
-
+container = AppstoreContainer()
 repo = container.data.appdata_repo()
 dataset = repo.get_dataset()
 ```
