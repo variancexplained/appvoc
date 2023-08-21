@@ -12,7 +12,7 @@ kernelspec:
 ---
 # Exploratory Data Analysis
 
-## Stage One: App Performance Overview
+## Stage I: App Performance Overview
 
 Stage one of our exploratory data analysis aims to expose patterns and yield insight into the nature and intensity of the customer experience within the IOS app user community.
 
@@ -47,19 +47,12 @@ Our exploration will comprise the following five analyses.
 
 +++
 
-**Import Python Libraries and Provision Dependencies**
+**Import Python Libraries and Provision Dependencies** # noqa
 
 ```{code-cell}
-import os
+import dependency
 import sys
-cwd = os.getcwd()
-module_path = os.path.abspath(os.path.join(cwd,"../.."))
-if module_path not in sys.path:
-    sys.path.append(module_path)
-```
-
-```{code-cell}
-
+print(sys.path)
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
@@ -71,7 +64,7 @@ from appstore.container import AppstoreContainer
 from appstore.data.dataset.appdata import AppDataDataset
 ```
 
-**Obtain the Dataset**
+**Obtain the Dataset** # noqa
 
 ```{code-cell}
 container = AppstoreContainer()

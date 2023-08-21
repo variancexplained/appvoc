@@ -10,7 +10,9 @@ kernelspec:
   language: python
   name: python3
 ---
-# AppStore Rating Exploratory Data Analysis
+# Exploratory Data Analysis
+
+## Stage II: Ratings
 
 | #  | Variable    | Description                      | Data Type   |
 | -- | ----------- | -------------------------------- | ----------- |
@@ -27,16 +29,9 @@ kernelspec:
 | 11 | fourstar    | Four Star Rating Count           | Discrete    |
 | 12 | fivestar    | Five Star Rating Count           | Discrete    |
 
-```{code-cell}
-import os
-import sys
-cwd = os.getcwd()
-module_path = os.path.abspath(os.path.join(cwd,"../.."))
-if module_path not in sys.path:
-    sys.path.append(module_path)
-```
 
 ```{code-cell}
+import dependency
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html

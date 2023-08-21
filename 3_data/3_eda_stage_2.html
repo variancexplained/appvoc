@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>3. AppStore Rating Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+    <title>3. Exploratory Data Analysis &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
 </title>
   
   
@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="4. Reviews" href="4_eda_stage_3.html" />
+    <link rel="next" title="4. Exploratory Data Analysis" href="4_eda_stage_3.html" />
     <link rel="prev" title="2. Exploratory Data Analysis" href="2_eda_stage_1.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -170,8 +170,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">1. Apple App Store Exploratory Data Analysis (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_eda_stage_1.html">2. Exploratory Data Analysis</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. AppStore Rating Exploratory Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Reviews</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_eda_stage_3.html">4. Exploratory Data Analysis</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="nav bd-sidenav">
@@ -442,7 +442,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>AppStore Rating Exploratory Data Analysis</h1>
+    <h1>Exploratory Data Analysis</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -452,9 +452,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.2. Content Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -466,8 +469,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="appstore-rating-exploratory-data-analysis">
-<h1><span class="section-number">3. </span>AppStore Rating Exploratory Data Analysis<a class="headerlink" href="#appstore-rating-exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis">
+<h1><span class="section-number">3. </span>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this heading">#</a></h1>
+<section id="stage-ii-ratings">
+<h2><span class="section-number">3.1. </span>Stage II: Ratings<a class="headerlink" href="#stage-ii-ratings" title="Permalink to this heading">#</a></h2>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>#</p></th>
@@ -541,19 +546,8 @@ document.write(`
 </table>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span><span class="s2">&quot;../..&quot;</span><span class="p">))</span>
-<span class="k">if</span> <span class="n">module_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dependency</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
 
@@ -564,16 +558,46 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Added package path: /home/john/projects/appstore to sys.path.
+Added config path: /home/john/projects/appstore/config to sys.path.
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.rating</span> <span class="kn">import</span> <span class="n">RatingDataset</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">formatting</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thousands&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">dependency</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dataset</span><span class="o">/</span><span class="n">rating</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">20</span>
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">jbook</span><span class="o">/</span><span class="mi">3</span><span class="n">_data</span><span class="o">/</span><span class="n">dependency</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">44</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="n">append_paths</span><span class="p">(</span><span class="n">filepaths</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span> <span class="c1">#                                   WIRE DEPENDENCIES                                              #</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
+<span class="ne">---&gt; </span><span class="mi">44</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>  <span class="c1"># noqa</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">47</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">container</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">31</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="kn">from</span> <span class="nn">appstore.infrastructure.database.mysql</span> <span class="kn">import</span> <span class="n">MySQLDatabase</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.project</span> <span class="kn">import</span> <span class="n">AppDataProjectRepo</span>
+<span class="ne">---&gt; </span><span class="mi">31</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.appdata</span> <span class="kn">import</span> <span class="n">AppDataRepo</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.review</span> <span class="kn">import</span> <span class="n">ReviewRepo</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.rating</span> <span class="kn">import</span> <span class="n">RatingRepo</span>
+
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">repo</span><span class="o">/</span><span class="n">appdata</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">27</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.base</span> <span class="kn">import</span> <span class="n">Repo</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.appdata</span> <span class="kn">import</span> <span class="n">AppData</span>
+<span class="ne">---&gt; </span><span class="mi">27</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.appdata</span> <span class="kn">import</span> <span class="n">AppDataDataset</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="kn">from</span> <span class="nn">appstore.infrastructure.database.base</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="kn">from</span> <span class="nn">sqlalchemy.dialects.mysql</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span>     <span class="n">LONGTEXT</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="n">BIGINT</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="n">VARCHAR</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="n">FLOAT</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="p">)</span>
+
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dataset</span><span class="o">/</span><span class="n">appdata</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">20</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#!/usr/bin/env python3</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># -*- coding:utf-8 -*-</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># ================================================================================================ #</span>
@@ -582,7 +606,7 @@ document.write(`
 <span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="c1"># ================================================================================================ #</span>
 <span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="ne">---&gt; </span><span class="mi">20</span> <span class="kn">from</span> <span class="nn">d8analysis.data.dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
-<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.rating</span> <span class="kn">import</span> <span class="n">Rating</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.appdata</span> <span class="kn">import</span> <span class="n">AppData</span>
 <span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
 
 <span class="n">File</span> <span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">d8analysis</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">25</span>
@@ -638,7 +662,7 @@ document.write(`
 </div>
 </div>
 <section id="structural-analysis">
-<h2><span class="section-number">3.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">3.1.1. </span>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">#</a></h3>
 <p>The structure and characteristics of the Rating dataset are as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -655,7 +679,7 @@ document.write(`
 </div>
 </section>
 <section id="data-quality-analysis">
-<h2><span class="section-number">3.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">3.1.2. </span>Data Quality Analysis<a class="headerlink" href="#data-quality-analysis" title="Permalink to this heading">#</a></h3>
 <p>Data type, cardinality, validity, duplication, and size data are summarized at the variable level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -665,8 +689,9 @@ document.write(`
 </div>
 </div>
 </section>
+</section>
 <section id="content-analysis">
-<h2><span class="section-number">3.3. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">3.2. </span>Content Analysis<a class="headerlink" href="#content-analysis" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">formatting</span><span class="p">)</span>
@@ -722,7 +747,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">4. </span>Reviews</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Exploratory Data Analysis</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -744,9 +769,12 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1. Structural Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.2. Data Quality Analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.3. Content Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-ii-ratings">3.1. Stage II: Ratings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-analysis">3.1.1. Structural Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-analysis">3.1.2. Data Quality Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content-analysis">3.2. Content Analysis</a></li>
 </ul>
   </nav></div>
 
