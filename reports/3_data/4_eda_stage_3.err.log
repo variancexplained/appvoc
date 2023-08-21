@@ -82,7 +82,7 @@ File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/__
 [1;32m     25[0m [38;5;66;03m# LoggingConfig.set_level("INFO")[39;00m
 [1;32m     26[0m container [38;5;241m=[39m D8AnalysisContainer()
 [0;32m---> 27[0m [43mcontainer[49m[38;5;241;43m.[39;49m[43minit_resources[49m[43m([49m[43m)[49m
-[1;32m     28[0m container[38;5;241m.[39mwire(modules[38;5;241m=[39m[[38;5;18m__name__[39m], packages[38;5;241m=[39m[[38;5;124m"[39m[38;5;124md8analysis[39m[38;5;124m"[39m])
+[1;32m     28[0m container[38;5;241m.[39mwire(packages[38;5;241m=[39m[[38;5;124m"[39m[38;5;124md8analysis[39m[38;5;124m"[39m])
 [1;32m     29[0m [38;5;66;03m# Data Package[39;00m
 
 File [0;32msrc/dependency_injector/containers.pyx:343[0m, in [0;36mdependency_injector.containers.DynamicContainer.init_resources[0;34m()[0m
