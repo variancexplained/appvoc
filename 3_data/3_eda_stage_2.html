@@ -565,53 +565,11 @@ document.write(`
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">jbook</span><span class="o">/</span><span class="mi">3</span><span class="n">_data</span><span class="o">/</span><span class="n">dependency</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">33</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span>     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span> <span class="c1">#                                   WIRE DEPENDENCIES                                              #</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
-<span class="ne">---&gt; </span><span class="mi">33</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>  <span class="c1"># noqa</span>
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">jbook</span><span class="o">/</span><span class="mi">3</span><span class="n">_data</span><span class="o">/</span><span class="n">dependency</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">36</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>  <span class="c1"># noqa</span>
 <span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">container</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">31</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="kn">from</span> <span class="nn">appstore.infrastructure.database.mysql</span> <span class="kn">import</span> <span class="n">MySQLDatabase</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.project</span> <span class="kn">import</span> <span class="n">AppDataProjectRepo</span>
-<span class="ne">---&gt; </span><span class="mi">31</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.appdata</span> <span class="kn">import</span> <span class="n">AppDataRepo</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.review</span> <span class="kn">import</span> <span class="n">ReviewRepo</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.rating</span> <span class="kn">import</span> <span class="n">RatingRepo</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">repo</span><span class="o">/</span><span class="n">appdata</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">27</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="kn">from</span> <span class="nn">appstore.data.repo.base</span> <span class="kn">import</span> <span class="n">Repo</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.appdata</span> <span class="kn">import</span> <span class="n">AppData</span>
-<span class="ne">---&gt; </span><span class="mi">27</span> <span class="kn">from</span> <span class="nn">appstore.data.dataset.appdata</span> <span class="kn">import</span> <span class="n">AppDataDataset</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="kn">from</span> <span class="nn">appstore.infrastructure.database.base</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="kn">from</span> <span class="nn">sqlalchemy.dialects.mysql</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span>     <span class="n">LONGTEXT</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="n">BIGINT</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="n">VARCHAR</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="n">FLOAT</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="p">)</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dataset</span><span class="o">/</span><span class="n">appdata</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">20</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#!/usr/bin/env python3</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># ================================================================================================ #</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="c1"># Copyright  : (c) 2023 John James                                                                 #</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="c1"># ================================================================================================ #</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="ne">---&gt; </span><span class="mi">20</span> <span class="kn">from</span> <span class="nn">d8analysis.data.dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
-<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="kn">from</span> <span class="nn">appstore.data.entity.appdata</span> <span class="kn">import</span> <span class="n">AppData</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">d8analysis</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">27</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span> <span class="c1"># ------------------------------------------------------------------------------------------------ #</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># LoggingConfig.set_level(&quot;INFO&quot;)</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="n">container</span> <span class="o">=</span> <span class="n">D8AnalysisContainer</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">27</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;d8analysis&quot;</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="c1"># Data Package</span>
+<span class="ne">---&gt; </span><span class="mi">36</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore&quot;</span><span class="p">])</span>
 
 <span class="nn">File src/dependency_injector/containers.pyx:343,</span> in <span class="ni">dependency_injector.containers.DynamicContainer.init_resources</span><span class="nt">()</span>
 
