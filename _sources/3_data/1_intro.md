@@ -37,6 +37,6 @@ This effort centers around three datasets comprising data obtained from the Appl
 ## EDA Approach
 Our analysis will traverse three stages, with three datasets, each providing progressively deeper insight into the voice of the mobile app customer.
 
-- [Stage one](jbook/3_data/2_eda_stage_1.md) is a high-level examination of the basic product descriptive information, as well as price, average rating, rating count and developer data.
+- [Stage one](3_data/2_eda_stage_1.md) is a high-level examination of the basic product descriptive information, as well as price, average rating, rating count and developer data.
 - [stage two](jbook/3_data/3_eda_stage_2.md), a subset of the data will provide review count and rating histograms of the distribution of ratings and rating counts, evincing the range and intensity of customer opinion.
 - [stage three](jbook/3_data/4_eda_stage_3.md), the analysis turns qualitative as we analyze customer sentiment from reviews, vis-a-vis ratings.
