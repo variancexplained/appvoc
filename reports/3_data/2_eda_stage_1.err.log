@@ -15,28 +15,20 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-dataset.plot.pdfcdfplot(x='rating', title='Average User Rating Distribution')
-
+with pd.option_context('format.precision',2):
+    df1_style = freq.style.set_table_attributes("style='display:inline; margin-right:220px;'").set_caption("Average User Rating Frequency Distribution")
+    df2_style = desc.style.set_table_attributes("style='display:inline; margin-right:120px'").set_caption("Average User Rating Descriptive Statistics")
+    display_html(df1_style._repr_html_() + df2_style._repr_html_(), raw=True)
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mAttributeError[0m                            Traceback (most recent call last)
-Cell [0;32mIn[8], line 1[0m
-[0;32m----> 1[0m [43mdataset[49m[38;5;241;43m.[39;49m[43mplot[49m[38;5;241m.[39mpdfcdfplot(x[38;5;241m=[39m[38;5;124m'[39m[38;5;124mrating[39m[38;5;124m'[39m, title[38;5;241m=[39m[38;5;124m'[39m[38;5;124mAverage User Rating Distribution[39m[38;5;124m'[39m)
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[14], line 2[0m
+[1;32m      1[0m [38;5;28;01mwith[39;00m pd[38;5;241m.[39moption_context([38;5;124m'[39m[38;5;124mformat.precision[39m[38;5;124m'[39m,[38;5;241m2[39m):
+[0;32m----> 2[0m     df1_style [38;5;241m=[39m [43mfreq[49m[38;5;241m.[39mstyle[38;5;241m.[39mset_table_attributes([38;5;124m"[39m[38;5;124mstyle=[39m[38;5;124m'[39m[38;5;124mdisplay:inline; margin-right:220px;[39m[38;5;124m'[39m[38;5;124m"[39m)[38;5;241m.[39mset_caption([38;5;124m"[39m[38;5;124mAverage User Rating Frequency Distribution[39m[38;5;124m"[39m)
+[1;32m      3[0m     df2_style [38;5;241m=[39m desc[38;5;241m.[39mstyle[38;5;241m.[39mset_table_attributes([38;5;124m"[39m[38;5;124mstyle=[39m[38;5;124m'[39m[38;5;124mdisplay:inline; margin-right:120px[39m[38;5;124m'[39m[38;5;124m"[39m)[38;5;241m.[39mset_caption([38;5;124m"[39m[38;5;124mAverage User Rating Descriptive Statistics[39m[38;5;124m"[39m)
+[1;32m      4[0m     display_html(df1_style[38;5;241m.[39m_repr_html_() [38;5;241m+[39m df2_style[38;5;241m.[39m_repr_html_(), raw[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
 
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/data/dataset.py:314[0m, in [0;36mDataset.plot[0;34m(self)[0m
-[1;32m    312[0m [38;5;129m@property[39m
-[1;32m    313[0m [38;5;28;01mdef[39;00m [38;5;21mplot[39m([38;5;28mself[39m) [38;5;241m-[39m[38;5;241m>[39m DatasetVisualizer:  [38;5;66;03m# pragma: no cover[39;00m
-[0;32m--> 314[0m     [38;5;28;01mreturn[39;00m [43mDatasetVisualizer[49m[43m([49m[43mdf[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_df[49m[43m)[49m
-
-File [0;32msrc/dependency_injector/_cwiring.pyx:28[0m, in [0;36mdependency_injector._cwiring._get_sync_patched._patched[0;34m()[0m
-
-File [0;32m~/anaconda3/envs/appstore/lib/python3.10/site-packages/d8analysis/data/plot.py:45[0m, in [0;36mDatasetVisualizer.__init__[0;34m(self, df, canvas)[0m
-[1;32m     43[0m [38;5;28mself[39m[38;5;241m.[39m_df [38;5;241m=[39m df
-[1;32m     44[0m [38;5;28mself[39m[38;5;241m.[39m_canvas [38;5;241m=[39m canvas
-[0;32m---> 45[0m sns[38;5;241m.[39mset_style(style[38;5;241m=[39m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_canvas[49m[38;5;241;43m.[39;49m[43mstyle[49m)
-[1;32m     46[0m sns[38;5;241m.[39mset_palette(palette[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39m_canvas[38;5;241m.[39mpalette)
-
-[0;31mAttributeError[0m: 'Provide' object has no attribute 'style'
+[0;31mNameError[0m: name 'freq' is not defined
 
