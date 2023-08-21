@@ -486,6 +486,9 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Added /home/john/projects/appstore to sys.path
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
@@ -493,11 +496,11 @@ document.write(`
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">os</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">jbook</span><span class="o">/</span><span class="mi">3</span><span class="n">_data</span><span class="o">/</span><span class="n">dependency</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">36</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>  <span class="c1"># noqa</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">36</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore&quot;</span><span class="p">])</span>
+<span class="n">File</span> <span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">appstore</span><span class="o">/</span><span class="n">jbook</span><span class="o">/</span><span class="mi">3</span><span class="n">_data</span><span class="o">/</span><span class="n">dependency</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">37</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>  <span class="c1"># noqa</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">container</span> <span class="o">=</span> <span class="n">AppstoreContainer</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">37</span> <span class="n">container</span><span class="o">.</span><span class="n">init_resources</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="n">container</span><span class="o">.</span><span class="n">wire</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;appstore&quot;</span><span class="p">])</span>
 
 <span class="nn">File src/dependency_injector/containers.pyx:343,</span> in <span class="ni">dependency_injector.containers.DynamicContainer.init_resources</span><span class="nt">()</span>
 
