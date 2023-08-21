@@ -50,7 +50,6 @@ Our exploration will comprise the following five analyses.
 **Import Dependencies** # noqa
 
 ```{code-cell}
-from jbook import dependency
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
