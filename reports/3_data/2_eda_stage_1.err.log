@@ -21,7 +21,7 @@ dataset = repo.get_dataset()
 ------------------
 
 ----- stderr -----
-/bin/sh: 1: scripts/database/management/start.sh: not found
+/bin/sh: 1: ./start.sh: not found
 ----- stderr -----
 Database connection failed.
 Exception type: type[OperationalError('(pymysql.err.OperationalError) (1049, "Unknown database \'None\'")')]
