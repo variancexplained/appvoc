@@ -20,8 +20,13 @@ repo = container.data.appdata_repo()
 dataset = repo.get_dataset()
 ------------------
 
+----- stdout -----
+
+Starting MySQL...
+ * Starting MySQL database server mysqld
+   ...done.
 ----- stderr -----
-/bin/sh: 1: /appstore/infrastructure/database/start.sh: not found
+[sudo] password for john:
 ----- stderr -----
 Database connection failed.
 Exception type: type[OperationalError('(pymysql.err.OperationalError) (1049, "Unknown database \'None\'")')]
