@@ -12,4 +12,4 @@ kernelspec:
 ---
 # Introduction
 
-Apple's App Store ecosystem, host to nearly 1.8 million apps as of May 2023{cite}`AppDataReport`, which were downloaded or redownloaded on average 1.5 billion times each week in 2022, facilitated $1.1 trillion in developer billings and sales last year{cite}`DevelopersGeneratedTrillion`.
+Apple's App Store ecosystem, host to nearly 1.8 million apps {cite}`AppDataReport`, which were downloaded or redownloaded on average 1.5 billion times each week in 2022, facilitated $1.1 trillion in developer billings and sales last year{cite}`DevelopersGeneratedTrillion`.
