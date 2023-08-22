@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 12:45:30 pm                                                    #
-# Modified   : Sunday August 20th 2023 06:09:17 pm                                                 #
+# Modified   : Monday August 21st 2023 05:50:49 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -20,23 +20,34 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: forward
+root: content/forward
 options:
   numbered: 3
 parts:
   - caption: 1. Introduction
     numbered: 3
     chapters:
-      - file: 1_intro/1_intro
+      - file: content/1_intro/1_intro
   - caption: 2. Background
     numbered: 3
     chapters:
-      - file: 2_background/1_voc
+      - file: content/2_background/1_voc
   - caption: 3. Data
     numbered: 3
     chapters:
-      - file: 3_data/1_intro.md
-      - file: 3_data/2_eda_stage_1
+      - file: content/3_data/1_intro
+      - file: content/3_data/2_appdata
+      - file: content/3_data/3_appstats
+      - file: content/3_data/4_reviews
+      - file: content/3_data/5_summary
+  - caption: 4. Exploratory Data Analysis
+    numbered: 3
+    chapters:
+      - file: content/4_eda/1_intro
+      - file: content/4_eda/2_appdata
+      - file: content/4_eda/3_appstats
+      - file: content/4_eda/4_reviews
+      - file: content/4_eda/5_summary
   - caption: References
     chapters:
-      - file: 99_references
+      - file: content/99_references

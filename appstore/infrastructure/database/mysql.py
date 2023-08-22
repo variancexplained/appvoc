@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /appstore/infrastructure/database/mysql.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Saturday July 29th 2023 05:29:14 pm                                                 #
+# Modified   : Monday August 21st 2023 12:39:40 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,6 +19,7 @@
 """MySQL Database Module"""
 from __future__ import annotations
 import os
+
 from dotenv import load_dotenv
 from sqlalchemy.exc import SQLAlchemyError
 import sqlalchemy
@@ -28,8 +29,6 @@ from time import sleep
 from appstore.infrastructure.database.base import Database
 
 # ------------------------------------------------------------------------------------------------ #
-START_SCRIPT_FILEPATH = "scripts/database/management/start.sh"
-# ------------------------------------------------------------------------------------------------ #
 load_dotenv()
 
 
@@ -37,7 +36,7 @@ load_dotenv()
 class MySQLDatabase(Database):
     """MySQL Database Class
     Args:
-        name (str): Name of database in ['appstore','googleplay']
+        name (str): Name of database
     """
 
     def __init__(self, name: str) -> None:
@@ -88,4 +87,5 @@ class MySQLDatabase(Database):
         return f"mysql+pymysql://{u}:{p}@localhost/{self._name}"
 
     def _start_db(self) -> None:
-        subprocess.run([START_SCRIPT_FILEPATH], shell=True)
+        filepath = os.getenv("MYSSQL_STARTUP_SCRIPT")
+        subprocess.run([filepath], shell=True)

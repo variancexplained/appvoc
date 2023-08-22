@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Friday August 11th 2023 02:32:47 am                                                 #
+# Modified   : Monday August 21st 2023 09:21:40 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -33,6 +33,7 @@ from tests.data.rating.response import batch
 from appstore.data.dataset.appdata import AppDataDataset
 from appstore.data.dataset.rating import RatingDataset
 from appstore.data.dataset.review import ReviewDataset
+from appstore.utils.jbook import DocConverter
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -437,3 +438,20 @@ def request_ratings():
         "headers": STOREFRONT["headers"],
     }
     return d
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    DOC CONVERTER                                                 #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def converter(container):
+    jbook_module = "tests/data/utils/jbooks/jbook"
+    jbook_search_path = "tests/data/utils/jbooks/jbook/content/**/*.md"
+    notebook_module = "tests/data/utils/jbooks/notebooks"
+    notebook_search_path = "tests/data/utils/jbooks/notebooks/content/**/*.ipynb"
+    return DocConverter(
+        jbook_module=jbook_module,
+        jbook_search_path=jbook_search_path,
+        notebook_module=notebook_module,
+        notebook_search_path=notebook_search_path,
+    )

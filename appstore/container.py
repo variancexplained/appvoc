@@ -11,12 +11,14 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Friday August 11th 2023 12:19:15 am                                                 #
+# Modified   : Monday August 21st 2023 07:27:52 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Framework Dependency Container"""
+import os
+import logging
 import logging.config  # pragma: no cover
 
 from dependency_injector import containers, providers
@@ -37,6 +39,7 @@ from appstore.data.repo.uow import UoW
 from appstore.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
 from appstore.infrastructure.web.session import SessionHandler
 from appstore.infrastructure.web.asession import ASessionHandler
+from appstore.config import ConfigFileDefault, ConfigFileJBook
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -155,14 +158,28 @@ class WebSessionContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
+#                                    CONFIG SELECTOR                                               #
+# ------------------------------------------------------------------------------------------------ #
+def config_selector():
+    config = "jbook" if "jbook" in os.getcwd() else "appstore"
+    return config
+
+
+# ------------------------------------------------------------------------------------------------ #
 #                                       FRAMEWORK                                                  #
 # ------------------------------------------------------------------------------------------------ #
 class AppstoreContainer(containers.DeclarativeContainer):
+    config_file_selector = providers.Selector(
+        config_selector,
+        jbook=providers.Factory(ConfigFileJBook),
+        appstore=providers.Factory(ConfigFileDefault),
+    )
+
     config = providers.Configuration(
         yaml_files=[
-            "config/logging.yml",
-            "config/persistence.yml",
-            "config/web.yml",
+            config_file_selector().logging,
+            config_file_selector().web,
+            config_file_selector().persistence,
         ]
     )
 
@@ -173,9 +190,3 @@ class AppstoreContainer(containers.DeclarativeContainer):
     io = providers.Container(IOContainer)
 
     web = providers.Container(WebSessionContainer, config=config)
-
-
-# ------------------------------------------------------------------------------------------------ #
-if __name__ == "__main__":
-    container = AppstoreContainer()
-    container.wire(packages=["appstore.data.acquisition.scraper", "appstore.data.dataset"])
