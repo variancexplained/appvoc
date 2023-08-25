@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Friday August 11th 2023 03:14:59 am                                                 #
+# Modified   : Thursday August 24th 2023 08:43:06 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -394,11 +394,11 @@ class TestRatingRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        DIRECTORY = "tests/data/repo/archive/"  # noqa
+        DIRECTORY = "tests/data/repo/export/"  # noqa
         shutil.rmtree(DIRECTORY, ignore_errors=True)
         with container.data.db() as db:
             repo = RatingRepo(database=db)
-            repo.archive(directory=DIRECTORY)
+            repo.export(directory=DIRECTORY)
             assert len(os.listdir(DIRECTORY)) == 1
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

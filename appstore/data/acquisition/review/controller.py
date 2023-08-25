@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Thursday August 10th 2023 11:33:07 pm                                               #
+# Modified   : Thursday August 24th 2023 08:19:25 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -214,4 +214,4 @@ class ReviewController(Controller):
         self._director.update_job(job=job)
         self._director.update_jobrun(jobrun=jobrun)
         # Archive the ratings
-        self._uow.rating_repo.archive()
+        self._uow.rating_repo.export()

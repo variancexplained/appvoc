@@ -9,7 +9,7 @@ title: |
 author: John James
 copyright: "2023"
 logo: "figures/logo.png"
-root: index
+root: forward
 options:
   numbered: true
 only_build_toc_files: true
@@ -19,7 +19,7 @@ only_build_toc_files: true
 # ================================================================================================ #
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: force
+  execute_notebooks: auto
   exclude_patterns:
     - '*.py'
 
@@ -35,9 +35,10 @@ latex:
 # ================================================================================================ #
 bibtex_bibfiles:
   - references.bib
-# sphinx:
-#   config:
-#     bibtex_reference_style: super
+sphinx:
+  config:
+    bibtex_default_style: unsrt
+    bibtex_reference_style: label
 # ================================================================================================ #
 #                                       HTML                                                       #
 # ================================================================================================ #

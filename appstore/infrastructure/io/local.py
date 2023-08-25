@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.8                                                                              #
 # Filename   : /appstore/infrastructure/io/local.py                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 4th 2023 08:46:04 pm                                                  #
-# Modified   : Saturday July 29th 2023 04:39:08 pm                                                 #
+# Modified   : Wednesday August 23rd 2023 10:14:36 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -139,6 +139,48 @@ class CSVIO(IO):  # pragma: no cover
         filepath: str,
         data: pd.DataFrame,
         sep: str = ",",
+        index: bool = False,
+        index_label: bool = None,
+        encoding: str = "utf-8",
+        **kwargs,
+    ) -> None:
+        data.to_csv(filepath, sep=sep, index=index, index_label=index_label, encoding=encoding)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                        TSV IO                                                    #
+# ------------------------------------------------------------------------------------------------ #
+
+
+class TSVIO(IO):  # pragma: no cover
+    @classmethod
+    def _read(
+        cls,
+        filepath: str,
+        sep: str = "\t",
+        header: Union[int, None] = 0,
+        index_col: Union[int, str] = None,
+        usecols: List[str] = None,
+        low_memory: bool = False,
+        encoding: str = "utf-8",
+        **kwargs,
+    ) -> pd.DataFrame:
+        return pd.read_csv(
+            filepath,
+            sep=sep,
+            header=header,
+            index_col=index_col,
+            usecols=usecols,
+            low_memory=low_memory,
+            encoding=encoding,
+        )
+
+    @classmethod
+    def _write(
+        cls,
+        filepath: str,
+        data: pd.DataFrame,
+        sep: str = "\t",
         index: bool = False,
         index_label: bool = None,
         encoding: str = "utf-8",
@@ -284,6 +326,7 @@ class IOService:  # pragma: no cover
         "html": HtmlIO,
         "dat": CSVIO,
         "csv": CSVIO,
+        "tsv": TSVIO,
         "yaml": YamlIO,
         "yml": YamlIO,
         "json": JsonIO,

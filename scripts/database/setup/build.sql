@@ -7,10 +7,8 @@
  * Copyright (c) 2023 John James
  */
 
+DROP DATABASE IF EXISTS appstore;
+DROP DATABASE IF EXISTS appstore_test;
+CREATE DATABASE IF NOT EXISTS appstore;
+CREATE DATABASE IF NOT EXISTS appstore_test;
 
--- DROP DATABASE IF EXISTS appstore_test;
--- DROP DATABASE IF EXISTS googleplay_test;
--- CREATE DATABASE IF NOT EXISTS appstore;
--- CREATE DATABASE IF NOT EXISTS googleplay;
--- CREATE DATABASE IF NOT EXISTS appstore_test;
--- CREATE DATABASE IF NOT EXISTS googleplay_test;

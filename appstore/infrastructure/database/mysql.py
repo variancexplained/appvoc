@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Monday August 21st 2023 12:39:40 am                                                 #
+# Modified   : Thursday August 24th 2023 05:18:04 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -75,6 +75,20 @@ class MySQLDatabase(Database):
                     raise
             else:
                 return self
+
+    def backup(self, filepath: str, full: bool = True) -> None:
+        """Performs a backup of the database to file
+
+        Args:
+            filepath (str): The backup file on the local file system.
+        """
+
+    def restore(self, filepath: str) -> None:
+        """Restores the database from a backup file.
+
+        Args:
+            filepath (str): The backup file on the local file system.
+        """
 
     def _get_connection_string(self) -> str:
         """Returns the connection string for the named database."""

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Friday August 11th 2023 03:15:48 am                                                 #
+# Modified   : Thursday August 24th 2023 08:43:32 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -391,7 +391,7 @@ class TestReviewRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_archive_review(self, container, caplog):
+    def test_export_review(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -406,7 +406,7 @@ class TestReviewRepo:  # pragma: no cover
 
         with container.data.db() as db:
             repo = ReviewRepo(database=db)
-            fp = repo.archive()
+            fp = repo.export()
             assert os.path.exists(fp)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

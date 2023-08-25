@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 06:46:51 pm                                                 #
-# Modified   : Friday August 11th 2023 03:04:38 am                                                 #
+# Modified   : Friday August 25th 2023 10:54:42 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -567,7 +567,7 @@ class TestAppDataRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_archive_appdata(self, appdata_repo, caplog):
+    def test_export_appdata(self, appdata_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -579,11 +579,12 @@ class TestAppDataRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        DIRECTORY = "tests/data/repo/archive/"  # noqa
+        DIRECTORY = "tests/data/repo/export/"  # noqa
         shutil.rmtree(DIRECTORY, ignore_errors=True)
         repo = appdata_repo
-        repo.archive(directory=DIRECTORY)
+        filepath = repo.export(directory=DIRECTORY)
         assert len(os.listdir(DIRECTORY)) == 1
+        os.remove(filepath)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

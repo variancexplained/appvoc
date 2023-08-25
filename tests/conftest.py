@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Monday August 21st 2023 09:21:40 pm                                                 #
+# Modified   : Friday August 25th 2023 11:17:03 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,9 +23,11 @@ import dotenv
 import subprocess
 from datetime import datetime
 
+import pandas as pd
+
 from appstore.data.acquisition.base import App
 from appstore.infrastructure.io.local import IOService
-from appstore.container import AppstoreContainer
+from appstore.infrastructure.cloud.amazon import AWS
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
 from appstore.data.acquisition.review.request import ReviewRequest
@@ -34,26 +36,13 @@ from appstore.data.dataset.appdata import AppDataDataset
 from appstore.data.dataset.rating import RatingDataset
 from appstore.data.dataset.review import ReviewDataset
 from appstore.utils.jbook import DocConverter
+from appstore.container import AppstoreContainer
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
 
-# ================================================================================================ #
-#                                FRAMEWORK TEST FIXTURES                                           #
-# ================================================================================================ #
-APPDATA_RATINGS_FILEPATH = "tests/data/appdata/rating/appdata.pkl"
-DATAFRAME_FILEPATH = "tests/data/test.csv"
-APPDATA_FILEPATH = "tests/data/appdata.csv"
-APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"
-REVIEWS_FILEPATH = "tests/data/reviews.csv"
+# ------------------------------------------------------------------------------------------------ #
 RATINGS_FILEPATH = "tests/data/appstore_ratings.csv"
-RESET_SCRIPT = "tests/scripts/reset.sh"
-JOBS_FILEPATH = "tests/data/job/jobs.csv"
-
-APPDATA_DATASET = "tests/data/dataset/appdata.pkl"
-RATING_DATASET = "tests/data/dataset/rating.pkl"
-REVIEW_DATASET = "tests/data/dataset/review.pkl"
-
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
 
 APPS = [
@@ -73,12 +62,15 @@ APPS = [
         "category": "UTILITIES",
     },
 ]
-EPOCH = "1970-01-01 00:00:00"
-collect_ignore = [
-    "test_database*.*",
-    "appstore/data/acquisition/rating/*.*",
-    "appstore/data/acquisition/review/*.*",
-]
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                        CLOUD                                                     #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def aws():
+    """Returns an AWS object configured with default test bucket"""
+    return AWS(default_bucket="development-ai")
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -113,6 +105,7 @@ def urls():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def reset():
+    RESET_SCRIPT = "tests/scripts/reset.sh"  # noqa
     subprocess.run(RESET_SCRIPT, shell=True)
 
 
@@ -124,16 +117,16 @@ def mode():
     dotenv_file = dotenv.find_dotenv()
     dotenv.load_dotenv(dotenv_file)
     prior_mode = os.environ["MODE"]
-    prior_archive = os.environ["ARCHIVE"]
+    prior_archive = os.environ["DATASETS"]
     os.environ["MODE"] = "test"
-    os.environ["ARCHIVE"] = os.environ["ARCHIVE_TEST"]
+    os.environ["DATASETS"] = os.environ["DATASETS_TEST"]
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
-    dotenv.set_key(dotenv_file, "ARCHIVE", os.environ["ARCHIVE"])
+    dotenv.set_key(dotenv_file, "DATASETS", os.environ["DATASETS"])
     yield
     os.environ["MODE"] = prior_mode
-    os.environ["ARCHIVE"] = prior_archive
+    os.environ["DATASETS"] = prior_archive
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
-    dotenv.set_key(dotenv_file, "ARCHIVE", os.environ["ARCHIVE"])
+    dotenv.set_key(dotenv_file, "DATASETS", os.environ["DATASETS"])
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -153,6 +146,7 @@ def container():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def dataframe():
+    DATAFRAME_FILEPATH = "tests/data/test.csv"  # noqa
     df = IOService.read(DATAFRAME_FILEPATH)
     return df
 
@@ -162,15 +156,20 @@ def dataframe():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def appdata():
+    APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"  # noqa
     df = IOService.read(APPDATA_HEALTH_FILEPATH)
     return df
 
 
+# ================================================================================================ #
+#                                    DATASET FIXTURES                                              #
+# ================================================================================================ #
 # ------------------------------------------------------------------------------------------------ #
-#                                  APPDATA DATASET                                                 #
+#                                    APPDATA DATASET                                               #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def appdata_dataset():
+    APPDATA_DATASET = "tests/data/dataset/appdata.pkl"
     df = IOService.read(APPDATA_DATASET)
     ds = AppDataDataset(df=df)
     return ds
@@ -181,6 +180,7 @@ def appdata_dataset():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def rating_dataset():
+    RATING_DATASET = "tests/data/dataset/rating.pkl"
     df = IOService.read(RATING_DATASET)
     ds = RatingDataset(df=df)
     return ds
@@ -191,34 +191,115 @@ def rating_dataset():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def review_dataset():
+    REVIEW_DATASET = "tests/data/dataset/review.pkl"
     df = IOService.read(REVIEW_DATASET)
     ds = ReviewDataset(df=df)
     return ds
 
 
+# ================================================================================================ #
+#                                  REPOSITORY FIXTURES                                             #
+# ================================================================================================ #
 # ------------------------------------------------------------------------------------------------ #
-#                                    APPDATA REPO ZERO                                             #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def appdata_repo_zero(container):
-    repo = container.data.appdata_repo()
-    df = repo.getall()
-    repo.delete_all()
-    repo.save()
-    yield repo
-    repo.load(data=df)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                    APPDATA REPO ZERO                                             #
+#                                    APPDATA REPO                                                  #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def appdata_repo(container):
     repo = container.data.appdata_repo()
-    data = repo.getall()
-    repo.delete_all()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
     yield repo
-    repo.load(data)
+    if len(df) > 0:
+        repo.load(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    RATINGS REPO                                                  #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_repo(container):
+    repo = container.data.rating_repo()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
+    yield repo
+    if len(df) > 0:
+        repo.load(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    REVIEWS REPO                                                  #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_repo(container):
+    repo = container.data.review_repo()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
+    yield repo
+    if len(df) > 0:
+        repo.load(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      JOB REPO                                                    #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def job_repo(container):
+    repo = container.data.job_repo()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
+    yield repo
+    if len(df) > 0:
+        repo.load(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  REVIEW JOB RUN REPO                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def review_jobrun_repo(container):
+    repo = container.data.review_jobrun_repo()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
+    yield repo
+    if len(df) > 0:
+        repo.load(data=df)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                  RATING JOB RUN REPO                                             #
+# ------------------------------------------------------------------------------------------------ #
+@pytest.fixture(scope="module", autouse=False)
+def rating_jobrun_repo(container):
+    repo = container.data.rating_jobrun_repo()
+    df = pd.DataFrame()
+    try:
+        df = repo.getall()
+        repo.delete_all()
+    except Exception:
+        pass  # noqa
+    yield repo
+    if len(df) > 0:
+        repo.load(data=df)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -234,43 +315,8 @@ def rating_batch():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def job_df():
+    JOBS_FILEPATH = "tests/data/job/jobs.csv"  # noqa
     return IOService.read(JOBS_FILEPATH)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                       JOB REPO                                                   #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def job_repo(container):
-    repo = container.data.job_repo()
-    data = repo.getall()
-    repo.delete_all()
-    yield repo
-    repo.load(df=data)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                     REVIEW JOBRUN REPO                                           #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def review_jobrun_repo(container):
-    repo = container.data.review_jobrun_repo()
-    data = repo.getall()
-    repo.delete_all()
-    yield repo
-    repo.load(df=data)
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                     RATING JOBRUN REPO                                           #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def rating_jobrun_repo(container):
-    repo = container.data.rating_jobrun_repo()
-    data = repo.getall()
-    repo.delete_all()
-    yield repo
-    repo.load(df=data)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -329,6 +375,7 @@ def review_responses():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def uow(container):
+    APPDATA_RATINGS_FILEPATH = "tests/data/appdata/rating/appdata.pkl"  # noqa
     df = IOService.read(APPDATA_RATINGS_FILEPATH)
     uow = container.data.uow()
     uow.rollback()
@@ -365,32 +412,13 @@ def appdata_project_repo(container, appdata_project):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                  APPSTORE RATINGS REPO                                           #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def appstore_rating_repo(container):
-    repo = container.data.rating_repo()
-    repo.delete_all()
-    df = IOService.read(RATINGS_FILEPATH)
-    repo.load(data=df)
-    return repo
-
-
-# ------------------------------------------------------------------------------------------------ #
 #                                        REVIEWS                                                   #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def review():
+    REVIEWS_FILEPATH = "tests/data/reviews.csv"  # noqa
     df = IOService.read(REVIEWS_FILEPATH)
     return df
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                      REVIEW REPO                                                 #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def review_repo(container):
-    return container.data.review_repo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -400,14 +428,6 @@ def review_repo(container):
 def rating():
     df = IOService.read(RATINGS_FILEPATH)
     return df
-
-
-# ------------------------------------------------------------------------------------------------ #
-#                                      RATING REPO                                                 #
-# ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def rating_repo(container):
-    return container.data.rating_repo
 
 
 # ------------------------------------------------------------------------------------------------ #
