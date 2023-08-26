@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 24th 2023 06:15:57 pm                                               #
-# Modified   : Thursday August 24th 2023 08:06:25 pm                                               #
+# Modified   : Friday August 25th 2023 11:23:44 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 # ------------------------------------------------------------------------------------------------ #
 class AWS(CloudStorageManager):
-    """"""
+    """AWS S3 Storage Manager"""
 
     def __init__(self, default_bucket: str = None) -> None:
         super().__init__()

@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Thursday August 24th 2023 05:18:04 pm                                               #
+# Modified   : Friday August 25th 2023 12:53:49 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -76,12 +76,15 @@ class MySQLDatabase(Database):
             else:
                 return self
 
-    def backup(self, filepath: str, full: bool = True) -> None:
+    def backup(self, filepath: str) -> None:
         """Performs a backup of the database to file
 
         Args:
             filepath (str): The backup file on the local file system.
         """
+        script = os.getenv("MYSQL_BACKUP_SCRIPT")
+        command = [script, "-d", self._name, "-f", filepath]
+        subprocess.check_call(command, shell=True)
 
     def restore(self, filepath: str) -> None:
         """Restores the database from a backup file.
@@ -89,6 +92,9 @@ class MySQLDatabase(Database):
         Args:
             filepath (str): The backup file on the local file system.
         """
+        script = os.getenv("MYSQL_RESTORE_SCRIPT")
+        command = [script, "-d", self._name, "-f", filepath]
+        subprocess.check_call(command, shell=True)
 
     def _get_connection_string(self) -> str:
         """Returns the connection string for the named database."""

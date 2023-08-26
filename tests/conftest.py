@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Friday August 25th 2023 11:17:03 am                                                 #
+# Modified   : Saturday August 26th 2023 04:09:34 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -217,6 +217,15 @@ def appdata_repo(container):
         repo.load(data=df)
 
 
+@pytest.fixture(scope="function", autouse=False)
+def appdata_repo_loaded(container):
+    fp = "tests/data/repo/testdata/appdata.pkl"
+    df = IOService.read(filepath=fp)
+    repo = container.data.appdata_repo()
+    repo.replace(data=df)
+    return repo
+
+
 # ------------------------------------------------------------------------------------------------ #
 #                                    RATINGS REPO                                                  #
 # ------------------------------------------------------------------------------------------------ #
@@ -234,6 +243,15 @@ def rating_repo(container):
         repo.load(data=df)
 
 
+@pytest.fixture(scope="function", autouse=False)
+def rating_repo_loaded(container):
+    fp = "tests/data/repo/testdata/rating.pkl"
+    df = IOService.read(filepath=fp)
+    repo = container.data.rating_repo()
+    repo.replace(data=df)
+    return repo
+
+
 # ------------------------------------------------------------------------------------------------ #
 #                                    REVIEWS REPO                                                  #
 # ------------------------------------------------------------------------------------------------ #
@@ -249,6 +267,15 @@ def review_repo(container):
     yield repo
     if len(df) > 0:
         repo.load(data=df)
+
+
+@pytest.fixture(scope="function", autouse=False)
+def review_repo_loaded(container):
+    fp = "tests/data/repo/testdata/review.pkl"
+    df = IOService.read(filepath=fp)
+    repo = container.data.review_repo()
+    repo.replace(data=df)
+    return repo
 
 
 # ------------------------------------------------------------------------------------------------ #

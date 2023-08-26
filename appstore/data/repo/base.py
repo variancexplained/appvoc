@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Thursday August 24th 2023 08:38:23 pm                                               #
+# Modified   : Saturday August 26th 2023 02:55:56 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -249,7 +249,13 @@ class Repo(ABC):
         """Saves the repository to file located in the designated directory."""
         self._database.commit()
 
-    def export(self, directory: str = None, format: str = "pkl") -> str:
+    def export(
+        self,
+        directory: str = None,
+        format: str = "pkl",
+        by_category: bool = False,
+        with_datetime: bool = True,
+    ) -> str:
         """Archives the data
         Args:
             directory (str): The base directory into which the archive is created.
@@ -260,10 +266,24 @@ class Repo(ABC):
         if directory is None:
             basedir = os.getenv(key="DATASETS")
             directory = os.path.join(basedir, self._name)
+
+        if with_datetime:
+            name = self._name + "_" + datetime.now().strftime("%Y-%m-%dT%H%M%S")
+        else:
+            name = self._name
+
         os.makedirs(directory, exist_ok=True)
-        filename = self._name + "_" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + "." + format
-        filepath = os.path.join(directory, filename)
-        IOService.write(filepath=filepath, data=df)
+        if by_category:
+            filepath = []
+            for category, data in df.groupby(by="category"):
+                filename = name + "_" + category + "." + format
+                fp = os.path.join(directory, filename)
+                filepath.append(fp)
+                IOService.write(filepath=fp, data=data)
+        else:
+            filename = name + "." + format
+            filepath = os.path.join(directory, filename)
+            IOService.write(filepath=filepath, data=df)
         return filepath
 
     def _parse_datetime(self, data: pd.DataFrame, dtcols: Union[str, list[str]]) -> pd.DataFrame:

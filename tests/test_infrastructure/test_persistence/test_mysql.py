@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
+# Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_persistence/test_mysql.py                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
-# Modified   : Wednesday July 26th 2023 09:59:29 am                                                #
+# Modified   : Friday August 25th 2023 12:41:39 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -154,7 +154,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         db = MySQLDatabase(name="test")
-        db.name == "test"
+        assert db.name == "test"
         assert db.is_connected is True
         db.close()
         assert db.is_connected is False
@@ -429,7 +429,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_insert_AUTOCOMMIT(self, dataframe, caplog):
+    def test_transaction_insert_autocommit(self, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -484,7 +484,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_update_AUTOCOMMIT(self, dataframe, caplog):
+    def test_transaction_update_autocommit(self, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -533,6 +533,34 @@ class TestMySQLDatabase:  # pragma: no cover
 
         with pytest.raises(SQLAlchemyError):
             db.query(query=select_query, params=select_params)
+
+        # ---------------------------------------------------------------------------------------- #
+        end = datetime.now()
+        duration = round((end - start).total_seconds(), 1)
+
+        logger.info(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                duration,
+                end.strftime("%I:%M:%S %p"),
+                end.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(single_line)
+    # ============================================================================================ #
+    def test_backup(self, caplog):
+        start = datetime.now()
+        logger.info(
+            "\n\nStarted {} {} at {} on {}".format(
+                self.__class__.__name__,
+                inspect.stack()[0][3],
+                start.strftime("%I:%M:%S %p"),
+                start.strftime("%m/%d/%Y"),
+            )
+        )
+        logger.info(double_line)
+        # ---------------------------------------------------------------------------------------- #
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
