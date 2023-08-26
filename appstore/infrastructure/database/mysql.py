@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Friday August 25th 2023 12:53:49 pm                                                 #
+# Modified   : Saturday August 26th 2023 07:12:27 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -83,7 +83,7 @@ class MySQLDatabase(Database):
             filepath (str): The backup file on the local file system.
         """
         script = os.getenv("MYSQL_BACKUP_SCRIPT")
-        command = [script, "-d", self._name, "-f", filepath]
+        command = ["bash", script, self._name, filepath]
         subprocess.check_call(command, shell=True)
 
     def restore(self, filepath: str) -> None:
@@ -93,7 +93,7 @@ class MySQLDatabase(Database):
             filepath (str): The backup file on the local file system.
         """
         script = os.getenv("MYSQL_RESTORE_SCRIPT")
-        command = [script, "-d", self._name, "-f", filepath]
+        command = ["bash", script, self._name, filepath]
         subprocess.check_call(command, shell=True)
 
     def _get_connection_string(self) -> str:

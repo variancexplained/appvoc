@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 24th 2023 06:15:57 pm                                               #
-# Modified   : Friday August 25th 2023 11:23:44 am                                                 #
+# Modified   : Saturday August 26th 2023 05:00:25 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,7 +21,7 @@ import boto3
 from botocore.exceptions import ClientError
 import os
 
-from appstore.data.manage.base import CloudStorageManager
+from appstore.infrastructure.cloud.base import CloudStorageManager
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

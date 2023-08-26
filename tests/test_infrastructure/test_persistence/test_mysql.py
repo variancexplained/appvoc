@@ -11,11 +11,13 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
-# Modified   : Friday August 25th 2023 12:41:39 pm                                                 #
+# Modified   : Saturday August 26th 2023 07:15:06 pm                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+import os
+import time
 import inspect
 from datetime import datetime
 import pytest
@@ -51,7 +53,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         query = "DROP TABLE IF EXISTS iris;"
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         with db as connection:
             connection.execute(query=query)
         # ---------------------------------------------------------------------------------------- #
@@ -82,7 +84,7 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         db.connect()
         _ = db.insert(data=dataframe, tablename="iris")
         db.rollback()  # Rollback has no effect when not in transaction.
@@ -120,7 +122,7 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         with db as connection:
             rows_inserted = connection.insert(data=dataframe, tablename="iris")
         assert isinstance(rows_inserted, int)
@@ -153,8 +155,8 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="test")
-        assert db.name == "test"
+        db = MySQLDatabase(name="iris")
+        assert db.name == "iris_test"
         assert db.is_connected is True
         db.close()
         assert db.is_connected is False
@@ -189,7 +191,7 @@ class TestMySQLDatabase:  # pragma: no cover
         QUERY = "SELECT * FROM iris WHERE iris.Name = :name;"
         PARAMS = {"name": "Iris-virginica"}
 
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         with db as connection:
             df = connection.query(query=QUERY, params=PARAMS)
         assert isinstance(df, pd.DataFrame)
@@ -226,7 +228,7 @@ class TestMySQLDatabase:  # pragma: no cover
         query = "UPDATE iris SET PetalWidth = :pw WHERE iris.Name = :name;"
         params = {"pw": 99, "name": "Iris-setosa"}
 
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         with db as database:
             rows_updated = database.update(query=query, params=params)
         logger.debug(f"\n\nRows Updated{rows_updated}")
@@ -270,7 +272,7 @@ class TestMySQLDatabase:  # pragma: no cover
         query = "DELETE FROM iris WHERE Name = :name;"
         params = {"name": "Iris-virginica"}
 
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         with db as database:
             rows_deleted = database.delete(query=query, params=params)
         logger.debug(f"\n\nRows Deleted{rows_deleted}")
@@ -280,7 +282,7 @@ class TestMySQLDatabase:  # pragma: no cover
         query = "SELECT EXISTS(SELECT 1 FROM iris WHERE Name = :name LIMIT 1);"
         db.connect()
         exists = db.exists(query=query, params=params)
-        assert exists is True
+        assert exists is False
         db.close()
         logger.debug(f"\n\n{exists}\n{type(exists)}")
         # ---------------------------------------------------------------------------------------- #
@@ -313,7 +315,7 @@ class TestMySQLDatabase:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         query = "SELECT * FROM iris;"
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         db.connect()
         result = db.in_transaction()
         assert result is False
@@ -378,7 +380,7 @@ class TestMySQLDatabase:  # pragma: no cover
         select_params = {"name": "Iris-setosa", "pl": 1.4, "sw": 3.5, "sl": 5.1}
 
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         db.connect()
         result = db.in_transaction()
         assert result is False
@@ -443,7 +445,7 @@ class TestMySQLDatabase:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         query = "SELECT * FROM iris;"
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         db.connect(autocommit=True)
         result = db.in_transaction()
         assert result is False
@@ -502,7 +504,7 @@ class TestMySQLDatabase:  # pragma: no cover
         select_params = {"name": "Iris-setosa", "pl": 1.4, "sw": 3.5, "sl": 5.1}
 
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="test")
+        db = MySQLDatabase(name="iris")
         db.connect(autocommit=True)
         result = db.in_transaction()
         assert result is False
@@ -548,8 +550,9 @@ class TestMySQLDatabase:  # pragma: no cover
             )
         )
         logger.info(single_line)
+
     # ============================================================================================ #
-    def test_backup(self, caplog):
+    def test_backup_restore(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -561,7 +564,51 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
+        directory = "tests/data/database/backup"
+        os.makedirs(name=directory, exist_ok=True)
+        filename = "appstore_" + datetime.now().strftime("%Y-%m-%dT%H%M%S") + ".sql"
+        filepath = os.path.join(directory, filename)
+        filepath = os.path.abspath(filepath)
+        db = container.data.db()
+        db.backup(filepath=filepath)
+        time.sleep(3)
+        assert os.path.exists(filepath)
 
+        # Delete Appdata
+        query = "DELETE FROM appdata;"
+        params = {}
+        db.delete(query=query, params=params)
+
+        # Delete Rating
+        query = "DELETE FROM rating;"
+        params = {}
+        db.delete(query=query, params=params)
+
+        # Delete Review
+        query = "DELETE FROM review;"
+        params = {}
+        db.delete(query=query, params=params)
+
+        # Restore
+        db.restore(filepath=filepath)
+
+        # Get appdata
+        query = "SELECT * FROM appdata;"
+        params = None
+        appdata = db.query(query=query, params=params)
+        assert appdata.shape[0] == 100
+
+        # Get rating
+        query = "SELECT * FROM rating;"
+        params = None
+        rating = db.query(query=query, params=params)
+        assert rating.shape[0] == 100
+
+        # Get appdata
+        query = "SELECT * FROM review;"
+        params = None
+        review = db.query(query=query, params=params)
+        assert review.shape[0] == 100
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
