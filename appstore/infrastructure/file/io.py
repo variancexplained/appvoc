@@ -4,14 +4,14 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.8                                                                              #
-# Filename   : /appstore/infrastructure/io/local.py                                                #
+# Filename   : /appstore/infrastructure/file/io.py                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 4th 2023 08:46:04 pm                                                  #
-# Modified   : Wednesday August 23rd 2023 10:14:36 pm                                              #
+# Modified   : Sunday August 27th 2023 04:36:00 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -144,7 +144,14 @@ class CSVIO(IO):  # pragma: no cover
         encoding: str = "utf-8",
         **kwargs,
     ) -> None:
-        data.to_csv(filepath, sep=sep, index=index, index_label=index_label, encoding=encoding)
+        data.to_csv(
+            filepath,
+            sep=sep,
+            index=index,
+            index_label=index_label,
+            encoding=encoding,
+            escapechar="\\",
+        )
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -186,7 +193,14 @@ class TSVIO(IO):  # pragma: no cover
         encoding: str = "utf-8",
         **kwargs,
     ) -> None:
-        data.to_csv(filepath, sep=sep, index=index, index_label=index_label, encoding=encoding)
+        data.to_csv(
+            filepath,
+            sep=sep,
+            index=index,
+            index_label=index_label,
+            encoding=encoding,
+            escapechar="\\",
+        )
 
 
 # ------------------------------------------------------------------------------------------------ #
