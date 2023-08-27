@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 09:50:40 pm                                                  #
-# Modified   : Saturday August 26th 2023 07:12:27 pm                                               #
+# Modified   : Sunday August 27th 2023 05:24:34 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,7 @@
 """MySQL Database Module"""
 from __future__ import annotations
 import os
-
+from datetime import datetime
 from dotenv import load_dotenv
 from sqlalchemy.exc import SQLAlchemyError
 import sqlalchemy
@@ -27,6 +27,7 @@ import subprocess
 from time import sleep
 
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.database.config import DatabaseConfig
 
 # ------------------------------------------------------------------------------------------------ #
 load_dotenv()
@@ -39,11 +40,16 @@ class MySQLDatabase(Database):
         name (str): Name of database
     """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, config: DatabaseConfig) -> None:
         super().__init__()
-        self._name = name
+        self._config = config()
+        self._name = self._config.name
         self._connection_string = self._get_connection_string()
         self.connect()
+
+    @property
+    def mode(self) -> str:
+        return self._config.mode
 
     def connect(self, autocommit: bool = False) -> None:
         attempts = 0
@@ -76,15 +82,33 @@ class MySQLDatabase(Database):
             else:
                 return self
 
-    def backup(self, filepath: str) -> None:
-        """Performs a backup of the database to file
-
-        Args:
-            filepath (str): The backup file on the local file system.
-        """
-        script = os.getenv("MYSQL_BACKUP_SCRIPT")
-        command = ["bash", script, self._name, filepath]
-        subprocess.check_call(command, shell=True)
+    def backup(self) -> str:
+        """Performs a backup of the database to file"""
+        directory = self._config.backup_directory
+        filename = "appstore_" + datetime.now().strftime("%Y-%m-%d_T%H%M%S") + ".sql"
+        filepath = os.path.abspath(os.path.join(directory, filename))
+        os.makedirs(directory, exist_ok=True)
+        try:
+            with open(filepath, "w") as f:
+                proc = subprocess.Popen(
+                    [
+                        "mysqldump",
+                        "--user=%s" % self._config.username,
+                        "--password=%s" % self._config.password,
+                        "--add-drop-database",
+                        "--skip-add-drop-table",
+                        "--databases",
+                        self._name,
+                    ],
+                    stdout=f,
+                )
+                proc.communicate()
+        except ValueError as e:  # pragma: no cover
+            msg = f"Suprocess POpen was called with invalid arguments.\n{e}"
+            self._logger.exception(msg)
+            raise
+        else:
+            return filepath
 
     def restore(self, filepath: str) -> None:
         """Restores the database from a backup file.
@@ -92,20 +116,24 @@ class MySQLDatabase(Database):
         Args:
             filepath (str): The backup file on the local file system.
         """
-        script = os.getenv("MYSQL_RESTORE_SCRIPT")
-        command = ["bash", script, self._name, filepath]
-        subprocess.check_call(command, shell=True)
+        try:
+            with open(filepath, "r") as f:
+                command = [
+                    "mysql",
+                    "--user=%s" % self._config.username,
+                    "--password=%s" % self._config.password,
+                    self._name,
+                ]
+                proc = subprocess.Popen(command, stdin=f)
+                stdout, stderr = proc.communicate()
+        except ValueError as e:  # pragma: no cover
+            msg = f"Suprocess POpen was called with invalid arguments.\n{e}"
+            self._logger.exception(msg)
+            raise
 
     def _get_connection_string(self) -> str:
         """Returns the connection string for the named database."""
+        return f"mysql+pymysql://{self._config.username}:{self._config.password}@localhost/{self._name}"
 
-        u = os.getenv("MYSQL_USERNAME")
-        p = os.getenv("MYSQL_PWD")
-        mode = os.getenv("MODE")
-        self._name = f"{self._name}_test" if mode == "test" else self._name
-
-        return f"mysql+pymysql://{u}:{p}@localhost/{self._name}"
-
-    def _start_db(self) -> None:
-        filepath = os.getenv("MYSSQL_STARTUP_SCRIPT")
-        subprocess.run([filepath], shell=True)
+    def _start_db(self) -> None:  # pragma: no cover
+        subprocess.run([self._config.startup], shell=True)

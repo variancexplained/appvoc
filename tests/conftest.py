@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Saturday August 26th 2023 04:09:34 pm                                               #
+# Modified   : Sunday August 27th 2023 04:21:04 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,7 +26,7 @@ from datetime import datetime
 import pandas as pd
 
 from appstore.data.acquisition.base import App
-from appstore.infrastructure.io.local import IOService
+from appstore.infrastructure.file.io import IOService
 from appstore.infrastructure.cloud.amazon import AWS
 from appstore.infrastructure.web.headers import STOREFRONT
 from appstore.data.acquisition.appdata.project import AppDataProject
@@ -117,26 +117,23 @@ def mode():
     dotenv_file = dotenv.find_dotenv()
     dotenv.load_dotenv(dotenv_file)
     prior_mode = os.environ["MODE"]
-    prior_archive = os.environ["DATASETS"]
     os.environ["MODE"] = "test"
-    os.environ["DATASETS"] = os.environ["DATASETS_TEST"]
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
-    dotenv.set_key(dotenv_file, "DATASETS", os.environ["DATASETS"])
     yield
     os.environ["MODE"] = prior_mode
-    os.environ["DATASETS"] = prior_archive
     dotenv.set_key(dotenv_file, "MODE", os.environ["MODE"])
-    dotenv.set_key(dotenv_file, "DATASETS", os.environ["DATASETS"])
 
 
 # ------------------------------------------------------------------------------------------------ #
 #                              DEPENDENCY INJECTION                                                #
 # ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def container():
     container = AppstoreContainer()
     container.init_resources()
-    container.wire(packages=["appstore.data.acquisition", "appstore.data.dataset"])
+    container.wire(
+        packages=["appstore.data.acquisition", "appstore.data.dataset", "appstore.data.storage"]
+    )
 
     return container
 
@@ -327,6 +324,14 @@ def rating_jobrun_repo(container):
     yield repo
     if len(df) > 0:
         repo.load(data=df)
+
+
+# ================================================================================================ #
+#                                     DATA MANAGEMENT                                              #
+# ================================================================================================ #
+# ------------------------------------------------------------------------------------------------ #
+#                                     STORAGE MANAGER                                              #
+# ------------------------------------------------------------------------------------------------ #
 
 
 # ------------------------------------------------------------------------------------------------ #

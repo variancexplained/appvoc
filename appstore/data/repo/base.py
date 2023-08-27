@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Saturday August 26th 2023 02:55:56 pm                                               #
+# Modified   : Sunday August 27th 2023 12:36:22 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -28,7 +28,7 @@ from dotenv import load_dotenv
 import pandas as pd
 
 from appstore.infrastructure.database.base import Database
-from appstore.infrastructure.io.local import IOService
+from appstore.infrastructure.file.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 load_dotenv()

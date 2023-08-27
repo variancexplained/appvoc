@@ -4,40 +4,42 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /tests/test_data_acquisition/test_review/test_review_controller.py                  #
+# Filename   : /tests/test_data_management/test_storage_management.py                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Tuesday August 8th 2023 07:30:54 am                                                 #
-# Modified   : Sunday August 27th 2023 12:36:06 am                                                 #
+# Created    : Saturday August 26th 2023 10:20:27 pm                                               #
+# Modified   : Sunday August 27th 2023 06:32:17 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
+import os
 import inspect
 from datetime import datetime
 import pytest
 import logging
 
-import pandas as pd
+from appstore.data.storage.manager import DataStorageManager
 
-from appstore.infrastructure.file.io import IOService
-from appstore.data.acquisition.review.controller import ReviewController
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
 double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
-# ------------------------------------------------------------------------------------------------ #
+
+ARCHIVE = None
+DIRECTORY = "tests/data/manage"
+OBJECT_NAME = "credit_score_dataset.csv"
 
 
-@pytest.mark.review_ctrl
-class TestReviewCtrl:  # pragma: no cover
+@pytest.mark.dm
+class TestDataStorageManager:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, container, apps, caplog):
+    def test_backup_restore(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -49,44 +51,28 @@ class TestReviewCtrl:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        # Configure AppData
-        ids = []
-        for app in apps:
-            if app.category_id == "6002":
-                ids.append(app.id)
-
-        # Extract target appdata from archive
-        filepath = "tests/data/archive/appdata/appdata_07-29-2023_17-16-45.pkl"
-        df = IOService.read(filepath=filepath)
-        df = df[df["category_id"] == "6002"]
-        logger.debug(df.sample(n=5))
-
-        appdata = df.loc[df["id"].isin(ids)]
-        # Load appdata into repository
+        ds = DataStorageManager()
+        filepath = ds.backup()
+        assert os.path.exists(filepath)
+        # Purge
+        ds.purge()
+        # Restore
+        ds.restore(filepath=filepath)
+        #  Validate data appdata
         repo = container.data.appdata_repo()
-        repo.replace(data=appdata)
         df = repo.getall()
-        assert df.shape[0] == 2
+        assert df.shape[0] == 100
 
-        # Reset review repo
-        filepath = "tests/data/review/reviews.pkl"
-        df = IOService.read(filepath=filepath)
+        #  Validate rating data
+        repo = container.data.rating_repo()
+        df = repo.getall()
+        assert df.shape[0] == 100
+
+        #  Validate review data
         repo = container.data.review_repo()
-        repo.replace(data=df)
+        df = repo.getall()
+        assert df.shape[0] == 100
 
-        # Reset job to complete is False
-        repo = container.data.job_repo()
-        job = repo.get(id="review-6002")
-        job.complete = False
-        repo.update(job=job)
-
-        # Reset jobrun
-        repo = container.data.review_jobrun_repo()
-        repo.reset(force=True)
-
-        # Reset review request
-        repo = container.data.review_request_repo()
-        repo.reset(force=True)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -103,7 +89,7 @@ class TestReviewCtrl:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_ctrl(self, container, caplog):
+    def test_archive(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -115,30 +101,43 @@ class TestReviewCtrl:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
+        ds = DataStorageManager()
+        archive = ds.archive()
+        assert os.path.exists(archive)
 
-        ctrl = ReviewController(max_pages=4, verbose=1)
-        ctrl.scrape()
+        # Upload the archive
+        ds.upload(filepath=archive)
+        object_name = os.path.basename(archive)
+        assert ds.exists(object_name=object_name)
 
+        # Purge the data
+        ds.purge()
+
+        # Recovery the data from an archive
+        filepath = "tests/data/backup/archive/appstore_2023-08-27_T063129.tar.gz"
+        ds.recover(filepath=filepath)
+
+        #  Validate data appdata
+        repo = container.data.appdata_repo()
+        df = repo.getall()
+        assert df.shape[0] == 100
+
+        #  Validate rating data
+        repo = container.data.rating_repo()
+        df = repo.getall()
+        assert df.shape[0] == 100
+
+        #  Validate review data
         repo = container.data.review_repo()
         df = repo.getall()
-        assert isinstance(df, pd.DataFrame)
-        assert df.shape[0] > 500
-
-        repo = container.data.review_jobrun_repo()
-        df = repo.getall()
-        assert isinstance(df, pd.DataFrame)
-        assert sum(df["complete"]) == df.shape[0]
-
-        repo = container.data.job_repo()
-        job = repo.get(id="review-6002")
-        assert job.complete == True  # noqa
+        assert df.shape[0] == 100
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
 
         logger.info(
-            "\nCompleted {} {} in {} seconds at {} on {}".format(
+            "\n\tCompleted {} {} in {} seconds at {} on {}".format(
                 self.__class__.__name__,
                 inspect.stack()[0][3],
                 duration,
@@ -149,7 +148,7 @@ class TestReviewCtrl:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_restart(self, container, caplog):
+    def test_download(self, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -161,24 +160,11 @@ class TestReviewCtrl:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        # Reset job to complete is False
-        repo = container.data.job_repo()
-        job = repo.get(id="review-6002")
-        job.complete = False
-        repo.update(job=job)
-
-        # Get current latest index
-        repo = container.data.review_request_repo()
-        request = repo.get(id="284815942")
-        assert request.last_index > 0
-        idx = request.last_index
-
-        ctrl = ReviewController(max_pages=4, verbose=1)
-        ctrl.scrape()
-
-        request = repo.get(id="284815942")
-        assert request.last_index > idx
-
+        ds = DataStorageManager()
+        filepath = "tests/data/archive/credit_score_dataset.csv"
+        object_name = "credit_score_dataset.csv"
+        ds.download(filepath, object_name=object_name)
+        assert os.path.exists(filepath)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

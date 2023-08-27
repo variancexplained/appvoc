@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 8th 2023 07:30:54 am                                                 #
-# Modified   : Wednesday August 9th 2023 04:33:01 am                                               #
+# Modified   : Sunday August 27th 2023 12:35:57 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import pandas as pd
 
-from appstore.infrastructure.io.local import IOService
+from appstore.infrastructure.file.io import IOService
 from appstore.data.acquisition.rating.controller import RatingController
 
 # ------------------------------------------------------------------------------------------------ #

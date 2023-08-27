@@ -11,13 +11,12 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
-# Modified   : Saturday August 26th 2023 07:15:06 pm                                               #
+# Modified   : Sunday August 27th 2023 02:52:56 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
-import time
 import inspect
 from datetime import datetime
 import pytest
@@ -25,8 +24,6 @@ import logging
 
 import pandas as pd
 from sqlalchemy.exc import SQLAlchemyError
-
-from appstore.infrastructure.database.mysql import MySQLDatabase
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -40,7 +37,7 @@ single_line = f"\n{100 * '-'}"
 @pytest.mark.db
 class TestMySQLDatabase:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, caplog):
+    def test_setup(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -52,8 +49,8 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
+        db = container.data.db()
         query = "DROP TABLE IF EXISTS iris;"
-        db = MySQLDatabase(name="iris")
         with db as connection:
             connection.execute(query=query)
         # ---------------------------------------------------------------------------------------- #
@@ -72,7 +69,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_insert_without_commit(self, dataframe, caplog):
+    def test_insert_without_commit(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -84,7 +81,7 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         db.connect()
         _ = db.insert(data=dataframe, tablename="iris")
         db.rollback()  # Rollback has no effect when not in transaction.
@@ -93,7 +90,7 @@ class TestMySQLDatabase:  # pragma: no cover
         df = db.query(query=query)
         db.close()
         assert df.shape[0] != 0
-        self.test_setup(caplog=caplog)
+        self.test_setup(container=container, caplog=caplog)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -110,7 +107,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_insert_in_context(self, dataframe, caplog):
+    def test_insert_in_context(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -122,7 +119,7 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         with db as connection:
             rows_inserted = connection.insert(data=dataframe, tablename="iris")
         assert isinstance(rows_inserted, int)
@@ -143,7 +140,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_properties(self, caplog):
+    def test_properties(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -155,8 +152,8 @@ class TestMySQLDatabase:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        db = MySQLDatabase(name="iris")
-        assert db.name == "iris_test"
+        db = container.data.db()
+        assert db.name == "appstore_test"
         assert db.is_connected is True
         db.close()
         assert db.is_connected is False
@@ -176,7 +173,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_query(self, caplog):
+    def test_query(self, container, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -191,7 +188,7 @@ class TestMySQLDatabase:  # pragma: no cover
         QUERY = "SELECT * FROM iris WHERE iris.Name = :name;"
         PARAMS = {"name": "Iris-virginica"}
 
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         with db as connection:
             df = connection.query(query=QUERY, params=PARAMS)
         assert isinstance(df, pd.DataFrame)
@@ -213,7 +210,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_update(self, dataframe, caplog):
+    def test_update(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -228,7 +225,7 @@ class TestMySQLDatabase:  # pragma: no cover
         query = "UPDATE iris SET PetalWidth = :pw WHERE iris.Name = :name;"
         params = {"pw": 99, "name": "Iris-setosa"}
 
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         with db as database:
             rows_updated = database.update(query=query, params=params)
         logger.debug(f"\n\nRows Updated{rows_updated}")
@@ -240,7 +237,7 @@ class TestMySQLDatabase:  # pragma: no cover
         df = db.query(query=query, params=params)
         db.close()
         logger.debug(f"\n\n{df}")
-        self.test_query(caplog=caplog)
+        self.test_query(container=container, caplog=caplog)
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)
@@ -257,7 +254,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_delete(self, dataframe, caplog):
+    def test_delete(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -272,7 +269,7 @@ class TestMySQLDatabase:  # pragma: no cover
         query = "DELETE FROM iris WHERE Name = :name;"
         params = {"name": "Iris-virginica"}
 
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         with db as database:
             rows_deleted = database.delete(query=query, params=params)
         logger.debug(f"\n\nRows Deleted{rows_deleted}")
@@ -301,7 +298,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_insert(self, dataframe, caplog):
+    def test_transaction_insert(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -315,7 +312,7 @@ class TestMySQLDatabase:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         query = "SELECT * FROM iris;"
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         db.connect()
         result = db.in_transaction()
         assert result is False
@@ -363,7 +360,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_update(self, dataframe, caplog):
+    def test_transaction_update(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -380,7 +377,7 @@ class TestMySQLDatabase:  # pragma: no cover
         select_params = {"name": "Iris-setosa", "pl": 1.4, "sw": 3.5, "sl": 5.1}
 
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         db.connect()
         result = db.in_transaction()
         assert result is False
@@ -431,7 +428,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_insert_autocommit(self, dataframe, caplog):
+    def test_transaction_insert_autocommit(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -445,7 +442,7 @@ class TestMySQLDatabase:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         query = "SELECT * FROM iris;"
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         db.connect(autocommit=True)
         result = db.in_transaction()
         assert result is False
@@ -486,7 +483,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_transaction_update_autocommit(self, dataframe, caplog):
+    def test_transaction_update_autocommit(self, container, dataframe, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -504,7 +501,7 @@ class TestMySQLDatabase:  # pragma: no cover
         select_params = {"name": "Iris-setosa", "pl": 1.4, "sw": 3.5, "sl": 5.1}
 
         # Confirm beginning state, not in transaction
-        db = MySQLDatabase(name="iris")
+        db = container.data.db()
         db.connect(autocommit=True)
         result = db.in_transaction()
         assert result is False
@@ -552,7 +549,9 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_backup_restore(self, container, caplog):
+    def test_backup_restore(
+        self, container, appdata_repo_loaded, rating_repo_loaded, review_repo_loaded, caplog
+    ):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -570,45 +569,58 @@ class TestMySQLDatabase:  # pragma: no cover
         filepath = os.path.join(directory, filename)
         filepath = os.path.abspath(filepath)
         db = container.data.db()
+        logger.debug("Backing up database")
         db.backup(filepath=filepath)
-        time.sleep(3)
+        logger.debug("Backup complete")
         assert os.path.exists(filepath)
 
         # Delete Appdata
         query = "DELETE FROM appdata;"
         params = {}
         db.delete(query=query, params=params)
+        logger.debug("Deleted appdata")
+        db.commit()
 
         # Delete Rating
         query = "DELETE FROM rating;"
         params = {}
         db.delete(query=query, params=params)
+        logger.debug("Deleted rating")
+        db.commit()
 
         # Delete Review
         query = "DELETE FROM review;"
         params = {}
         db.delete(query=query, params=params)
+        logger.debug("Deleted reviews")
+        db.commit()
 
         # Restore
+        logger.debug("Restoring database")
         db.restore(filepath=filepath)
+        logger.debug("Database restored")
+        db.commit()
 
         # Get appdata
         query = "SELECT * FROM appdata;"
         params = None
         appdata = db.query(query=query, params=params)
         assert appdata.shape[0] == 100
+        logger.debug(appdata.head())
 
         # Get rating
         query = "SELECT * FROM rating;"
         params = None
         rating = db.query(query=query, params=params)
         assert rating.shape[0] == 100
+        logger.debug(rating.head())
 
         # Get appdata
         query = "SELECT * FROM review;"
         params = None
         review = db.query(query=query, params=params)
         assert review.shape[0] == 100
+        logger.debug(review.head())
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

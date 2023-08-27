@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Wednesday August 23rd 2023 10:16:11 pm                                              #
+# Modified   : Sunday August 27th 2023 04:01:52 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,7 @@ import logging.config  # pragma: no cover
 from dependency_injector import containers, providers
 from urllib3.util import Retry
 
-from appstore.infrastructure.io.local import IOService
+from appstore.infrastructure.file.io import IOService
 from appstore.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appstore.infrastructure.web.throttle import LatencyThrottle, AThrottle
 from appstore.infrastructure.database.mysql import MySQLDatabase
@@ -36,6 +36,11 @@ from appstore.data.repo.request import ReviewRequestRepo
 from appstore.data.repo.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
 from appstore.infrastructure.web.base import PROXY_SERVERS
 from appstore.data.repo.uow import UoW
+from appstore.infrastructure.file.config import FileConfig
+from appstore.infrastructure.file.archive import FileArchiver
+from appstore.infrastructure.cloud.amazon import AWS
+from appstore.infrastructure.cloud.config import CloudConfig
+from appstore.infrastructure.database.config import DatabaseConfig
 from appstore.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
 from appstore.infrastructure.web.session import SessionHandler
 from appstore.infrastructure.web.asession import ASessionHandler
@@ -55,19 +60,18 @@ class LoggingContainer(containers.DeclarativeContainer):
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                         IO                                                       #
+#                                     FILE CONTAINER                                               #
 # ------------------------------------------------------------------------------------------------ #
-class IOContainer(containers.DeclarativeContainer):
-    service = providers.Singleton(IOService)
+class FileContainer(containers.DeclarativeContainer):
+    io = providers.Singleton(IOService)
+    archiver = providers.Singleton(FileArchiver, config=FileConfig)
 
 
 # ------------------------------------------------------------------------------------------------ #
 #                                        DATA                                                      #
 # ------------------------------------------------------------------------------------------------ #
 class PersistenceContainer(containers.DeclarativeContainer):
-    config = providers.Configuration()
-
-    db = providers.Singleton(MySQLDatabase, name=config.database.appstore.name)
+    db = providers.Singleton(MySQLDatabase, config=DatabaseConfig)
 
     appdata_repo = providers.Singleton(AppDataRepo, database=db)
     review_repo = providers.Singleton(ReviewRepo, database=db)
@@ -89,6 +93,13 @@ class PersistenceContainer(containers.DeclarativeContainer):
         review_jobrun_repo=ReviewJobRunRepo,
         review_request_repo=ReviewRequestRepo,
     )
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      CLOUD CONTAINER                                             #
+# ------------------------------------------------------------------------------------------------ #
+class CloudContainer(containers.DeclarativeContainer):
+    aws = providers.Singleton(AWS, config=CloudConfig)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -185,8 +196,10 @@ class AppstoreContainer(containers.DeclarativeContainer):
 
     logs = providers.Container(LoggingContainer, config=config)
 
-    data = providers.Container(PersistenceContainer, config=config)
+    data = providers.Container(PersistenceContainer)
 
-    io = providers.Container(IOContainer)
+    file = providers.Container(FileContainer)
 
     web = providers.Container(WebSessionContainer, config=config)
+
+    cloud = providers.Container(CloudContainer)
