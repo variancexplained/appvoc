@@ -580,7 +580,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_html</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">d8analysis</span> <span class="k">as</span> <span class="nn">eda</span>
+<span class="kn">import</span> <span class="nn">studioai</span> <span class="k">as</span> <span class="nn">eda</span>
 
 <span class="kn">from</span> <span class="nn">appstore.data.dataset.appdata</span> <span class="kn">import</span> <span class="n">AppDataDataset</span>
 <span class="kn">from</span> <span class="nn">appstore.container</span> <span class="kn">import</span> <span class="n">AppstoreContainer</span>
@@ -626,79 +626,76 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_5ef79" style='display:inline; margin-right:220px;'>
+<table id="T_8a7e7" style='display:inline; margin-right:220px;'>
   <caption>Dataset Structure</caption>
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_5ef79_level0_col0" class="col_heading level0 col0" >Characteristic</th>
-      <th id="T_5ef79_level0_col1" class="col_heading level0 col1" >Total</th>
+      <th id="T_8a7e7_level0_col0" class="col_heading level0 col0" >Characteristic</th>
+      <th id="T_8a7e7_level0_col1" class="col_heading level0 col1" >Total</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_5ef79_level0_row0" class="row_heading level0 row0" >0</th>
-      <td id="T_5ef79_row0_col0" class="data row0 col0" >Number of Observations</td>
-      <td id="T_5ef79_row0_col1" class="data row0 col1" >475132</td>
+      <th id="T_8a7e7_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_8a7e7_row0_col0" class="data row0 col0" >Number of Observations</td>
+      <td id="T_8a7e7_row0_col1" class="data row0 col1" >475132</td>
     </tr>
     <tr>
-      <th id="T_5ef79_level0_row1" class="row_heading level0 row1" >1</th>
-      <td id="T_5ef79_row1_col0" class="data row1 col0" >Number of Variables</td>
-      <td id="T_5ef79_row1_col1" class="data row1 col1" >11</td>
+      <th id="T_8a7e7_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_8a7e7_row1_col0" class="data row1 col0" >Number of Variables</td>
+      <td id="T_8a7e7_row1_col1" class="data row1 col1" >15</td>
     </tr>
     <tr>
-      <th id="T_5ef79_level0_row2" class="row_heading level0 row2" >2</th>
-      <td id="T_5ef79_row2_col0" class="data row2 col0" >Number of Cells</td>
-      <td id="T_5ef79_row2_col1" class="data row2 col1" >5226452</td>
+      <th id="T_8a7e7_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_8a7e7_row2_col0" class="data row2 col0" >Number of Cells</td>
+      <td id="T_8a7e7_row2_col1" class="data row2 col1" >7126980</td>
     </tr>
     <tr>
-      <th id="T_5ef79_level0_row3" class="row_heading level0 row3" >3</th>
-      <td id="T_5ef79_row3_col0" class="data row3 col0" >Size (Bytes)</td>
-      <td id="T_5ef79_row3_col1" class="data row3 col1" >962579922</td>
+      <th id="T_8a7e7_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_8a7e7_row3_col0" class="data row3 col0" >Size (Bytes)</td>
+      <td id="T_8a7e7_row3_col1" class="data row3 col1" >974458222</td>
     </tr>
   </tbody>
 </table>
 <style type="text/css">
 </style>
-<table id="T_cdc8b" style='display:inline; margin-right:120px'>
+<table id="T_046e1" style='display:inline; margin-right:120px'>
   <caption>Dataset Data Types</caption>
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_cdc8b_level0_col0" class="col_heading level0 col0" >Data Type</th>
-      <th id="T_cdc8b_level0_col1" class="col_heading level0 col1" >Count</th>
+      <th id="T_046e1_level0_col0" class="col_heading level0 col0" >Count</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Data Type</th>
+      <th class="blank col0" >&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_cdc8b_level0_row0" class="row_heading level0 row0" >0</th>
-      <td id="T_cdc8b_row0_col0" class="data row0 col0" >string</td>
-      <td id="T_cdc8b_row0_col1" class="data row0 col1" >5</td>
+      <th id="T_046e1_level0_row0" class="row_heading level0 row0" >bool</th>
+      <td id="T_046e1_row0_col0" class="data row0 col0" >1</td>
     </tr>
     <tr>
-      <th id="T_cdc8b_level0_row1" class="row_heading level0 row1" >1</th>
-      <td id="T_cdc8b_row1_col0" class="data row1 col0" >float64</td>
-      <td id="T_cdc8b_row1_col1" class="data row1 col1" >2</td>
+      <th id="T_046e1_level0_row1" class="row_heading level0 row1" >category</th>
+      <td id="T_046e1_row1_col0" class="data row1 col0" >2</td>
     </tr>
     <tr>
-      <th id="T_cdc8b_level0_row2" class="row_heading level0 row2" >2</th>
-      <td id="T_cdc8b_row2_col0" class="data row2 col0" >category</td>
-      <td id="T_cdc8b_row2_col1" class="data row2 col1" >1</td>
+      <th id="T_046e1_level0_row2" class="row_heading level0 row2" >datetime64[ns]</th>
+      <td id="T_046e1_row2_col0" class="data row2 col0" >2</td>
     </tr>
     <tr>
-      <th id="T_cdc8b_level0_row3" class="row_heading level0 row3" >3</th>
-      <td id="T_cdc8b_row3_col0" class="data row3 col0" >category</td>
-      <td id="T_cdc8b_row3_col1" class="data row3 col1" >1</td>
+      <th id="T_046e1_level0_row3" class="row_heading level0 row3" >float64</th>
+      <td id="T_046e1_row3_col0" class="data row3 col0" >4</td>
     </tr>
     <tr>
-      <th id="T_cdc8b_level0_row4" class="row_heading level0 row4" >4</th>
-      <td id="T_cdc8b_row4_col0" class="data row4 col0" >int64</td>
-      <td id="T_cdc8b_row4_col1" class="data row4 col1" >1</td>
+      <th id="T_046e1_level0_row4" class="row_heading level0 row4" >int64</th>
+      <td id="T_046e1_row4_col0" class="data row4 col0" >1</td>
     </tr>
     <tr>
-      <th id="T_cdc8b_level0_row5" class="row_heading level0 row5" >5</th>
-      <td id="T_cdc8b_row5_col0" class="data row5 col0" >datetime64[ns]</td>
-      <td id="T_cdc8b_row5_col1" class="data row5 col1" >1</td>
+      <th id="T_046e1_level0_row5" class="row_heading level0 row5" >string</th>
+      <td id="T_046e1_row5_col0" class="data row5 col0" >5</td>
     </tr>
   </tbody>
 </table>
@@ -714,224 +711,241 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_260fe">
+<table id="T_5f4a7">
   <thead>
     <tr>
-      <th id="T_260fe_level0_col0" class="col_heading level0 col0" >Id</th>
-      <th id="T_260fe_level0_col1" class="col_heading level0 col1" >Name</th>
-      <th id="T_260fe_level0_col2" class="col_heading level0 col2" >Description</th>
-      <th id="T_260fe_level0_col3" class="col_heading level0 col3" >Category_id</th>
-      <th id="T_260fe_level0_col4" class="col_heading level0 col4" >Category</th>
-      <th id="T_260fe_level0_col5" class="col_heading level0 col5" >Price</th>
-      <th id="T_260fe_level0_col6" class="col_heading level0 col6" >Developer_id</th>
-      <th id="T_260fe_level0_col7" class="col_heading level0 col7" >Developer</th>
-      <th id="T_260fe_level0_col8" class="col_heading level0 col8" >Rating</th>
-      <th id="T_260fe_level0_col9" class="col_heading level0 col9" >Ratings</th>
-      <th id="T_260fe_level0_col10" class="col_heading level0 col10" >Released</th>
+      <th id="T_5f4a7_level0_col0" class="col_heading level0 col0" >id</th>
+      <th id="T_5f4a7_level0_col1" class="col_heading level0 col1" >name</th>
+      <th id="T_5f4a7_level0_col2" class="col_heading level0 col2" >description</th>
+      <th id="T_5f4a7_level0_col3" class="col_heading level0 col3" >category_id</th>
+      <th id="T_5f4a7_level0_col4" class="col_heading level0 col4" >category</th>
+      <th id="T_5f4a7_level0_col5" class="col_heading level0 col5" >price</th>
+      <th id="T_5f4a7_level0_col6" class="col_heading level0 col6" >developer_id</th>
+      <th id="T_5f4a7_level0_col7" class="col_heading level0 col7" >developer</th>
+      <th id="T_5f4a7_level0_col8" class="col_heading level0 col8" >rating</th>
+      <th id="T_5f4a7_level0_col9" class="col_heading level0 col9" >ratings</th>
+      <th id="T_5f4a7_level0_col10" class="col_heading level0 col10" >released</th>
+      <th id="T_5f4a7_level0_col11" class="col_heading level0 col11" >extracted</th>
+      <th id="T_5f4a7_level0_col12" class="col_heading level0 col12" >free</th>
+      <th id="T_5f4a7_level0_col13" class="col_heading level0 col13" >months_avail</th>
+      <th id="T_5f4a7_level0_col14" class="col_heading level0 col14" >ratings_per_month</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td id="T_260fe_row0_col0" class="data row0 col0" >1501310833</td>
-      <td id="T_260fe_row0_col1" class="data row0 col1" >Decibel Sound Meter | dB Level</td>
-      <td id="T_260fe_row0_col2" class="data row0 col2" >Sound level meter(or SPL) app is shows a decibel values by measure the environmental noise, displays measured dB values in various forms. you'll experience tidy graphic design with high frame by this smart sound meter app.
+      <td id="T_5f4a7_row0_col0" class="data row0 col0" >673020961</td>
+      <td id="T_5f4a7_row0_col1" class="data row0 col1" >岡三アクティブFX for iPhone</td>
+      <td id="T_5f4a7_row0_col2" class="data row0 col2" >「岡三アクティブFX for iPhone」は岡三証券が提供するiPhone専用のFXトレーディングアプリです。
+どなたでも無料でダウンロードでき、ログインしなくてもリアルタイム為替レートやテクニカルチャートをご利用いただけます。
 
-Decibel meters also are referred to as sound level meters (decibel meters), noise detection, sound meters, noise detectors, and noise detectors.
-Decibel meter may be a noise detection software that uses mobile microphone to live the ambient noise decibel (dB).
-The current decibel size and curve are displayed during the method . With the decibel meter, you'll measure the present ring
-The background level of the environment is straightforward and straightforward to use.
+※お取引には、岡三アクティブFX取引口座の開設、取引口座へのログインが必要です。
 
-Functions:
-- The dashboard displays the present noise decibel value
-- Display min/aver/max/current decibel value
-- Display decibel size change chart
-- Auto decibel value calibrate
-- Display test time
+■主な機能
 
-11 Levels of Noise:
-120dB: thunder
-110dB: rock 'n' roll
-100dB: train
-90dB: factory
-80dB: busy street
-70dB: busy traffic
-60dB: conversation
-50dB: quiet library
-40dB: quiet park
-30dB: whisper
-20dB: leaves fall
+【リアルタイム為替レート】
+岡三アクティブFX取扱い２０通貨ペアのリアルタイムレートを配信。
+レート一覧は、お好みに合わせて「リスト」「パネルＳ」「パネルＬ」の表示切替が可能です。
+また、レート一覧をワンタップするだけで「チャート」や「クイック注文」「全決済注文」などに素早く移動できます。
 
-Decibels: dB, dB(A), dBA, dB(C), dBV, dBm and dBi? What are they all?
-The decibel (dB) may be a logarithmic unit wont to measure sound level. it's also widely utilized in electronics, signals and communication. The dB may be a logarithmic way of describing a ratio. The ratio could also be power, instantaneous sound pressure , voltage or intensity or several other things. afterward we relate dB to the phon and to the sone, which measures loudness.
+【多彩なチャート機能】
+TICKから月足まで１３種類の豊富な足種と多彩なテクニカル指標でチャート分析を強力にサポート。テクニカルのパラメータを変更してオリジナルのカスタマイズも可能です。
+また、チャートを見ながらワンタップで発注する「クイック注文機能」を搭載。狙ったタイミングで素早く注文を出すことが可能です。
+[テクニカル指標]
+単純移動平均、指数平滑移動平均、ボリンジャーバンド、一目均衡表、パラボリック、ストキャスティクス、RSI、MACD、DMI、平均足、RCIを搭載
 
-What is a Sound level meter?
-A sound level meter is employed for acoustic (sound that travels through air) measurements. it's commonly a hand-held instrument with a microphone. the simplest sort of microphone for sound level meters is that the condenser microphone[1], which mixes precision with stability and reliability. The diaphragm of the microphone responds to changes in atmospheric pressure caused by sound waves. that's why the instrument is usually mentioned as a instantaneous sound pressure Level (SPL) Meter. This movement of the diaphragm, i.e. the instantaneous sound pressure deviation (pascal Pa), is converted into an electrical signal (volts V). While describing sound in terms of instantaneous sound pressure (Pascal) is feasible , a logarithmic conversion is typically applied and therefore the instantaneous sound pressure level is stated instead, with 0 dB SPL adequate to 20 micropascals.
+【豊富な注文機能】
+豊富な注文方法をご用意。
+成行や指値等のベーシックな注文から、トレール注文や時間指定注文などPCと同等の注文が可能です。
 
-A microphone is distinguishable by the voltage value produced when a known, constant instantaneous sound pressure is applied. this is often referred to as the microphone sensitivity. The instrument must know the sensitivity of the actual microphone getting used . Using this information, the instrument is in a position to accurately convert the electrical signal back to a instantaneous sound pressure , and display the resulting instantaneous sound pressure level (decibels dB SPL).
+【クイック注文】
+「クイック注文」は、新規注文、決済注文、同一通貨ペアの全決済注文などを全てワンタップで発注することができます。
+保有ポジション、平均約定レートや評価損益などを１画面に集約しているので、スピーディーなお取引が可能です。
 
-Sound level meters are commonly utilized in sound pollution studies for the quantification of various sorts of noise, especially for industrial, environmental, mining[2] and aircraft noise. the present international standard that specifies sound level meter functionality and performances is that the IEC 61672-1:2013. However, the reading from a sound level meter doesn't correlate well to human-perceived loudness, which is best measured by a loudness meter. Specific loudness may be a compressive nonlinearity and varies at certain levels and at certain frequencies.These metrics also can be calculated during a number of various ways
+【充実の設定機能】
+注文条件の初期設定や通貨ペア別の注文設定、起動時画面の設定など、様々な項目の設定が可能です。
+お客様が一番使い易いオリジナルの設定に保存しておくことができます。
 
-Note:
-Microphones in most IOS devices are aligned to human voice. the utmost values are limited by the device. Very loud sounds(over ~90 dB) might not be recognized in most device. So please use it as just an auxiliary tools. If you would like more accurate dB values, we recommend a actual sound level meter for that.</td>
-      <td id="T_260fe_row0_col3" class="data row0 col3" >6007</td>
-      <td id="T_260fe_row0_col4" class="data row0 col4" >Productivity</td>
-      <td id="T_260fe_row0_col5" class="data row0 col5" >0.000000</td>
-      <td id="T_260fe_row0_col6" class="data row0 col6" >1489624695</td>
-      <td id="T_260fe_row0_col7" class="data row0 col7" >Mattia La Spina</td>
-      <td id="T_260fe_row0_col8" class="data row0 col8" >5.000000</td>
-      <td id="T_260fe_row0_col9" class="data row0 col9" >2</td>
-      <td id="T_260fe_row0_col10" class="data row0 col10" >2020-03-08 08:00:00</td>
+【投資情報】
+アジア・オセアニアからニューヨーク市場まで、全世界の取引時間に対応したマーケット情報を、1日約200本のフルボリュームで配信。
+岡三オンライン証券の公式ブログや動画コンテンツ等も閲覧でき、いつでもどこでも最新のニュースへアクセスできます。
+※ご利用には取引口座へのログインが必要です。
+
+■提供会社
+岡三証券株式会社　岡三オンライン証券カンパニー
+https://www.okasan-online.co.jp/
+金融商品取引業者 関東財務局長(金商)第53号
+加入協会: 日本証券業協会、 一般社団法人 日本投資顧問業協会、 一般社団法人 金融先物取引業協会、 一般社団法人 第二種金融商品取引業協会、 一般社団法人 日本暗号資産取引業協会</td>
+      <td id="T_5f4a7_row0_col3" class="data row0 col3" >6015</td>
+      <td id="T_5f4a7_row0_col4" class="data row0 col4" >Finance</td>
+      <td id="T_5f4a7_row0_col5" class="data row0 col5" >0.000000</td>
+      <td id="T_5f4a7_row0_col6" class="data row0 col6" >395918157</td>
+      <td id="T_5f4a7_row0_col7" class="data row0 col7" >岡三オンライン証券株式会社</td>
+      <td id="T_5f4a7_row0_col8" class="data row0 col8" >0.000000</td>
+      <td id="T_5f4a7_row0_col9" class="data row0 col9" >0</td>
+      <td id="T_5f4a7_row0_col10" class="data row0 col10" >2013-08-08 07:00:00</td>
+      <td id="T_5f4a7_row0_col11" class="data row0 col11" >2023-07-31 05:00:00</td>
+      <td id="T_5f4a7_row0_col12" class="data row0 col12" >True</td>
+      <td id="T_5f4a7_row0_col13" class="data row0 col13" >118.000000</td>
+      <td id="T_5f4a7_row0_col14" class="data row0 col14" >0.000000</td>
     </tr>
     <tr>
-      <td id="T_260fe_row1_col0" class="data row1 col0" >1597540641</td>
-      <td id="T_260fe_row1_col1" class="data row1 col1" >Noble Nutrition</td>
-      <td id="T_260fe_row1_col2" class="data row1 col2" >Kick start your fitness journey with Noble Nutrition. Together with Noble Nutrition, you'll have the best combination of nutrition & exercises available on a single app.
+      <td id="T_5f4a7_row1_col0" class="data row1 col0" >1447839267</td>
+      <td id="T_5f4a7_row1_col1" class="data row1 col1" >Workout Schedule</td>
+      <td id="T_5f4a7_row1_col2" class="data row1 col2" >Workout Schedule app that gives you a 10 weeks training schedule for your whole body. You are free to determine your workout as you like or to follow the preset schedule.  
 
-With Noble Nutrition, you can begin your fitness journey in no time. Get a fully personalized workout and meal plan tailored to your fitness goals. Progress tracking gets easier when you log your daily workout, record meals, update your check-ins and connect your fitness band & health kit, and get real-time updates via advanced analytical tools. Everything that contributes to your fitness goals gets captured in one place. To top it all, use the inbuilt 1-1 chat feature to have all your queries addressed on the go. 
-
-You deserve to be the best. That’s why Noble Nutrition have packed so many features in a single app to help you achieve your fitness goals. 
-
-Start your journey today!
-
-Features that will help you achieve your fitness goals include: 
- 
-* Personalized Workout Plan: Get a fully personalized fitness plan tailored to your goals, whether it is to gain weight, lose weight, gain muscles, or simply wish to work on your general fitness.
- 
-* Nutrition, Hydration & Habits: Access meal plans assigned by your coach and log your food intake to keep a close track of your calorie intake and macros. You can also track your hydration, steps and calories burnt on the app.
- 
-* Instant messaging & video calls - Message your coach in real-time and schedule video sessions directly from the app. Stay connected with your coach to improve compliance and get better results. 
- 
-* Check-ins: Gain complete insight into your overall performance with easy check-ins and real-time updates.
- 
-* Progress: Stay on top of your progress with powerful analytics.
- 
-* Wearable integration: Get the bigger picture of your progress by connecting your fitness band & health kit thereby enabling real-time updates.
-
-
-Note regarding Apple Health:
- 
-The app integrates with Apple Health to show your daily activity - distance, steps, active energy, and flights to help you better achieve your goals.
- 
-App also uses Apple Health to track energy burned and heart rate during a workout session, if an Apple Watch is used.
- 
-Workout metrics are shared with the coach to better design your workout schedule.
- 
-DISCLAIMER:
-Users should seek a doctor’s advice before using this app and making any medical decisions.</td>
-      <td id="T_260fe_row1_col3" class="data row1 col3" >6013</td>
-      <td id="T_260fe_row1_col4" class="data row1 col4" >Health & Fitness</td>
-      <td id="T_260fe_row1_col5" class="data row1 col5" >0.000000</td>
-      <td id="T_260fe_row1_col6" class="data row1 col6" >1597540643</td>
-      <td id="T_260fe_row1_col7" class="data row1 col7" >Noble Bodybuilding, LLC</td>
-      <td id="T_260fe_row1_col8" class="data row1 col8" >4.764710</td>
-      <td id="T_260fe_row1_col9" class="data row1 col9" >17</td>
-      <td id="T_260fe_row1_col10" class="data row1 col10" >NaT</td>
+Important features: 
+-10 weeks schedule with different exercises.
+-Click the picture to see how to perform the exercise.
+-Change sets and reps on each exercise.
+-Double-click each exercise to mark it as finished.</td>
+      <td id="T_5f4a7_row1_col3" class="data row1 col3" >6013</td>
+      <td id="T_5f4a7_row1_col4" class="data row1 col4" >Health & Fitness</td>
+      <td id="T_5f4a7_row1_col5" class="data row1 col5" >0.000000</td>
+      <td id="T_5f4a7_row1_col6" class="data row1 col6" >1230753430</td>
+      <td id="T_5f4a7_row1_col7" class="data row1 col7" >Nerje Salah</td>
+      <td id="T_5f4a7_row1_col8" class="data row1 col8" >4.250000</td>
+      <td id="T_5f4a7_row1_col9" class="data row1 col9" >4</td>
+      <td id="T_5f4a7_row1_col10" class="data row1 col10" >NaT</td>
+      <td id="T_5f4a7_row1_col11" class="data row1 col11" >2023-07-31 05:00:00</td>
+      <td id="T_5f4a7_row1_col12" class="data row1 col12" >True</td>
+      <td id="T_5f4a7_row1_col13" class="data row1 col13" >nan</td>
+      <td id="T_5f4a7_row1_col14" class="data row1 col14" >nan</td>
     </tr>
     <tr>
-      <td id="T_260fe_row2_col0" class="data row2 col0" >492190063</td>
-      <td id="T_260fe_row2_col1" class="data row2 col1" >日本 旅遊會話一指搞定(Point and Learn Japan Travel Conversation)</td>
-      <td id="T_260fe_row2_col2" class="data row2 col2" >到日本旅行時
-如果能跟當地人們來幾句會話的話
-一定會成為更開心美好的回憶。
+      <td id="T_5f4a7_row2_col0" class="data row2 col0" >1578880067</td>
+      <td id="T_5f4a7_row2_col1" class="data row2 col1" >Pay'am</td>
+      <td id="T_5f4a7_row2_col2" class="data row2 col2" >Pay'am is an app that facilitates the payment of goods and services 7 times faster in Africa, without an internet connection. 
+The goal of the app is to promote a digital economy for economic growth in Africa.
 
-「日本 旅遊會話一指搞定」是不論任何人都能輕鬆上手的旅遊會話應用程式。
+NB: Pay'am is not a mobile wallet, it is a facilitator of financial transactions across network providers and banks. It uses your current mobile wallet or bank to facilitate the process of paying for goods and services and sending money
 
-特長
-■ 在旅途中能簡單使用!
-啟動非常快
-在旅途中可隨時迅速對應。
+* Send and request money: 
+With Payam, you can send money to your peers across any network provider. You can do that either by selecting the person's contact in your contact list, scanning his or her QR Code, or inputting the receiver's number manually. The transaction happens within seconds.
 
-■ 能輕巧迅速動作!
-以簡單易懂為最優先設計考量
-實現了輕巧順暢的使用感。
+* Pay bills: 
+Pay utility bills like Water, Electricity, and TV cable bills from the comfort of your home or office with the payamapp.
 
-■ 在旅途中好用的會話表現
-能簡單地表達自己的意思
-收錄了各種旅途中實用的會話表現。
+* Deposit or withdraw money: 
+You can easily make a deposit or withdrawal from your local agent faster and more securely.
 
-■ 搖一下就可播放語音!
-搖一下就能播放語音。
+* Buy Airtime and internet data
 
-■ 圖解單字表(附語音)
-將旅途中常用單字以圖解方式整理。
-輕輕觸碰單字就可播放語音。
+* Check balance:
+Check the balance of your mobile wallet, internet data, and airtime
 
+This app uses Accessibility Services to simplify and visualize complex, USSD-based processes for illiterate and innumerate users.
+************************************************
+Supported countries:
+Cameroon
+Rwanda
+************************************************
+Supported operators and service providers:
+Cameroon:
+-- Operators
+	MTN Cameroon
+	Orange Cameroon
+-- Service providers
+	MTN Mobile Money Cameroon
+	Orange Money Cameroon
 
+Rwanda:
+-- Operators
+	MTN Rwanda
+-- Service providers
+	MTN Mobile Money Rwanda
 
-Description:
-Tongue-tied tourists? 
-Get "Point and Learn Japan Travel Conversation" for your trip. 
-It's an travel phrase application 
-for Taiwanese Mandarin. 
-
-Features: 
-Easy-to-use on your trip: 
-You can find expressions and words whenever you need. 
-Just touch the icon. 
-It's ready for use in a minute. 
-
-Perform comfortably: 
-You can flick and shake. 
-See light and smooth move. 
-It's user-friendly interface. 
-
-Useful travel-related phrase: 
-You can find exact expressions. 
-Zooms each phrase and point the screen to show it. 
-It supports landscape mode. 
-
-Shake to play voice files: 
-You can "speak" in Japanese 
-by shaking or tapping the screen. 
-*You can shake to play only phrase files. 
-
-Picture wordbook (with voice): 
-You can listen to the pronunciation of the word. 
-Tap the word to play it. 
-Enjoy scrolling and playing at the same time.</td>
-      <td id="T_260fe_row2_col3" class="data row2 col3" >6003</td>
-      <td id="T_260fe_row2_col4" class="data row2 col4" >Travel</td>
-      <td id="T_260fe_row2_col5" class="data row2 col5" >0.000000</td>
-      <td id="T_260fe_row2_col6" class="data row2 col6" >320222259</td>
-      <td id="T_260fe_row2_col7" class="data row2 col7" >Brain</td>
-      <td id="T_260fe_row2_col8" class="data row2 col8" >1.000000</td>
-      <td id="T_260fe_row2_col9" class="data row2 col9" >1</td>
-      <td id="T_260fe_row2_col10" class="data row2 col10" >2012-01-11 19:33:00</td>
+**********************
+Pay for goods and services with the payam app up to 7 times faster!
+Scan QR code to send money, withdraw, or deposit
+Use your preferred  mobile wallet or bank
+Send money or pay merchants without internet
+Secured biometrically and with PIN code
+Multiple services available per country
+Send money or request payment from others
+Receive payments through QR code</td>
+      <td id="T_5f4a7_row2_col3" class="data row2 col3" >6015</td>
+      <td id="T_5f4a7_row2_col4" class="data row2 col4" >Finance</td>
+      <td id="T_5f4a7_row2_col5" class="data row2 col5" >0.000000</td>
+      <td id="T_5f4a7_row2_col6" class="data row2 col6" >1157308873</td>
+      <td id="T_5f4a7_row2_col7" class="data row2 col7" >GLOBEXCAM GROUP LIMITED</td>
+      <td id="T_5f4a7_row2_col8" class="data row2 col8" >5.000000</td>
+      <td id="T_5f4a7_row2_col9" class="data row2 col9" >3</td>
+      <td id="T_5f4a7_row2_col10" class="data row2 col10" >2022-01-04 08:00:00</td>
+      <td id="T_5f4a7_row2_col11" class="data row2 col11" >2023-07-31 05:00:00</td>
+      <td id="T_5f4a7_row2_col12" class="data row2 col12" >True</td>
+      <td id="T_5f4a7_row2_col13" class="data row2 col13" >18.000000</td>
+      <td id="T_5f4a7_row2_col14" class="data row2 col14" >0.162339</td>
     </tr>
     <tr>
-      <td id="T_260fe_row3_col0" class="data row3 col0" >6443700387</td>
-      <td id="T_260fe_row3_col1" class="data row3 col1" >JPG Media</td>
-      <td id="T_260fe_row3_col2" class="data row3 col2" >A simple & fast way to book an appointment, view and access client portals, learn about services and stay up to day with current promotions and product updates at the touch of a button.  New Push Notifications will make sure you never miss important information about promotions, new products, etc.  No more emails and spam.</td>
-      <td id="T_260fe_row3_col3" class="data row3 col3" >6008</td>
-      <td id="T_260fe_row3_col4" class="data row3 col4" >Photo & Video</td>
-      <td id="T_260fe_row3_col5" class="data row3 col5" >0.000000</td>
-      <td id="T_260fe_row3_col6" class="data row3 col6" >1648473958</td>
-      <td id="T_260fe_row3_col7" class="data row3 col7" >Jane Photography Group, LLC (jpg, Llc)</td>
-      <td id="T_260fe_row3_col8" class="data row3 col8" >0.000000</td>
-      <td id="T_260fe_row3_col9" class="data row3 col9" >0</td>
-      <td id="T_260fe_row3_col10" class="data row3 col10" >2022-10-05 07:00:00</td>
+      <td id="T_5f4a7_row3_col0" class="data row3 col0" >1016278440</td>
+      <td id="T_5f4a7_row3_col1" class="data row3 col1" >DoF Table</td>
+      <td id="T_5f4a7_row3_col2" class="data row3 col2" >DoF Table shows the "depth of field" (or focus range) in a table format calculated by the camera and the lens model you choose.
+
+With this app, you don't need to input the parameters (e.g. f-value) by hand because this app shows the result in a table format — you just select the camera and the lens. In addition to that, this app never bothers you by showing DoF values which cannot be achieved by the lens you chose.
+
+■Features
+- Shows Depth of fields in a table format
+- The table hides settings which cannot be achieved with the equipments you chose.
+- Shipped with actual product database.
+- You can add cameras and lenses by yourself.
+
+Other useful information are also available:
+
+- Hyperfocal distance
+- Field of view [Pro Version only]
+- Angle of view [Pro Version only]
+- 35mm equivalent focal length of chosen combination of the camera/lens [Pro Version only]
+- Crop factor (focal length multiplier) of cameras
+- Native aspect ratio of cameras
+
+■Pro Version
+If you liked this app, please consider purchasing the "Pro version" in the Settings menu. Highlights of Pro version are:
+
+- Ad-free
+- Additional features to calculate:
+  - Field of View
+  - Angle of View
+  - 35mm Equivalent Focal Length
+
+■Notes
+- You can backup/restore user-defined camera/lens database using "iTunes file sharing."</td>
+      <td id="T_5f4a7_row3_col3" class="data row3 col3" >6008</td>
+      <td id="T_5f4a7_row3_col4" class="data row3 col4" >Photo & Video</td>
+      <td id="T_5f4a7_row3_col5" class="data row3 col5" >0.000000</td>
+      <td id="T_5f4a7_row3_col6" class="data row3 col6" >1016278439</td>
+      <td id="T_5f4a7_row3_col7" class="data row3 col7" >Suguru Yamamoto</td>
+      <td id="T_5f4a7_row3_col8" class="data row3 col8" >4.384620</td>
+      <td id="T_5f4a7_row3_col9" class="data row3 col9" >13</td>
+      <td id="T_5f4a7_row3_col10" class="data row3 col10" >2015-08-26 01:36:00</td>
+      <td id="T_5f4a7_row3_col11" class="data row3 col11" >2023-07-31 05:00:00</td>
+      <td id="T_5f4a7_row3_col12" class="data row3 col12" >True</td>
+      <td id="T_5f4a7_row3_col13" class="data row3 col13" >93.000000</td>
+      <td id="T_5f4a7_row3_col14" class="data row3 col14" >0.139151</td>
     </tr>
     <tr>
-      <td id="T_260fe_row4_col0" class="data row4 col0" >999197469</td>
-      <td id="T_260fe_row4_col1" class="data row4 col1" >Pinch Pad: a simple sketchpad</td>
-      <td id="T_260fe_row4_col2" class="data row4 col2" >Draw simple sketches and post them instantly to Twitter, Tumblr, and more.
+      <td id="T_5f4a7_row4_col0" class="data row4 col0" >1120910144</td>
+      <td id="T_5f4a7_row4_col1" class="data row4 col1" >انشاء جي آي إف مع ملصقات</td>
+      <td id="T_5f4a7_row4_col2" class="data row4 col2" >حان الوقت لانشاء وصنع صور متحركه وافلام فيديو قصيره ووضع اجمل الملصقات عليها مع برنامج انشاء جي اي اف مع ملصقات
+من خلال البرنامج تستطيع عمل التالي:
+التقاط صوره باستخدام الكاميرا او من خلال البوم الصور
+تركيب خلفيات ملونه 
+اضافة نص على الصوره
+اضافة العديد من الملصقات المثيره والمميزه
+انتاج صور متحرمه او فيلم قصير من الصور التي قمت بتركيبها
 
-Features:
-• Simple but powerful sketching tools
-• Works with Apple Pencil
-• Animation support: draw multiple frames, then post them all as one animated GIF
-• Seamless integration with Twitter and Tumblr, so you can post your sketches with a single tap
-• Offline support: try to post without a connection, and Pinch Pad will save your sketches until your internet comes back
-
-Pinch Pad was built specifically to help you post quick drawings at any time. It's a great app for doing hourly comics, or for sharing doodles with your followers or friends. Give it a try! :)</td>
-      <td id="T_260fe_row4_col3" class="data row4 col3" >6016</td>
-      <td id="T_260fe_row4_col4" class="data row4 col4" >Entertainment</td>
-      <td id="T_260fe_row4_col5" class="data row4 col5" >0.000000</td>
-      <td id="T_260fe_row4_col6" class="data row4 col6" >690015717</td>
-      <td id="T_260fe_row4_col7" class="data row4 col7" >Ryan Laughlin</td>
-      <td id="T_260fe_row4_col8" class="data row4 col8" >4.000000</td>
-      <td id="T_260fe_row4_col9" class="data row4 col9" >4</td>
-      <td id="T_260fe_row4_col10" class="data row4 col10" >2015-06-11 12:09:00</td>
+واخيرا يمكنك تصدير الفيديو اما على شكل صور متحرمه -جي اي اف- او على شكل فيديو وفلم قصير ومشاركته مع اصدقائك على شبكات التواصل الاجتماعي</td>
+      <td id="T_5f4a7_row4_col3" class="data row4 col3" >6008</td>
+      <td id="T_5f4a7_row4_col4" class="data row4 col4" >Photo & Video</td>
+      <td id="T_5f4a7_row4_col5" class="data row4 col5" >0.000000</td>
+      <td id="T_5f4a7_row4_col6" class="data row4 col6" >1114392483</td>
+      <td id="T_5f4a7_row4_col7" class="data row4 col7" >MOHAMMED ABURAS</td>
+      <td id="T_5f4a7_row4_col8" class="data row4 col8" >0.000000</td>
+      <td id="T_5f4a7_row4_col9" class="data row4 col9" >0</td>
+      <td id="T_5f4a7_row4_col10" class="data row4 col10" >2016-06-09 03:28:00</td>
+      <td id="T_5f4a7_row4_col11" class="data row4 col11" >2023-07-31 05:00:00</td>
+      <td id="T_5f4a7_row4_col12" class="data row4 col12" >True</td>
+      <td id="T_5f4a7_row4_col13" class="data row4 col13" >84.000000</td>
+      <td id="T_5f4a7_row4_col14" class="data row4 col14" >0.000000</td>
     </tr>
   </tbody>
 </table>
@@ -951,129 +965,169 @@ Pinch Pad was built specifically to help you post quick drawings at any time. It
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_a3bfb">
+<table id="T_56623">
   <thead>
     <tr>
-      <th id="T_a3bfb_level0_col0" class="col_heading level0 col0" >Column</th>
-      <th id="T_a3bfb_level0_col1" class="col_heading level0 col1" >Datatype</th>
-      <th id="T_a3bfb_level0_col2" class="col_heading level0 col2" >Valid</th>
-      <th id="T_a3bfb_level0_col3" class="col_heading level0 col3" >Null</th>
-      <th id="T_a3bfb_level0_col4" class="col_heading level0 col4" >Validity</th>
-      <th id="T_a3bfb_level0_col5" class="col_heading level0 col5" >Cardinality</th>
-      <th id="T_a3bfb_level0_col6" class="col_heading level0 col6" >Percent unique</th>
-      <th id="T_a3bfb_level0_col7" class="col_heading level0 col7" >Size</th>
+      <th id="T_56623_level0_col0" class="col_heading level0 col0" >Column</th>
+      <th id="T_56623_level0_col1" class="col_heading level0 col1" >DataType</th>
+      <th id="T_56623_level0_col2" class="col_heading level0 col2" >Valid</th>
+      <th id="T_56623_level0_col3" class="col_heading level0 col3" >Null</th>
+      <th id="T_56623_level0_col4" class="col_heading level0 col4" >Validity</th>
+      <th id="T_56623_level0_col5" class="col_heading level0 col5" >Cardinality</th>
+      <th id="T_56623_level0_col6" class="col_heading level0 col6" >Percent Unique</th>
+      <th id="T_56623_level0_col7" class="col_heading level0 col7" >Size</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td id="T_a3bfb_row0_col0" class="data row0 col0" >id</td>
-      <td id="T_a3bfb_row0_col1" class="data row0 col1" >string</td>
-      <td id="T_a3bfb_row0_col2" class="data row0 col2" >475132</td>
-      <td id="T_a3bfb_row0_col3" class="data row0 col3" >0</td>
-      <td id="T_a3bfb_row0_col4" class="data row0 col4" >1.000000</td>
-      <td id="T_a3bfb_row0_col5" class="data row0 col5" >475132</td>
-      <td id="T_a3bfb_row0_col6" class="data row0 col6" >1.000000</td>
-      <td id="T_a3bfb_row0_col7" class="data row0 col7" >31748470</td>
+      <td id="T_56623_row0_col0" class="data row0 col0" >id</td>
+      <td id="T_56623_row0_col1" class="data row0 col1" >string</td>
+      <td id="T_56623_row0_col2" class="data row0 col2" >475132</td>
+      <td id="T_56623_row0_col3" class="data row0 col3" >0</td>
+      <td id="T_56623_row0_col4" class="data row0 col4" >1.000000</td>
+      <td id="T_56623_row0_col5" class="data row0 col5" >475132</td>
+      <td id="T_56623_row0_col6" class="data row0 col6" >1.000000</td>
+      <td id="T_56623_row0_col7" class="data row0 col7" >31748470</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row1_col0" class="data row1 col0" >name</td>
-      <td id="T_a3bfb_row1_col1" class="data row1 col1" >string</td>
-      <td id="T_a3bfb_row1_col2" class="data row1 col2" >475132</td>
-      <td id="T_a3bfb_row1_col3" class="data row1 col3" >0</td>
-      <td id="T_a3bfb_row1_col4" class="data row1 col4" >1.000000</td>
-      <td id="T_a3bfb_row1_col5" class="data row1 col5" >474250</td>
-      <td id="T_a3bfb_row1_col6" class="data row1 col6" >1.000000</td>
-      <td id="T_a3bfb_row1_col7" class="data row1 col7" >40449624</td>
+      <td id="T_56623_row1_col0" class="data row1 col0" >name</td>
+      <td id="T_56623_row1_col1" class="data row1 col1" >string</td>
+      <td id="T_56623_row1_col2" class="data row1 col2" >475132</td>
+      <td id="T_56623_row1_col3" class="data row1 col3" >0</td>
+      <td id="T_56623_row1_col4" class="data row1 col4" >1.000000</td>
+      <td id="T_56623_row1_col5" class="data row1 col5" >474250</td>
+      <td id="T_56623_row1_col6" class="data row1 col6" >1.000000</td>
+      <td id="T_56623_row1_col7" class="data row1 col7" >40449624</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row2_col0" class="data row2 col0" >description</td>
-      <td id="T_a3bfb_row2_col1" class="data row2 col1" >string</td>
-      <td id="T_a3bfb_row2_col2" class="data row2 col2" >475132</td>
-      <td id="T_a3bfb_row2_col3" class="data row2 col3" >0</td>
-      <td id="T_a3bfb_row2_col4" class="data row2 col4" >1.000000</td>
-      <td id="T_a3bfb_row2_col5" class="data row2 col5" >463635</td>
-      <td id="T_a3bfb_row2_col6" class="data row2 col6" >0.980000</td>
-      <td id="T_a3bfb_row2_col7" class="data row2 col7" >1186227495</td>
+      <td id="T_56623_row2_col0" class="data row2 col0" >description</td>
+      <td id="T_56623_row2_col1" class="data row2 col1" >string</td>
+      <td id="T_56623_row2_col2" class="data row2 col2" >475132</td>
+      <td id="T_56623_row2_col3" class="data row2 col3" >0</td>
+      <td id="T_56623_row2_col4" class="data row2 col4" >1.000000</td>
+      <td id="T_56623_row2_col5" class="data row2 col5" >463635</td>
+      <td id="T_56623_row2_col6" class="data row2 col6" >0.980000</td>
+      <td id="T_56623_row2_col7" class="data row2 col7" >1186227495</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row3_col0" class="data row3 col0" >category_id</td>
-      <td id="T_a3bfb_row3_col1" class="data row3 col1" >category</td>
-      <td id="T_a3bfb_row3_col2" class="data row3 col2" >475132</td>
-      <td id="T_a3bfb_row3_col3" class="data row3 col3" >0</td>
-      <td id="T_a3bfb_row3_col4" class="data row3 col4" >1.000000</td>
-      <td id="T_a3bfb_row3_col5" class="data row3 col5" >26</td>
-      <td id="T_a3bfb_row3_col6" class="data row3 col6" >0.000000</td>
-      <td id="T_a3bfb_row3_col7" class="data row3 col7" >477790</td>
+      <td id="T_56623_row3_col0" class="data row3 col0" >category_id</td>
+      <td id="T_56623_row3_col1" class="data row3 col1" >category</td>
+      <td id="T_56623_row3_col2" class="data row3 col2" >475132</td>
+      <td id="T_56623_row3_col3" class="data row3 col3" >0</td>
+      <td id="T_56623_row3_col4" class="data row3 col4" >1.000000</td>
+      <td id="T_56623_row3_col5" class="data row3 col5" >26</td>
+      <td id="T_56623_row3_col6" class="data row3 col6" >0.000000</td>
+      <td id="T_56623_row3_col7" class="data row3 col7" >477790</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row4_col0" class="data row4 col0" >category</td>
-      <td id="T_a3bfb_row4_col1" class="data row4 col1" >category</td>
-      <td id="T_a3bfb_row4_col2" class="data row4 col2" >475132</td>
-      <td id="T_a3bfb_row4_col3" class="data row4 col3" >0</td>
-      <td id="T_a3bfb_row4_col4" class="data row4 col4" >1.000000</td>
-      <td id="T_a3bfb_row4_col5" class="data row4 col5" >26</td>
-      <td id="T_a3bfb_row4_col6" class="data row4 col6" >0.000000</td>
-      <td id="T_a3bfb_row4_col7" class="data row4 col7" >477944</td>
+      <td id="T_56623_row4_col0" class="data row4 col0" >category</td>
+      <td id="T_56623_row4_col1" class="data row4 col1" >category</td>
+      <td id="T_56623_row4_col2" class="data row4 col2" >475132</td>
+      <td id="T_56623_row4_col3" class="data row4 col3" >0</td>
+      <td id="T_56623_row4_col4" class="data row4 col4" >1.000000</td>
+      <td id="T_56623_row4_col5" class="data row4 col5" >26</td>
+      <td id="T_56623_row4_col6" class="data row4 col6" >0.000000</td>
+      <td id="T_56623_row4_col7" class="data row4 col7" >477944</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row5_col0" class="data row5 col0" >price</td>
-      <td id="T_a3bfb_row5_col1" class="data row5 col1" >float64</td>
-      <td id="T_a3bfb_row5_col2" class="data row5 col2" >475132</td>
-      <td id="T_a3bfb_row5_col3" class="data row5 col3" >0</td>
-      <td id="T_a3bfb_row5_col4" class="data row5 col4" >1.000000</td>
-      <td id="T_a3bfb_row5_col5" class="data row5 col5" >125</td>
-      <td id="T_a3bfb_row5_col6" class="data row5 col6" >0.000000</td>
-      <td id="T_a3bfb_row5_col7" class="data row5 col7" >3801056</td>
+      <td id="T_56623_row5_col0" class="data row5 col0" >price</td>
+      <td id="T_56623_row5_col1" class="data row5 col1" >float64</td>
+      <td id="T_56623_row5_col2" class="data row5 col2" >475132</td>
+      <td id="T_56623_row5_col3" class="data row5 col3" >0</td>
+      <td id="T_56623_row5_col4" class="data row5 col4" >1.000000</td>
+      <td id="T_56623_row5_col5" class="data row5 col5" >125</td>
+      <td id="T_56623_row5_col6" class="data row5 col6" >0.000000</td>
+      <td id="T_56623_row5_col7" class="data row5 col7" >3801056</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row6_col0" class="data row6 col0" >developer_id</td>
-      <td id="T_a3bfb_row6_col1" class="data row6 col1" >string</td>
-      <td id="T_a3bfb_row6_col2" class="data row6 col2" >475132</td>
-      <td id="T_a3bfb_row6_col3" class="data row6 col3" >0</td>
-      <td id="T_a3bfb_row6_col4" class="data row6 col4" >1.000000</td>
-      <td id="T_a3bfb_row6_col5" class="data row6 col5" >265367</td>
-      <td id="T_a3bfb_row6_col6" class="data row6 col6" >0.560000</td>
-      <td id="T_a3bfb_row6_col7" class="data row6 col7" >31666555</td>
+      <td id="T_56623_row6_col0" class="data row6 col0" >developer_id</td>
+      <td id="T_56623_row6_col1" class="data row6 col1" >string</td>
+      <td id="T_56623_row6_col2" class="data row6 col2" >475132</td>
+      <td id="T_56623_row6_col3" class="data row6 col3" >0</td>
+      <td id="T_56623_row6_col4" class="data row6 col4" >1.000000</td>
+      <td id="T_56623_row6_col5" class="data row6 col5" >265367</td>
+      <td id="T_56623_row6_col6" class="data row6 col6" >0.560000</td>
+      <td id="T_56623_row6_col7" class="data row6 col7" >31666555</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row7_col0" class="data row7 col0" >developer</td>
-      <td id="T_a3bfb_row7_col1" class="data row7 col1" >string</td>
-      <td id="T_a3bfb_row7_col2" class="data row7 col2" >475132</td>
-      <td id="T_a3bfb_row7_col3" class="data row7 col3" >0</td>
-      <td id="T_a3bfb_row7_col4" class="data row7 col4" >1.000000</td>
-      <td id="T_a3bfb_row7_col5" class="data row7 col5" >264402</td>
-      <td id="T_a3bfb_row7_col6" class="data row7 col6" >0.560000</td>
-      <td id="T_a3bfb_row7_col7" class="data row7 col7" >37093493</td>
+      <td id="T_56623_row7_col0" class="data row7 col0" >developer</td>
+      <td id="T_56623_row7_col1" class="data row7 col1" >string</td>
+      <td id="T_56623_row7_col2" class="data row7 col2" >475132</td>
+      <td id="T_56623_row7_col3" class="data row7 col3" >0</td>
+      <td id="T_56623_row7_col4" class="data row7 col4" >1.000000</td>
+      <td id="T_56623_row7_col5" class="data row7 col5" >264402</td>
+      <td id="T_56623_row7_col6" class="data row7 col6" >0.560000</td>
+      <td id="T_56623_row7_col7" class="data row7 col7" >37093493</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row8_col0" class="data row8 col0" >rating</td>
-      <td id="T_a3bfb_row8_col1" class="data row8 col1" >float64</td>
-      <td id="T_a3bfb_row8_col2" class="data row8 col2" >475132</td>
-      <td id="T_a3bfb_row8_col3" class="data row8 col3" >0</td>
-      <td id="T_a3bfb_row8_col4" class="data row8 col4" >1.000000</td>
-      <td id="T_a3bfb_row8_col5" class="data row8 col5" >44083</td>
-      <td id="T_a3bfb_row8_col6" class="data row8 col6" >0.090000</td>
-      <td id="T_a3bfb_row8_col7" class="data row8 col7" >3801056</td>
+      <td id="T_56623_row8_col0" class="data row8 col0" >rating</td>
+      <td id="T_56623_row8_col1" class="data row8 col1" >float64</td>
+      <td id="T_56623_row8_col2" class="data row8 col2" >475132</td>
+      <td id="T_56623_row8_col3" class="data row8 col3" >0</td>
+      <td id="T_56623_row8_col4" class="data row8 col4" >1.000000</td>
+      <td id="T_56623_row8_col5" class="data row8 col5" >44083</td>
+      <td id="T_56623_row8_col6" class="data row8 col6" >0.090000</td>
+      <td id="T_56623_row8_col7" class="data row8 col7" >3801056</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row9_col0" class="data row9 col0" >ratings</td>
-      <td id="T_a3bfb_row9_col1" class="data row9 col1" >int64</td>
-      <td id="T_a3bfb_row9_col2" class="data row9 col2" >475132</td>
-      <td id="T_a3bfb_row9_col3" class="data row9 col3" >0</td>
-      <td id="T_a3bfb_row9_col4" class="data row9 col4" >1.000000</td>
-      <td id="T_a3bfb_row9_col5" class="data row9 col5" >14531</td>
-      <td id="T_a3bfb_row9_col6" class="data row9 col6" >0.030000</td>
-      <td id="T_a3bfb_row9_col7" class="data row9 col7" >3801056</td>
+      <td id="T_56623_row9_col0" class="data row9 col0" >ratings</td>
+      <td id="T_56623_row9_col1" class="data row9 col1" >int64</td>
+      <td id="T_56623_row9_col2" class="data row9 col2" >475132</td>
+      <td id="T_56623_row9_col3" class="data row9 col3" >0</td>
+      <td id="T_56623_row9_col4" class="data row9 col4" >1.000000</td>
+      <td id="T_56623_row9_col5" class="data row9 col5" >14531</td>
+      <td id="T_56623_row9_col6" class="data row9 col6" >0.030000</td>
+      <td id="T_56623_row9_col7" class="data row9 col7" >3801056</td>
     </tr>
     <tr>
-      <td id="T_a3bfb_row10_col0" class="data row10 col0" >released</td>
-      <td id="T_a3bfb_row10_col1" class="data row10 col1" >datetime64[ns]</td>
-      <td id="T_a3bfb_row10_col2" class="data row10 col2" >440837</td>
-      <td id="T_a3bfb_row10_col3" class="data row10 col3" >34295</td>
-      <td id="T_a3bfb_row10_col4" class="data row10 col4" >0.930000</td>
-      <td id="T_a3bfb_row10_col5" class="data row10 col5" >175353</td>
-      <td id="T_a3bfb_row10_col6" class="data row10 col6" >0.370000</td>
-      <td id="T_a3bfb_row10_col7" class="data row10 col7" >3801056</td>
+      <td id="T_56623_row10_col0" class="data row10 col0" >released</td>
+      <td id="T_56623_row10_col1" class="data row10 col1" >datetime64[ns]</td>
+      <td id="T_56623_row10_col2" class="data row10 col2" >440837</td>
+      <td id="T_56623_row10_col3" class="data row10 col3" >34295</td>
+      <td id="T_56623_row10_col4" class="data row10 col4" >0.930000</td>
+      <td id="T_56623_row10_col5" class="data row10 col5" >175353</td>
+      <td id="T_56623_row10_col6" class="data row10 col6" >0.370000</td>
+      <td id="T_56623_row10_col7" class="data row10 col7" >3801056</td>
+    </tr>
+    <tr>
+      <td id="T_56623_row11_col0" class="data row11 col0" >extracted</td>
+      <td id="T_56623_row11_col1" class="data row11 col1" >datetime64[ns]</td>
+      <td id="T_56623_row11_col2" class="data row11 col2" >475132</td>
+      <td id="T_56623_row11_col3" class="data row11 col3" >0</td>
+      <td id="T_56623_row11_col4" class="data row11 col4" >1.000000</td>
+      <td id="T_56623_row11_col5" class="data row11 col5" >1</td>
+      <td id="T_56623_row11_col6" class="data row11 col6" >0.000000</td>
+      <td id="T_56623_row11_col7" class="data row11 col7" >3801056</td>
+    </tr>
+    <tr>
+      <td id="T_56623_row12_col0" class="data row12 col0" >free</td>
+      <td id="T_56623_row12_col1" class="data row12 col1" >bool</td>
+      <td id="T_56623_row12_col2" class="data row12 col2" >475132</td>
+      <td id="T_56623_row12_col3" class="data row12 col3" >0</td>
+      <td id="T_56623_row12_col4" class="data row12 col4" >1.000000</td>
+      <td id="T_56623_row12_col5" class="data row12 col5" >2</td>
+      <td id="T_56623_row12_col6" class="data row12 col6" >0.000000</td>
+      <td id="T_56623_row12_col7" class="data row12 col7" >475132</td>
+    </tr>
+    <tr>
+      <td id="T_56623_row13_col0" class="data row13 col0" >months_avail</td>
+      <td id="T_56623_row13_col1" class="data row13 col1" >float64</td>
+      <td id="T_56623_row13_col2" class="data row13 col2" >440837</td>
+      <td id="T_56623_row13_col3" class="data row13 col3" >34295</td>
+      <td id="T_56623_row13_col4" class="data row13 col4" >0.930000</td>
+      <td id="T_56623_row13_col5" class="data row13 col5" >179</td>
+      <td id="T_56623_row13_col6" class="data row13 col6" >0.000000</td>
+      <td id="T_56623_row13_col7" class="data row13 col7" >3801056</td>
+    </tr>
+    <tr>
+      <td id="T_56623_row14_col0" class="data row14 col0" >ratings_per_month</td>
+      <td id="T_56623_row14_col1" class="data row14 col1" >float64</td>
+      <td id="T_56623_row14_col2" class="data row14 col2" >440837</td>
+      <td id="T_56623_row14_col3" class="data row14 col3" >34295</td>
+      <td id="T_56623_row14_col4" class="data row14 col4" >0.930000</td>
+      <td id="T_56623_row14_col5" class="data row14 col5" >203552</td>
+      <td id="T_56623_row14_col6" class="data row14 col6" >0.430000</td>
+      <td id="T_56623_row14_col7" class="data row14 col7" >3801056</td>
     </tr>
   </tbody>
 </table>
@@ -1123,47 +1177,38 @@ Pinch Pad was built specifically to help you post quick drawings at any time. It
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">])</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">stats</span><span class="o">.</span><span class="n">numeric</span><span class="p">[[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span><span class="s1">&#39;max&#39;</span><span class="p">]]</span>
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/pandas/core/frame.py:3767,</span> in <span class="ni">DataFrame.__getitem__</span><span class="nt">(self, key)</span>
+<span class="g g-Whitespace">   </span><span class="mi">3765</span>     <span class="k">if</span> <span class="n">is_iterator</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">3766</span>         <span class="n">key</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">3767</span>     <span class="n">indexer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">_get_indexer_strict</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">3769</span> <span class="c1"># take() does not accept boolean indexers</span>
+<span class="g g-Whitespace">   </span><span class="mi">3770</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">indexer</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>min</th>
-      <th>max</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>price</th>
-      <td>0.00</td>
-      <td>999.99</td>
-    </tr>
-    <tr>
-      <th>rating</th>
-      <td>0.00</td>
-      <td>5.00</td>
-    </tr>
-    <tr>
-      <th>ratings</th>
-      <td>0.00</td>
-      <td>30,835,421.00</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/pandas/core/indexes/base.py:5877,</span> in <span class="ni">Index._get_indexer_strict</span><span class="nt">(self, key, axis_name)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5874</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">5875</span>     <span class="n">keyarr</span><span class="p">,</span> <span class="n">indexer</span><span class="p">,</span> <span class="n">new_indexer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reindex_non_unique</span><span class="p">(</span><span class="n">keyarr</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">5877</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_missing</span><span class="p">(</span><span class="n">keyarr</span><span class="p">,</span> <span class="n">indexer</span><span class="p">,</span> <span class="n">axis_name</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5879</span> <span class="n">keyarr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">indexer</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5880</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Index</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">5881</span>     <span class="c1"># GH 42790 - Preserve name from an Index</span>
+
+<span class="nn">File ~/anaconda3/envs/appstore/lib/python3.10/site-packages/pandas/core/indexes/base.py:5938,</span> in <span class="ni">Index._raise_if_missing</span><span class="nt">(self, key, indexer, axis_name)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5936</span>     <span class="k">if</span> <span class="n">use_interval_msg</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">5937</span>         <span class="n">key</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">5938</span>     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;None of [</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">] are in the [</span><span class="si">{</span><span class="n">axis_name</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5940</span> <span class="n">not_found</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ensure_index</span><span class="p">(</span><span class="n">key</span><span class="p">)[</span><span class="n">missing_mask</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="g g-Whitespace">   </span><span class="mi">5941</span> <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">not_found</span><span class="si">}</span><span class="s2"> not in index&quot;</span><span class="p">)</span>
+
+<span class="ne">KeyError</span>: &quot;None of [Index([&#39;min&#39;, &#39;max&#39;], dtype=&#39;object&#39;)] are in the [columns]&quot;
+</pre></div>
+</div>
+</div>
 </div>
 <p>All numeric and datetime values are within range.</p>
 </section>
@@ -1177,124 +1222,6 @@ Pinch Pad was built specifically to help you post quick drawings at any time. It
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><style type="text/css">
-</style>
-<table id="T_5e182">
-  <thead>
-    <tr>
-      <th id="T_5e182_level0_col0" class="col_heading level0 col0" >Category_id</th>
-      <th id="T_5e182_level0_col1" class="col_heading level0 col1" >Category</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td id="T_5e182_row0_col0" class="data row0 col0" >6013</td>
-      <td id="T_5e182_row0_col1" class="data row0 col1" >Health & Fitness</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row1_col0" class="data row1 col0" >6017</td>
-      <td id="T_5e182_row1_col1" class="data row1 col1" >Education</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row2_col0" class="data row2 col0" >6000</td>
-      <td id="T_5e182_row2_col1" class="data row2 col1" >Business</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row3_col0" class="data row3 col0" >6012</td>
-      <td id="T_5e182_row3_col1" class="data row3 col1" >Lifestyle</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row4_col0" class="data row4 col0" >6004</td>
-      <td id="T_5e182_row4_col1" class="data row4 col1" >Sports</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row5_col0" class="data row5 col0" >6014</td>
-      <td id="T_5e182_row5_col1" class="data row5 col1" >Games</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row6_col0" class="data row6 col0" >6007</td>
-      <td id="T_5e182_row6_col1" class="data row6 col1" >Productivity</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row7_col0" class="data row7 col0" >6002</td>
-      <td id="T_5e182_row7_col1" class="data row7 col1" >Utilities</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row8_col0" class="data row8 col0" >6027</td>
-      <td id="T_5e182_row8_col1" class="data row8 col1" >Graphics & Design</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row9_col0" class="data row9 col0" >6010</td>
-      <td id="T_5e182_row9_col1" class="data row9 col1" >Navigation</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row10_col0" class="data row10 col0" >6018</td>
-      <td id="T_5e182_row10_col1" class="data row10 col1" >Book</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row11_col0" class="data row11 col0" >6026</td>
-      <td id="T_5e182_row11_col1" class="data row11 col1" >Developer Tools</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row12_col0" class="data row12 col0" >6001</td>
-      <td id="T_5e182_row12_col1" class="data row12 col1" >Weather</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row13_col0" class="data row13 col0" >6016</td>
-      <td id="T_5e182_row13_col1" class="data row13 col1" >Entertainment</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row14_col0" class="data row14 col0" >6009</td>
-      <td id="T_5e182_row14_col1" class="data row14 col1" >News</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row15_col0" class="data row15 col0" >6006</td>
-      <td id="T_5e182_row15_col1" class="data row15 col1" >Reference</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row16_col0" class="data row16 col0" >6005</td>
-      <td id="T_5e182_row16_col1" class="data row16 col1" >Social Networking</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row17_col0" class="data row17 col0" >6024</td>
-      <td id="T_5e182_row17_col1" class="data row17 col1" >Shopping</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row18_col0" class="data row18 col0" >6015</td>
-      <td id="T_5e182_row18_col1" class="data row18 col1" >Finance</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row19_col0" class="data row19 col0" >6023</td>
-      <td id="T_5e182_row19_col1" class="data row19 col1" >Food & Drink</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row20_col0" class="data row20 col0" >6003</td>
-      <td id="T_5e182_row20_col1" class="data row20 col1" >Travel</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row21_col0" class="data row21 col0" >6025</td>
-      <td id="T_5e182_row21_col1" class="data row21 col1" >Stickers</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row22_col0" class="data row22 col0" >6020</td>
-      <td id="T_5e182_row22_col1" class="data row22 col1" >Medical</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row23_col0" class="data row23 col0" >6021</td>
-      <td id="T_5e182_row23_col1" class="data row23 col1" >Magazines & Newspapers</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row24_col0" class="data row24 col0" >6011</td>
-      <td id="T_5e182_row24_col1" class="data row24 col1" >Music</td>
-    </tr>
-    <tr>
-      <td id="T_5e182_row25_col0" class="data row25 col0" >6008</td>
-      <td id="T_5e182_row25_col1" class="data row25 col1" >Photo & Video</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
 </div>
 <p>Category and category_id values are as expected.</p>
 </section>
