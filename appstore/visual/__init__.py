@@ -4,45 +4,15 @@
 # Project    : Appstore Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
-# Filename   : /config/logging.yml                                                                 #
+# Filename   : /appstore/visual/__init__.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Thursday April 20th 2023 01:19:19 pm                                                #
-# Modified   : Sunday August 27th 2023 05:34:58 pm                                                 #
+# Created    : Monday August 28th 2023 06:39:54 am                                                 #
+# Modified   : Monday August 28th 2023 06:39:58 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-logging:
-  disable_existing_loggers: false
-  formatters:
-    console:
-      datefmt: '%m/%d/%Y %I:%M:%S %p'
-      format: '[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s] : %(message)s'
-    file:
-      datefmt: '%m/%d/%Y %I:%M:%S %p'
-      format: '[%(asctime)s] [%(levelname)s] [%(name)s] [%(module)s] [%(funcName)s]
-        : %(message)s'
-  handlers:
-    console:
-      class: logging.StreamHandler
-      formatter: console
-      level: INFO
-      stream: ext://sys.stderr
-    file:
-      backupCount: 0
-      class: logging.handlers.TimedRotatingFileHandler
-      filename: logs/appstore.log
-      formatter: file
-      interval: 1
-      level: DEBUG
-      when: midnight
-  root:
-    handlers:
-    - console
-    - file
-    level: DEBUG
-  version: 1

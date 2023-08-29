@@ -11,15 +11,16 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Sunday August 20th 2023 01:07:50 am                                                 #
+# Modified   : Monday August 28th 2023 08:57:00 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import pandas as pd
-from d8analysis.data.dataset import Dataset
 
-from appstore.data.entity.appdata import AppData
+from studioai.data.dataset import Dataset
+
+from appstore.visual.seaborn import Visualizer
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -30,12 +31,18 @@ class AppDataDataset(Dataset):
         repo (Repo): The dataset repository
     """
 
-    def __init__(self, df: pd.DataFrame) -> None:
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        visualizer: type[Visualizer] = Visualizer,
+    ) -> None:
         super().__init__(df=df)
+        self._visualizer = visualizer()
+        self._visualizer.data = self._df
 
-    def __getitem__(self, idx: int) -> AppData:
-        df = self._df.iloc[[idx]]
-        return AppData.from_df(df=df)
+    @property
+    def plot(self) -> Visualizer:
+        return self._visualizer
 
     def summary(self) -> None:
         """Summarizes the data"""

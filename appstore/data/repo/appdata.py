@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Friday August 11th 2023 03:00:31 am                                                 #
+# Modified   : Monday August 28th 2023 04:03:47 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,12 +26,7 @@ from appstore.data.repo.base import Repo
 from appstore.data.entity.appdata import AppData
 from appstore.data.dataset.appdata import AppDataDataset
 from appstore.infrastructure.database.base import Database
-from sqlalchemy.dialects.mysql import (
-    LONGTEXT,
-    BIGINT,
-    VARCHAR,
-    FLOAT,
-)
+from sqlalchemy.dialects.mysql import LONGTEXT, BIGINT, VARCHAR, FLOAT, TINYINT
 
 # ------------------------------------------------------------------------------------------------ #
 #                                    DATAFRAME DATA TYPES                                          #
@@ -42,15 +37,19 @@ DATAFRAME_DTYPES = {
     "description": "string",
     "category_id": "category",
     "category": "category",
+    "free": bool,
     "price": np.float64,
     "developer_id": "string",
     "developer": "string",
     "rating": np.float64,
     "ratings": np.int64,
+    "ratings_per_month": np.float64,
+    "months_avail": np.float64,
 }
 
 PARSE_DATES = {
     "released": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 
 # ------------------------------------------------------------------------------------------------ #
@@ -58,16 +57,20 @@ PARSE_DATES = {
 # ------------------------------------------------------------------------------------------------ #
 DATABASE_DTYPES = {
     "id": VARCHAR(24),
-    "name": VARCHAR(256),
+    "name": VARCHAR(1024),
     "description": LONGTEXT,
     "category_id": VARCHAR(8),
     "category": VARCHAR(128),
+    "free": TINYINT,
     "price": FLOAT,
     "developer_id": VARCHAR(24),
     "developer": VARCHAR(256),
     "rating": FLOAT,
     "ratings": BIGINT,
+    "ratings_per_month": FLOAT,
+    "months_avail": FLOAT,
     "released": VARCHAR(32),
+    "extracted": VARCHAR(32),
 }
 
 

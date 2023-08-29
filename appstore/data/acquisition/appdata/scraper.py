@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Sunday July 30th 2023 11:59:20 am                                                   #
+# Modified   : Monday August 28th 2023 09:59:57 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -183,6 +183,9 @@ class AppDataScraper(Scraper):
             appdata["rating"] = result["averageUserRating"]
             appdata["ratings"] = result["userRatingCount"]
             appdata["released"] = datetime.strptime(result["releaseDate"], "%Y-%m-%dT%H:%M:%f%z")
+            appdata["extracted"] = datetime.now()
+            appdata["avail"] = (appdata["extracted"] - appdata["released"]).days
+            appdata["ratings_per_day"] = appdata["ratings"] / appdata["avail"]
 
             result_list.append(appdata)
         df = pd.DataFrame(data=result_list)

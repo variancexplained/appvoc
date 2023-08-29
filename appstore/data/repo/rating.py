@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:56:28 am                                                #
-# Modified   : Friday August 11th 2023 03:01:23 am                                                 #
+# Modified   : Monday August 28th 2023 01:26:25 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -48,13 +48,15 @@ DATAFRAME_DTYPES = {
     "fourstar": np.int64,
     "fivestar": np.int64,
 }
-
+PARSE_DATES = {
+    "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+}
 # ------------------------------------------------------------------------------------------------ #
 #                                      DATABASE DATA TYPES                                         #
 # ------------------------------------------------------------------------------------------------ #
 DATABASE_DTYPES = {
     "id": VARCHAR(24),
-    "name": VARCHAR(128),
+    "name": VARCHAR(1024),
     "category_id": VARCHAR(8),
     "category": VARCHAR(64),
     "rating": FLOAT,
@@ -65,6 +67,7 @@ DATABASE_DTYPES = {
     "threestar": BIGINT,
     "fourstar": BIGINT,
     "fivestar": BIGINT,
+    "extracted": VARCHAR(32),
 }
 
 
@@ -95,7 +98,7 @@ class RatingRepo(Repo):
         self._logger.debug(msg)
 
     def get(
-        self, id: str, dtypes: dict = DATAFRAME_DTYPES, parse_dates: dict = None  # noqa
+        self, id: str, dtypes: dict = DATAFRAME_DTYPES, parse_dates: dict = PARSE_DATES  # noqa
     ) -> Rating:
         """Returns data for the entity designated by the 'id' parameter.
 

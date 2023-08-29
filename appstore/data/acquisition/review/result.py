@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Wednesday August 9th 2023 05:06:25 pm                                               #
+# Modified   : Monday August 28th 2023 10:34:19 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -72,6 +72,7 @@ class ReviewResult(Result):
             review["rating"] = data["rating"]
             review["title"] = data["title"]
             review["content"] = data["body"]
+            review["review_length"] = len(data["body"].split())
             review["vote_sum"] = data["voteSum"]
             review["vote_count"] = data["voteCount"]
             review["date"] = pd.to_datetime(data["date"])

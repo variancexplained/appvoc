@@ -54,7 +54,7 @@ import numpy as np
 import pandas as pd
 from IPython.display import HTML, display_html
 import seaborn as sns
-import d8analysis as eda
+import studioai as eda
 
 from appstore.data.dataset.appdata import AppDataDataset
 from appstore.container import AppstoreContainer

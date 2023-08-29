@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Friday August 11th 2023 03:02:13 am                                                 #
+# Modified   : Monday August 28th 2023 01:27:13 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -52,6 +52,7 @@ DATAFRAME_DTYPES = {
 
 PARSE_DATES = {
     "date": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 
 # ------------------------------------------------------------------------------------------------ #
@@ -60,7 +61,7 @@ PARSE_DATES = {
 DATABASE_DTYPES = {
     "id": VARCHAR(64),
     "app_id": VARCHAR(24),
-    "app_name": VARCHAR(128),
+    "app_name": VARCHAR(1024),
     "category_id": VARCHAR(8),
     "category": VARCHAR(128),
     "author": VARCHAR(128),
@@ -70,6 +71,7 @@ DATABASE_DTYPES = {
     "vote_sum": BIGINT,
     "vote_count": BIGINT,
     "date": VARCHAR(32),
+    "extracted": VARCHAR(32),
 }
 
 

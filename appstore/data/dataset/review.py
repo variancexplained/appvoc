@@ -11,13 +11,13 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Sunday August 20th 2023 01:16:25 am                                                 #
+# Modified   : Monday August 28th 2023 05:31:38 am                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import pandas as pd
-from d8analysis.data.dataset import Dataset
+from studioai.data.dataset import Dataset
 
 from appstore.data.entity.review import Review
 
