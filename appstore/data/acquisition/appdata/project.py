@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 03:47:36 pm                                                  #
-# Modified   : Sunday July 30th 2023 11:59:22 am                                                   #
+# Modified   : Tuesday August 29th 2023 07:17:14 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -89,7 +89,7 @@ class AppDataProject(Project):
 
     def get_start_page(self) -> int:
         """Computes the start page based upon app count and max_result size"""
-        return int(self.apps / self.page_size)  # 200 results per page.
+        return int(int(self.apps) / int(self.page_size))  # 200 results per page.
 
     @classmethod
     def from_df(cls, df: pd.DataFrame) -> Project:

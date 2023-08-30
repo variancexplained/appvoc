@@ -11,23 +11,21 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Monday August 28th 2023 09:59:57 am                                                 #
+# Modified   : Tuesday August 29th 2023 09:10:46 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Module containing command objects which encapsulate requests and response processing."""
 from __future__ import annotations
-import requests
 import logging
 import sys
-from datetime import datetime
 
-import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
 from appstore.data.acquisition.base import Scraper
 from appstore.data.acquisition.appdata.result import AppDataResult
+from appstore.data.acquisition.appdata.validator import AppDataValidator
 from appstore.infrastructure.web.session import SessionHandler
 from appstore.container import AppstoreContainer
 
@@ -84,21 +82,22 @@ class AppDataScraper(Scraper):
         """Formats an itunes request for the next page"""
         if self._pages < self._max_pages:
             self._set_next_url()
-            session = self._session.get(url=self._url, params=self._params)
-            try:
-                if self._is_valid_response(session=session):
-                    self._pages += 1  # Increment page count prior to result and page after.
-                    result = self._parse_response(session.response)
-                    self._page += 1
-                    return result
-                else:  # pragma: no cover
-                    raise StopIteration  # noqa
 
-            except requests.exceptions.JSONDecodeError as e:  # pragma: no cover
-                msg = f"Encountered {type[e]} exception. Likely a Nonetype exception on the session. Implying 204. Returning to calling environment. Details\n{e}"
-                self._logger.exception(msg)
-                self._status_code = 204
-                raise StopIteration
+            validator = AppDataValidator()
+            result = AppDataResult()
+
+            response = self._session.get(url=self._url, params=self._params)
+
+            if validator.is_valid(response=response):
+                self._page += 1
+                self._pages += 1
+                result.add_response(response=response, page=self._page, pages=self._pages)
+                self._results = result.results
+            else:
+                result.data_errors += validator.data_error
+                result.client_errors += validator.client_error
+                result.server_errors += validator.server_error
+            return result
         else:
             raise StopIteration
 
@@ -118,89 +117,6 @@ class AppDataScraper(Scraper):
             "limit": self._limit,
             "offset": self._page * self._limit,
         }
-
-    def _is_valid_response(self, session: SessionHandler) -> bool:  # pragma: no cover
-        """Returns True if response is valid, False otherwise.
-
-        Args:
-            session (SessionHandler): Session Handler object
-
-        """
-        valid = True
-        results = []
-        if session.status_code != 200:
-            msg = f"\nInvalid status code={session.status_code} encountered. Terminating at page {self._page}."
-            valid = False
-            self._logger.debug(msg)
-            return valid
-        else:
-            try:
-                results = session.response.json()["results"]
-            except AttributeError as e:
-                msg = f"\n{e}. Terminating at page {self._page}."
-                valid = False
-                self._logger.debug(msg)
-                return valid
-            except KeyError as e:
-                msg = f"\nInvalid response encountered. Response has no 'results' key.\n{e}\nTerminating at page {self._page}."
-                valid = False
-                self._logger.debug(msg)
-                return valid
-
-        if not isinstance(results, list):
-            msg = f"\nInvalid response encountered. Result data type not expected. Terminating at page {self._page}."
-            valid = False
-            self._logger.debug(msg)
-            return valid
-
-        if len(results) == 0:
-            valid = False
-            msg = f"\nInvalid Response: Zero length result encountered. Terminating at page {self._page}."
-            self._logger.debug(msg)
-            return valid
-
-        return valid
-
-    def _parse_response(self, response: requests.Response) -> pd.DataFrame:
-        """Accepts a requests Response object and returns a DataFrame
-
-        Args:
-            response (requests.Response): A requests Response object.
-
-        """
-        result_list = []
-        results = response.json()["results"]
-        for result in results:
-            appdata = {}
-            appdata["id"] = result["trackId"]
-            appdata["name"] = result["trackName"]
-            appdata["description"] = result["description"].strip()
-            appdata["category_id"] = result["primaryGenreId"]
-            appdata["category"] = result["primaryGenreName"]
-            appdata["price"] = result.get("price", 0)
-            appdata["developer_id"] = result["artistId"]
-            appdata["developer"] = result["artistName"]
-            appdata["rating"] = result["averageUserRating"]
-            appdata["ratings"] = result["userRatingCount"]
-            appdata["released"] = datetime.strptime(result["releaseDate"], "%Y-%m-%dT%H:%M:%f%z")
-            appdata["extracted"] = datetime.now()
-            appdata["avail"] = (appdata["extracted"] - appdata["released"]).days
-            appdata["ratings_per_day"] = appdata["ratings"] / appdata["avail"]
-
-            result_list.append(appdata)
-        df = pd.DataFrame(data=result_list)
-
-        result = AppDataResult(
-            scraper=type[self],
-            page=self._page,
-            pages=self._pages,
-            size=response.headers.get("content-length", 0),
-            results=len(df),
-            content=df,
-        )
-        self._results = len(df)
-
-        return result
 
     def _set_next_url(self) -> None:
         """Sets the parameter variable for the next url."""

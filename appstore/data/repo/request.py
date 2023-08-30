@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 9th 2023 04:55:46 pm                                               #
-# Modified   : Thursday August 10th 2023 11:32:52 pm                                               #
+# Modified   : Tuesday August 29th 2023 05:40:53 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,6 +24,7 @@ import numpy as np
 from appstore.data.acquisition.review.request import ReviewRequest
 from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.file.config import FileConfig
 from sqlalchemy.dialects.mysql import (
     VARCHAR,
     INTEGER,
@@ -58,8 +59,8 @@ class ReviewRequestRepo(Repo):
 
     __name = "review_request"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(name=self.__name, database=database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def add(self, request: ReviewRequest) -> None:

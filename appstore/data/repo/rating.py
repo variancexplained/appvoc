@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:56:28 am                                                #
-# Modified   : Monday August 28th 2023 01:26:25 pm                                                 #
+# Modified   : Tuesday August 29th 2023 05:40:27 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,6 +25,7 @@ from appstore.data.entity.rating import Rating
 from appstore.data.dataset.rating import RatingDataset
 from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.file.config import FileConfig
 from sqlalchemy.dialects.mysql import (
     BIGINT,
     VARCHAR,
@@ -49,7 +50,7 @@ DATAFRAME_DTYPES = {
     "fivestar": np.int64,
 }
 PARSE_DATES = {
-    "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    # "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 # ------------------------------------------------------------------------------------------------ #
 #                                      DATABASE DATA TYPES                                         #
@@ -67,7 +68,7 @@ DATABASE_DTYPES = {
     "threestar": BIGINT,
     "fourstar": BIGINT,
     "fivestar": BIGINT,
-    "extracted": VARCHAR(32),
+    # "extracted": VARCHAR(32),
 }
 
 
@@ -81,8 +82,8 @@ class RatingRepo(Repo):
 
     __name = "rating"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(name=self.__name, database=database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def load(self, data: pd.DataFrame) -> None:

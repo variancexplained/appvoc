@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Sunday August 27th 2023 12:36:22 am                                                 #
+# Modified   : Tuesday August 29th 2023 05:44:05 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -29,6 +29,7 @@ import pandas as pd
 
 from appstore.infrastructure.database.base import Database
 from appstore.infrastructure.file.io import IOService
+from appstore.infrastructure.file.config import FileConfig
 
 # ------------------------------------------------------------------------------------------------ #
 load_dotenv()
@@ -43,9 +44,10 @@ class Repo(ABC):
         database(Database): Database containing data to access.
     """
 
-    def __init__(self, name: str, database: Database) -> None:
+    def __init__(self, name: str, database: Database, config=FileConfig) -> None:
         self._name = name
         self._database = database
+        self._config = config()
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @abstractmethod
@@ -264,7 +266,7 @@ class Repo(ABC):
         """
         df = self.getall()
         if directory is None:
-            basedir = os.getenv(key="DATASETS")
+            basedir = self._config.datasets
             directory = os.path.join(basedir, self._name)
 
         if with_datetime:

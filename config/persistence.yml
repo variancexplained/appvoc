@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 12:01:04 pm                                                #
-# Modified   : Sunday August 27th 2023 05:50:08 am                                                 #
+# Modified   : Tuesday August 29th 2023 03:44:02 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,23 +24,29 @@
 database:
   name:
     prod: appstore
+    raw:  appstore_raw
     test: appstore_test
   backup:
-    prod: data/backup/database
-    test: tests/data/backup/database
+    prod: data/prod/database
+    raw: data/raw/database
+    test: tests/data/database
 
 file:
   archive:
-    prod: data/backup/archive
-    test: tests/data/backup/archive
+    prod: data/prod/archive
+    raw: data/raw/archive
+    test: tests/data/archive
   staging:
-    prod: data/backup/archive/staging
-    test: tests/data/backup/archive/staging
+    prod: data/prod/archive/staging
+    raw: data/raw/archive/staging
+    test: tests/data/archive/staging
   datasets:
-    prod: data/backup/datasets
+    prod: data/prod/datasets
+    raw: data/raw/datasets
     test: tests/data/datasets
 
 cloud:
   aws_bucket:
-    prod: appstore-dataset
+    prod: appstore-final
+    raw: appstore_raw
     test: appstore-tests

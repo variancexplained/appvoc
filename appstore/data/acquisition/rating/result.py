@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Monday August 28th 2023 10:28:40 am                                                 #
+# Modified   : Tuesday August 29th 2023 03:47:00 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,7 +19,6 @@
 """Defines the Result Object for Rating Responses"""
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import datetime
 
 from appstore.data.acquisition.base import Result
 from appstore.infrastructure.web.utils import getsize
@@ -64,5 +63,4 @@ class RatingResult(Result):
         page["threestar"] = response["ratingCountList"][2]
         page["fourstar"] = response["ratingCountList"][3]
         page["fivestar"] = response["ratingCountList"][4]
-        page["extracted"] = datetime.now()
         self.content.append(page)

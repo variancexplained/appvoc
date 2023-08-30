@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Monday August 28th 2023 01:27:13 pm                                                 #
+# Modified   : Tuesday August 29th 2023 05:41:12 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -25,6 +25,7 @@ from appstore.data.repo.base import Repo
 from appstore.data.entity.review import Review
 from appstore.data.dataset.review import ReviewDataset
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.file.config import FileConfig
 from sqlalchemy.dialects.mysql import (
     LONGTEXT,
     BIGINT,
@@ -52,7 +53,7 @@ DATAFRAME_DTYPES = {
 
 PARSE_DATES = {
     "date": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
-    "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
+    # "extracted": {"errors": "coerce", "format": "%Y-%m-%d %H:%M:%S", "exact": False},
 }
 
 # ------------------------------------------------------------------------------------------------ #
@@ -71,7 +72,7 @@ DATABASE_DTYPES = {
     "vote_sum": BIGINT,
     "vote_count": BIGINT,
     "date": VARCHAR(32),
-    "extracted": VARCHAR(32),
+    #    "extracted": VARCHAR(32),
 }
 
 
@@ -85,8 +86,8 @@ class ReviewRepo(Repo):
 
     __name = "review"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(name=self.__name, database=database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def load(self, data: pd.DataFrame) -> None:

@@ -23,6 +23,7 @@ tests/scripts/*.*
 # Notes and references
 /notes
 /references
+research
 
 # Distribution / packaging
 .Python

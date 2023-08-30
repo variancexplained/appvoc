@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Monday August 28th 2023 09:02:22 am                                                 #
+# Modified   : Tuesday August 29th 2023 05:47:58 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -73,13 +73,14 @@ class FileContainer(containers.DeclarativeContainer):
 class PersistenceContainer(containers.DeclarativeContainer):
     db = providers.Singleton(MySQLDatabase, config=DatabaseConfig)
 
-    appdata_repo = providers.Singleton(AppDataRepo, database=db)
-    review_repo = providers.Singleton(ReviewRepo, database=db)
-    rating_repo = providers.Singleton(RatingRepo, database=db)
-    job_repo = providers.Singleton(JobRepo, database=db)
-    rating_jobrun_repo = providers.Singleton(RatingJobRunRepo, database=db)
-    review_jobrun_repo = providers.Singleton(ReviewJobRunRepo, database=db)
-    review_request_repo = providers.Singleton(ReviewRequestRepo, database=db)
+    appdata_repo = providers.Singleton(AppDataRepo, database=db, config=FileConfig)
+    review_repo = providers.Singleton(ReviewRepo, database=db, config=FileConfig)
+    rating_repo = providers.Singleton(RatingRepo, database=db, config=FileConfig)
+    job_repo = providers.Singleton(JobRepo, database=db, config=FileConfig)
+    project_repo = providers.Singleton(AppDataProjectRepo, database=db, config=FileConfig)
+    rating_jobrun_repo = providers.Singleton(RatingJobRunRepo, database=db, config=FileConfig)
+    review_jobrun_repo = providers.Singleton(ReviewJobRunRepo, database=db, config=FileConfig)
+    review_request_repo = providers.Singleton(ReviewRequestRepo, database=db, config=FileConfig)
 
     uow = providers.Singleton(
         UoW,

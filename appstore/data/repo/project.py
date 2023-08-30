@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Thursday August 10th 2023 11:32:55 pm                                               #
+# Modified   : Tuesday August 29th 2023 05:52:40 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,6 +26,7 @@ import pandas as pd
 from appstore.data.acquisition.appdata.project import AppDataProject
 from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.file.config import FileConfig
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -38,13 +39,21 @@ class AppDataProjectRepo(Repo):
 
     __name = "appdata_project"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(name=self.__name, database=database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     @property
     def summary(self) -> pd.DataFrame:
         return self.getall()
+
+    def load(self, data: pd.DataFrame) -> None:
+        """Adds the dataframe rows to the designated table.
+
+        Args:
+            data (pd.DataFrame): DataFrame containing rows to add to the table.
+        """
+        pass  # Abstract method
 
     def get(self, id: str) -> AppDataProject:
         """Returns a Project instance for the designated id
@@ -73,7 +82,7 @@ class AppDataProjectRepo(Repo):
         else:
             msg = f"Exception. Multiple projects for {term}."
             self._logger.exception(msg)
-            raise Exception(msg)
+            raise Exception(msg)  # noqa
 
     def add(self, data: AppDataProject) -> None:
         """Adds a project to the repository.
@@ -92,7 +101,8 @@ class AppDataProjectRepo(Repo):
         Args:
             data (pd.DataFrame): DataFrame containing rows to add to the table.
         """
-        data = data.as_df()
+        if isinstance(data, AppDataProject):
+            data = data.as_df()
         self._database.insert(data=data, tablename=self._name, if_exists="replace")
         msg = f"Replace {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)

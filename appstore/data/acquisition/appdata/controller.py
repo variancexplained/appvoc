@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:23:40 pm                                                  #
-# Modified   : Thursday August 10th 2023 11:33:10 pm                                               #
+# Modified   : Tuesday August 29th 2023 07:21:15 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -24,7 +24,6 @@ from typing import Union
 
 from dependency_injector.wiring import Provide, inject
 
-from appstore.data.acquisition.base import Controller
 from appstore.data.acquisition.appdata.scraper import AppDataScraper
 from appstore.data.acquisition.appdata.project import AppDataProject
 from appstore.data.acquisition.appdata.result import AppDataResult
@@ -35,7 +34,7 @@ from appstore.container import AppstoreContainer
 # ------------------------------------------------------------------------------------------------ #
 #                            APPSTORE APP DATA CONTROLLER                                          #
 # ------------------------------------------------------------------------------------------------ #
-class AppDataController(Controller):
+class AppDataController:
     """AppStore App Data Controller encapsulates a scraping project.
 
     Note: Authorization is required to run controllers.
@@ -58,14 +57,15 @@ class AppDataController(Controller):
         max_results_per_page: int = 200,
         verbose: int = 10,
         backup_to_file: bool = True,
+        failure_threshold: int = 10,
     ) -> None:
-        super().__init__()
         self._uow = uow
         self._scraper = scraper
         self._verbose = verbose
         self._max_pages = max_pages
         self._max_results_per_page = max_results_per_page
         self._backup_to_file = backup_to_file
+        self._failure_threshold = failure_threshold
 
         # Stats
         self._page = 0
@@ -74,6 +74,7 @@ class AppDataController(Controller):
         self._rate = 0
         self._started = None
         self._duration = None
+        self._failures = 0
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -83,14 +84,11 @@ class AppDataController(Controller):
 
     def scrape(self, terms: Union[str, list]) -> None:
         """Implementation of the Scrape AppDataProject"""
-        if super().scrape():
-            terms = [terms] if isinstance(terms, str) else terms
 
-            for term in terms:
-                self._execute_project(term)
-        else:
-            msg = f"Running {self.__class__.__name__} is not authorized at this time."
-            self._logger.info(msg)
+        terms = [terms] if isinstance(terms, str) else terms
+
+        for term in terms:
+            self._execute_project(term)
 
     def _execute_project(self, term: str) -> None:
         """Creates, executes and completes a project for the search term
@@ -108,9 +106,16 @@ class AppDataController(Controller):
                 max_pages=self._max_pages,
                 limit=self._max_results_per_page,
             ):
-                project.update(apps=len(result.content))
-                self._persist(result, project)
-                self._update_report_stats(project)
+                if result.is_valid():
+                    project.update(apps=len(result.content))
+                    self._persist(result, project)
+                    self._update_report_stats(project)
+                else:
+                    self._failures += 1
+
+                if self._failures >= self._failure_threshold:
+                    self._failure_threshold = 0
+                    break
 
             self._complete_project(project)
 
@@ -123,7 +128,8 @@ class AppDataController(Controller):
         self._started = datetime.datetime.now()
         try:
             project = self._uow.appdata_project_repo.get_project(
-                controller=self.__class__.__name__, term=term
+                controller=self.__class__.__name__,
+                term=term,
             )
             msg = f"\nRetrieved Project:\n{str(project)}"
             self._logger.info(msg)
@@ -137,7 +143,7 @@ class AppDataController(Controller):
                 term=term,
                 page_size=self._max_results_per_page,
             )
-            self._uow.appdata_project_repo.add(project)
+            self._uow.appdata_project_repo.load(project)
             self._uow.save()
 
             msg = f"\n\nStarted project for {term.capitalize()} apps."
@@ -156,7 +162,7 @@ class AppDataController(Controller):
 
     def _persist(self, result: AppDataResult, project: AppDataProject) -> None:
         """Persists the results in the repository, and updates the project."""
-        self._uow.appdata_repo.add(result.content)
+        self._uow.appdata_repo.load(result.content)
         self._uow.appdata_project_repo.update(data=project)
         self._uow.save()
 
@@ -173,6 +179,9 @@ class AppDataController(Controller):
         project.complete()
         self._uow.appdata_project_repo.update(data=project)
         self._uow.save()
+
+        # Run dedup
+        self._uow.appdata_repo.dedup()
 
         # If backing up,  save the repo to archive.
         if self._backup_to_file:

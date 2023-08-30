@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Thursday August 10th 2023 11:32:57 pm                                               #
+# Modified   : Tuesday August 29th 2023 05:54:34 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -26,6 +26,7 @@ from appstore.data.acquisition.review.job import ReviewJobRun
 from appstore.data.acquisition.rating.job import RatingJobRun
 from appstore.data.repo.base import Repo
 from appstore.infrastructure.database.base import Database
+from appstore.infrastructure.file.config import FileConfig
 from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BIGINT, FLOAT, TINYINT
 
 # ------------------------------------------------------------------------------------------------ #
@@ -61,8 +62,8 @@ class JobRepo(Repo):
 
     __name = "job"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(name=self.__name, database=database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
     def add(self, job: Job) -> None:
@@ -213,8 +214,8 @@ RATING_JOBRUN_DATABASE_DTYPES = {
 class RatingJobRunRepo(Repo):
     __name = "rating_jobrun"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(self.__name, database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
 
     def add(self, jobrun: RatingJobRun) -> None:
         """Adds a job to the repo.
@@ -395,8 +396,8 @@ REVIEW_JOBRUN_DATABASE_DTYPES = {
 class ReviewJobRunRepo(Repo):
     __name = "review_jobrun"
 
-    def __init__(self, database: Database) -> None:
-        super().__init__(self.__name, database)
+    def __init__(self, database: Database, config=FileConfig) -> None:
+        super().__init__(name=self.__name, database=database, config=config)
 
     def add(self, jobrun: ReviewJobRun) -> None:
         """Adds a job to the repo.
