@@ -11,14 +11,15 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Tuesday August 29th 2023 03:47:28 am                                                #
+# Modified   : Thursday August 31st 2023 11:49:50 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Defines the Result Object for Rating Responses"""
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 import requests
 import pandas as pd
@@ -40,6 +41,7 @@ class ReviewResult(Result):
 
     """
 
+    content: List = field(default_factory=lambda: [])
     app: App = None
     reviews: int = 0
     index: int = 0

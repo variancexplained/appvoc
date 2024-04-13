@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 21st 2023 03:53:33 am                                                    #
-# Modified   : Monday August 28th 2023 08:57:00 am                                                 #
+# Modified   : Wednesday August 30th 2023 07:40:45 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -50,7 +50,8 @@ class AppDataDataset(Dataset):
         summary = self._df["category"].value_counts().reset_index()
         summary.columns = ["category", "Examples"]
         df2 = self._df.groupby(by="category")["id"].nunique().to_frame()
-        df3 = self._df.groupby(by="category")["rating"].mean().to_frame()
+        rated = self._df.loc[self._df["rating"] > 0]
+        df3 = rated.groupby(by="category")["rating"].mean().to_frame()
         df4 = self._df.groupby(by="category")["ratings"].sum().to_frame()
 
         summary = summary.join(df2, on="category")

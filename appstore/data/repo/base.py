@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 11:34:11 am                                                  #
-# Modified   : Tuesday August 29th 2023 05:44:05 pm                                                #
+# Modified   : Wednesday August 30th 2023 07:22:16 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -190,6 +190,7 @@ class Repo(ABC):
         query = f"DELETE FROM {self._name} WHERE id = :id;"
         params = {"id": id}
         self._database.delete(query=query, params=params)
+        self.save()
 
     def delete_by_category(self, category_id: Union[str, int]) -> int:
         """Deletes the entities by category_id
@@ -201,6 +202,7 @@ class Repo(ABC):
         query = f"DELETE FROM {self._name} WHERE category_id = :category_id;"
         params = {"category_id": category_id}
         self._database.delete(query=query, params=params)
+        self.save()
 
     def delete_all(self) -> int:
         """Deletes all entities from the repository."""
@@ -208,6 +210,7 @@ class Repo(ABC):
         query = f"DELETE FROM {self._name};"
         params = {}
         self._database.delete(query=query, params=params)
+        self.save()
 
     def get_duplicates(self, by: str = "id") -> pd.DataFrame:
         """Returns duplicate rows examing the column or columns in 'by'.
@@ -219,33 +222,17 @@ class Repo(ABC):
         counts = df[by].value_counts(sort=True, ascending=False, normalize=False).reset_index()
         counts
 
-    def dedup(self, keep: str = "last") -> None:
-        """Removes duplicates in the repository"""
-
+    def dedup(self, keep: str = "last", subset: str = "id") -> None:
+        """Removes duplicates by id"""
         df = self.getall()
-        rows = df.shape[0]
-        nids = df["id"].nunique()
-        if rows != nids:
-            msg = f"\nThere are {rows} rows and {nids} unique ids. Do you want to dedup? (y/n)"
-            dedup = input(msg)
-            if "y" in dedup.lower():
-                df2 = df.drop_duplicates(keep=keep)
-                rows2 = df2.shape[0]
-                nids2 = df2["id"].nunique()
-                if rows == rows2:
-                    msg = "There are no duplicate rows; however, there may be duplicate ids. Check your data."
-                    self._logger.info(msg)
-                else:
-                    msg = (
-                        f"\nDedup will reduce rows to {rows2} and {nids2} unique ids. Commit? (y/n)"
-                    )
-                    go = input(msg)
-                    if "y" in go.lower():
-                        self.replace(data=df2)
-                        deleted = rows - rows2
-                        msg = f"Removed {deleted} duplicates from the {self._name} repository."
-                        self._logger.info(msg)
-                        self.save()
+        n1 = df.shape[0]
+        df = df.drop_duplicates(subset=subset, keep=keep)
+        n2 = df.shape[0]
+        r = n1 - n2
+        self.replace(data=df)
+        self.save()
+        msg = f"Repository with {n1} observations dropped {r} duplicates leaving {n2} observations"
+        self._logger.info(msg)
 
     def save(self) -> None:
         """Saves the repository to file located in the designated directory."""

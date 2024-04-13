@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:54:37 am                                                #
-# Modified   : Tuesday August 29th 2023 05:41:12 pm                                                #
+# Modified   : Saturday April 13th 2024 02:50:38 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -149,3 +149,10 @@ class ReviewRepo(Repo):
         summary = df2.join(df3, on="category").reset_index()
         summary.columns = ["Category", "Reviews", "Apps"]
         return summary
+
+
+# ------------------------------------------------------------------------------------------------ #
+class ReviewDatasetRepo:
+    """Encapsulates a Hugging Face dataset containing training, validation, and test review data. """
+    directory = "data/prod/datasets/reviews/books"
+    def __init__(self, directory: str = None)

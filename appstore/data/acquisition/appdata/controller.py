@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:23:40 pm                                                  #
-# Modified   : Tuesday August 29th 2023 07:21:15 pm                                                #
+# Modified   : Thursday August 31st 2023 05:36:34 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -114,7 +114,7 @@ class AppDataController:
                     self._failures += 1
 
                 if self._failures >= self._failure_threshold:
-                    self._failure_threshold = 0
+                    self._failures = 0
                     break
 
             self._complete_project(project)

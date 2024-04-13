@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Tuesday August 29th 2023 05:39:06 pm                                                #
+# Modified   : Wednesday August 30th 2023 08:23:10 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -89,6 +89,23 @@ class AppDataRepo(Repo):
         super().__init__(name=self.__name, database=database, config=config)
         self._logger = logging.getLogger(f"{self.__class__.__name__}")
 
+    @property
+    def summary(self) -> None:
+        """Summarizes the data"""
+        df = self.getall()
+
+        summary = df["category"].value_counts().reset_index()
+        summary.columns = ["category", "Examples"]
+        df2 = df.groupby(by="category")["id"].nunique().to_frame()
+        df3 = df.groupby(by="category")["rating"].mean().to_frame()
+        df4 = df.groupby(by="category")["ratings"].sum().to_frame()
+
+        summary = summary.join(df2, on="category")
+        summary = summary.join(df3, on="category")
+        summary = summary.join(df4, on="category")
+        summary.columns = ["Category", "Examples", "Apps", "Average Rating", "Rating Count"]
+        return summary
+
     def load(self, data: pd.DataFrame) -> None:
         """Adds the dataframe rows to the designated table.
 
@@ -98,6 +115,7 @@ class AppDataRepo(Repo):
         self._database.insert(
             data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="append"
         )
+        self.save()
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
 
@@ -149,22 +167,6 @@ class AppDataRepo(Repo):
         self._database.insert(
             data=data, tablename=self._name, dtype=DATABASE_DTYPES, if_exists="replace"
         )
+        self.save()
         msg = f"Replaced {self._name} repository data with {data.shape[0]} rows."
         self._logger.debug(msg)
-
-    @property
-    def summary(self) -> None:
-        """Summarizes the data"""
-        df = self.getall()
-
-        summary = df["category"].value_counts().reset_index()
-        summary.columns = ["category", "Examples"]
-        df2 = df.groupby(by="category")["id"].nunique().to_frame()
-        df3 = df.groupby(by="category")["rating"].mean().to_frame()
-        df4 = df.groupby(by="category")["ratings"].sum().to_frame()
-
-        summary = summary.join(df2, on="category")
-        summary = summary.join(df3, on="category")
-        summary = summary.join(df4, on="category")
-        summary.columns = ["Category", "Examples", "Apps", "Average Rating", "Rating Count"]
-        return summary

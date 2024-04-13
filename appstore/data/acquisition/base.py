@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/appstore                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Thursday August 10th 2023 11:33:11 pm                                               #
+# Modified   : Thursday August 31st 2023 10:49:14 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 from datetime import datetime
 from dotenv import load_dotenv
 from abc import ABC, abstractmethod, abstractclassmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 import pandas as pd
@@ -236,7 +236,7 @@ class App(Entity):
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class Result(Entity):
-    content: list[dict] = field(default_factory=list)
+    content: Any = None
     size: int = 0
     data_errors: int = 0
     client_errors: int = 0
@@ -254,4 +254,7 @@ class Result(Entity):
         return pd.DataFrame(self.content)
 
     def is_valid(self) -> bool:
-        return len(self.content) > 0
+        if self.content is None:
+            return False
+        else:
+            return len(self.content) > 0
