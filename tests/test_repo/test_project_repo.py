@@ -7,7 +7,7 @@
 # Filename   : /tests/test_repo/test_project_repo.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
+# Email      : john@variancexplained.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 04:40:41 pm                                                  #
@@ -22,7 +22,7 @@ import pytest
 import logging
 import pandas as pd
 
-from appstore.data.acquisition.appdata.project import AppDataProject
+from appvoc.data.acquisition.appdata.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
 PROJECT = AppDataProject(

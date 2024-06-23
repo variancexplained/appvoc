@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_repo/test_export.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday August 26th 2023 04:06:15 pm                                               #
 # Modified   : Saturday August 26th 2023 04:16:43 pm                                               #
@@ -88,7 +88,9 @@ class TestExportRepo:  # pragma: no cover
         repo = appdata_repo_loaded
         DIRECTORY = "tests/data/repo/export/appdata/"
         # Export csv by category with datetime
-        files = repo.export(directory=DIRECTORY, format="csv", by_category=True, with_datetime=True)
+        files = repo.export(
+            directory=DIRECTORY, format="csv", by_category=True, with_datetime=True
+        )
         for file in files:
             assert os.path.exists(file)
         # Export pkl, no category no datetime
@@ -126,7 +128,9 @@ class TestExportRepo:  # pragma: no cover
         repo = rating_repo_loaded
         DIRECTORY = "tests/data/repo/export/ratings/"
         # Export csv by category with datetime
-        files = repo.export(directory=DIRECTORY, format="csv", by_category=True, with_datetime=True)
+        files = repo.export(
+            directory=DIRECTORY, format="csv", by_category=True, with_datetime=True
+        )
         for file in files:
             assert os.path.exists(file)
         # Export pkl, no category no datetime
@@ -163,7 +167,9 @@ class TestExportRepo:  # pragma: no cover
         repo = review_repo_loaded
         DIRECTORY = "tests/data/repo/export/reviews/"
         # Export csv by category with datetime
-        files = repo.export(directory=DIRECTORY, format="tsv", by_category=True, with_datetime=True)
+        files = repo.export(
+            directory=DIRECTORY, format="tsv", by_category=True, with_datetime=True
+        )
         for file in files:
             assert os.path.exists(file)
         # Export pkl, no category no datetime

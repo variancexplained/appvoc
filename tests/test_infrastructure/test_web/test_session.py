@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_infrastructure/test_web/test_session.py                                 #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday July 31st 2023 05:20:39 pm                                                   #
 # Modified   : Wednesday August 2nd 2023 01:12:41 am                                               #

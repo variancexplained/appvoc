@@ -1,588 +1,764 @@
-
-
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>1. Introduction &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
-</title>
-  
-  
-  
+  <title>1. Introduction &#8212; &lt;p style=&#34;text-align:left&#34;&gt;&lt;span
+    style=&#34;color:#002B5B&#34;&gt;&lt;span style=&#34;font-size:36px&#34;&gt;&lt;span
+    style=&#34;font-family:Lato&#34;&gt;VoCMobile.ai&lt;/span&gt;&lt;/span&gt;&lt;span
+    style=&#34;font-size:18px&#34;&gt;&lt;span style=&#34;font-family:Lato&#34;&gt;Generative-AI Powered Mobile App
+    Voice of Customer and Analytics&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+  </title>
+
+
+
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
+
   <!-- Loaded before other Sphinx assets -->
   <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-  
+
   <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+  <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+  <link rel="stylesheet"
+    href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+  <link rel="stylesheet" type="text/css"
+    href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'content/1_intro/1_intro';</script>
-    <link rel="shortcut icon" href="../../_static/favicon.png"/>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="References" href="../99_references.html" />
-    <link rel="prev" title="VoCAI: Voice of the Customer via Artificial Intelligence" href="../forward.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+  <script src="../../_static/jquery.js"></script>
+  <script src="../../_static/underscore.js"></script>
+  <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+  <script src="../../_static/doctools.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <script src="../../_static/copybutton.js"></script>
+  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+  <script>let toggleHintShow = 'Click to show';</script>
+  <script>let toggleHintHide = 'Click to hide';</script>
+  <script>let toggleOpenOnPrint = 'true';</script>
+  <script src="../../_static/togglebutton.js"></script>
+  <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+  <script src="../../_static/design-tabs.js"></script>
+  <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+    const thebe_selector = ".thebe,.cell"
+    const thebe_selector_input = "pre"
+    const thebe_selector_output = ".output, .cell_output"
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js"></script>
+  <script>window.MathJax = { "options": { "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area" } }</script>
+  <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>DOCUMENTATION_OPTIONS.pagename = 'content/1_intro/1_intro';</script>
+  <link rel="shortcut icon" href="../../_static/favicon.png" />
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="next" title="References" href="../99_references.html" />
+  <link rel="prev" title="VoCAI: Voice of the Customer via Artificial Intelligence" href="../forward.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en" />
+</head>
 
-  
-  
+
+<body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%"
+  data-default-mode="">
+
+
+
   <a class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
+
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary" />
   <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
+
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary" />
   <label class="overlay overlay-secondary" for="__secondary"></label>
-  
+
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
+      <form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..."
+          aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off"
+          spellcheck="false" />
+        <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+      </form>
+    </div>
   </div>
-  
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
-  
+
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+  </nav>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
+
       <div class="bd-sidebar-primary bd-sidebar">
-        
 
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-  
 
-<a class="navbar-brand logo" href="../forward.html">
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
-</a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../forward.html">
-                    VoCAI: Voice of the Customer via Artificial Intelligence
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">1. Introduction</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Introduction</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../99_references.html">References</a></li>
-</ul>
 
-    </div>
-</nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
+        <div class="sidebar-header-items sidebar-primary__section">
+
+
+
+
+        </div>
+
+        <div class="sidebar-primary-items__start sidebar-primary__section">
+          <div class="sidebar-primary-item">
+
+
+            <a class="navbar-brand logo" href="../forward.html">
+
+
+
+
+
+
+
+
+
+              <img src="../../_static/logo.png" class="logo__image only-light" alt="Logo image" />
+              <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+
+
+            </a>
+          </div>
+          <div class="sidebar-primary-item">
+            <nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+              <div class="bd-toc-item navbar-nav active">
+
+                <ul class="nav bd-sidenav bd-sidenav__home-link">
+                  <li class="toctree-l1">
+                    <a class="reference internal" href="../forward.html">
+                      VoCAI: Voice of the Customer via Artificial Intelligence
+                    </a>
+                  </li>
+                </ul>
+                <p aria-level="2" class="caption" role="heading"><span class="caption-text">1. Introduction</span></p>
+                <ul class="current nav bd-sidenav">
+                  <li class="toctree-l1 current active"><a class="current reference internal" href="#">1.
+                      Introduction</a></li>
+                </ul>
+                <p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+                <ul class="nav bd-sidenav">
+                  <li class="toctree-l1"><a class="reference internal" href="../99_references.html">References</a></li>
+                </ul>
+
+              </div>
+            </nav>
+          </div>
+        </div>
+
+
+        <div class="sidebar-primary-items__end sidebar-primary__section">
+        </div>
+
+        <div id="rtd-footer-container"></div>
 
 
       </div>
-      
+
       <main id="main-content" class="bd-main">
-        
-        
-
-<div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
-<div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
-</label></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<div class="article-header-buttons">
 
 
 
+        <div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+
+            <div class="bd-header-article">
+              <div class="header-article-items header-article__inner">
+
+                <div class="header-article-items__start">
+
+                  <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm"
+                      for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom"
+                      data-bs-toggle="tooltip">
+                      <span class="fa-solid fa-bars"></span>
+                    </label></div>
+
+                </div>
 
 
-<div class="dropdown dropdown-launch-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
-    <i class="fas fa-rocket"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://mybinder.org/v2/gh/john-james-ai/appstore/main?urlpath=tree/jbook/content/1_intro/1_intro.md" target="_blank"
-   class="btn btn-sm dropdown-item"
-   title="Launch onBinder"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
+                <div class="header-article-items__end">
 
-<span class="btn__icon-container">
-  
-    <img src="../../_static/images/logo_binder.svg">
-  </span>
-<span class="btn__text-container">Binder</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://colab.research.google.com/github/john-james-ai/appstore/blob/main/jbook/content/1_intro/1_intro.md" target="_blank"
-   class="btn btn-sm dropdown-item"
-   title="Launch onColab"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
+                  <div class="header-article-item">
 
-<span class="btn__icon-container">
-  
-    <img src="../../_static/images/logo_colab.png">
-  </span>
-<span class="btn__text-container">Colab</span>
-</a>
-</li>
-      
-  </ul>
-</div>
+                    <div class="article-header-buttons">
 
 
 
 
 
+                      <div class="dropdown dropdown-launch-buttons">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false" aria-label="Launch interactive content">
+                          <i class="fas fa-rocket"></i>
+                        </button>
+                        <ul class="dropdown-menu">
 
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/john-james-ai/appstore" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
 
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/john-james-ai/appstore/edit/main/jbook/content/1_intro/1_intro.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
 
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/john-james-ai/appstore/issues/new?title=Issue%20on%20page%20%2Fcontent/1_intro/1_intro.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
+                          <li><a
+                              href="https://mybinder.org/v2/gh/variancexplained/appvoc/main?urlpath=tree/jbook/content/1_intro/1_intro.md"
+                              target="_blank" class="btn btn-sm dropdown-item" title="Launch onBinder"
+                              data-bs-placement="left" data-bs-toggle="tooltip">
 
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
+
+                              <span class="btn__icon-container">
+
+                                <img src="../../_static/images/logo_binder.svg">
+                              </span>
+                              <span class="btn__text-container">Binder</span>
+                            </a>
+                          </li>
+
+
+
+
+                          <li><a
+                              href="https://colab.research.google.com/github/variancexplained/appvoc/blob/main/jbook/content/1_intro/1_intro.md"
+                              target="_blank" class="btn btn-sm dropdown-item" title="Launch onColab"
+                              data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+
+                                <img src="../../_static/images/logo_colab.png">
+                              </span>
+                              <span class="btn__text-container">Colab</span>
+                            </a>
+                          </li>
+
+                        </ul>
+                      </div>
 
 
 
 
 
 
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../../_sources/content/1_intro/1_intro.ipynb" target="_blank"
-   class="btn btn-sm btn-download-notebook-button dropdown-item"
-   title="Download notebook file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
+                      <div class="dropdown dropdown-source-buttons">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false" aria-label="Source repositories">
+                          <i class="fab fa-github"></i>
+                        </button>
+                        <ul class="dropdown-menu">
 
-<span class="btn__icon-container">
-  <i class="fas fa-code"></i>
-  </span>
-<span class="btn__text-container">.ipynb</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="../../_sources/content/1_intro/1_intro.md" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
 
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.md</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
 
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
+                          <li><a href="https://github.com/variancexplained/appvoc" target="_blank"
+                              class="btn btn-sm btn-source-repository-button dropdown-item" title="Source repository"
+                              data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+                                <i class="fab fa-github"></i>
+                              </span>
+                              <span class="btn__text-container">Repository</span>
+                            </a>
+                          </li>
 
 
 
 
-<button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
-  title="Fullscreen mode"
-  data-bs-placement="bottom" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
+                          <li><a
+                              href="https://github.com/variancexplained/appvoc/edit/main/jbook/content/1_intro/1_intro.md"
+                              target="_blank" class="btn btn-sm btn-source-edit-button dropdown-item"
+                              title="Suggest edit" data-bs-placement="left" data-bs-toggle="tooltip">
 
 
-<script>
-document.write(`
+                              <span class="btn__icon-container">
+                                <i class="fas fa-pencil-alt"></i>
+                              </span>
+                              <span class="btn__text-container">Suggest edit</span>
+                            </a>
+                          </li>
+
+
+
+
+                          <li><a
+                              href="https://github.com/variancexplained/appvoc/issues/new?title=Issue%20on%20page%20%2Fcontent/1_intro/1_intro.html&body=Your%20issue%20content%20here."
+                              target="_blank" class="btn btn-sm btn-source-issues-button dropdown-item"
+                              title="Open an issue" data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+                                <i class="fas fa-lightbulb"></i>
+                              </span>
+                              <span class="btn__text-container">Open issue</span>
+                            </a>
+                          </li>
+
+                        </ul>
+                      </div>
+
+
+
+
+
+
+                      <div class="dropdown dropdown-download-buttons">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false" aria-label="Download this page">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+
+
+
+                          <li><a href="../../_sources/content/1_intro/1_intro.ipynb" target="_blank"
+                              class="btn btn-sm btn-download-notebook-button dropdown-item"
+                              title="Download notebook file" data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+                                <i class="fas fa-code"></i>
+                              </span>
+                              <span class="btn__text-container">.ipynb</span>
+                            </a>
+                          </li>
+
+
+
+
+                          <li><a href="../../_sources/content/1_intro/1_intro.md" target="_blank"
+                              class="btn btn-sm btn-download-source-button dropdown-item" title="Download source file"
+                              data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+                                <i class="fas fa-file"></i>
+                              </span>
+                              <span class="btn__text-container">.md</span>
+                            </a>
+                          </li>
+
+
+
+
+                          <li>
+                            <button onclick="window.print()" class="btn btn-sm btn-download-pdf-button dropdown-item"
+                              title="Print to PDF" data-bs-placement="left" data-bs-toggle="tooltip">
+
+
+                              <span class="btn__icon-container">
+                                <i class="fas fa-file-pdf"></i>
+                              </span>
+                              <span class="btn__text-container">.pdf</span>
+                            </button>
+                          </li>
+
+                        </ul>
+                      </div>
+
+
+
+
+                      <button onclick="toggleFullScreen()" class="btn btn-sm btn-fullscreen-button"
+                        title="Fullscreen mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+
+
+                        <span class="btn__icon-container">
+                          <i class="fas fa-expand"></i>
+                        </span>
+
+                      </button>
+
+
+                      <script>
+                        document.write(`
   <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
     <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
     <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
 `);
-</script>
+                      </script>
 
-<script>
-document.write(`
+                      <script>
+                        document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
   </button>
 `);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
-</div></div>
-      
-    </div>
-  
-</div>
-</div>
-              
-              
+                      </script>
+                      <label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"
+                        title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+                        <span class="fa-solid fa-list"></span>
+                      </label>
+                    </div>
+                  </div>
 
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2> Contents </h2>
+                </div>
+
+              </div>
             </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-overview">1.1. Dataset Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection-methodology">1.2. Data Collection Methodology</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-and-organization">1.3. Structure and Organization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-processing-and-manipulation">1.4. Data Processing and Manipulation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sharing-and-access">1.5. Sharing and Access</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-specifics">1.6. Data Specifics</a></li>
-</ul>
-            </nav>
-        </div>
-    </div>
-</div>
 
-              
-                
-<div id="searchbox"></div>
-                <article class="bd-article" role="main">
-                  
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
-<p>The global mobile application market, valued at <span class="math notranslate nohighlight">\( 475.9 billion in 2022, is expected to reach \)</span>755.50 $billion in revenue by 2027, growing at 8.58% compound annual growth rate (CAGR) <span id="id1">[<a class="reference internal" href="../99_references.html#id1320" title="App - Worldwide \textbar  Statista Market Forecast. URL: https://www.statista.com/outlook/dmo/app/worldwide (visited on 2023-08-29).">1</a>]</span>.</p>
-<p>[[enter revenue by segment]]</p>
-<p>Increased internet penetration, low-cost mobile data plans, and the availability and range of smartphones, tablets,  and wearable mobile devices have bolstered demand for, and availability of, gaming, entertainment, e-commerce, healthcare, and education applications. In the wake of the coronavirus (COVID-19) outbreak, social-media, gaming and entertainment-based applications led the market in downloads.</p>
-<p>[[enter line plot downloads by segment.]]</p>
-<p>The ubiquity of the iPhone propelled Apple to one of the most valuable companies in the world, with revenue increasing from <span class="math notranslate nohighlight">\(37.4 billion in 2008, the year the iPhone and App Store were launched, to over \)</span>394.3 billion in 2022 <span id="id2">[<a class="reference internal" href="../99_references.html#id1305" title="App Data Report 2023. URL: https://www.businessofapps.com/data/report-app-data/ (visited on 2023-08-22).">2</a>]</span>.</p>
-<p>[[apple revenue]]</p>
-<p>Apple’s App Store ecosystem, host to nearly 1.8 million apps <span id="id3">[<a class="reference internal" href="../99_references.html#id1305" title="App Data Report 2023. URL: https://www.businessofapps.com/data/report-app-data/ (visited on 2023-08-22).">2</a>]</span>  across 70 categories, were downloaded or re-downloaded on average 1.5 billion times each week in 2022.  In all, Apple facilitated some $1.1 trillion in developer billings and sales last year <span id="id4">[<a class="reference internal" href="../99_references.html#id1303" title="Developers generated \$1.1 trillion in the App Store ecosystem in 2022. URL: https://www.apple.com/newsroom/2023/05/developers-generated-one-point-one-trillion-in-the-app-store-ecosystem-in-2022/ (visited on 2023-08-22).">3</a>]</span>, accounting for over 62% of the global revenue share in 2022.</p>
-<p>“Companies need to prove their worth — day after day, month after month, year after year.”– Kaiser Mulla-Feroze.</p>
-<p>Yet, failure, to put it delicately, is a fact of life for app developers. Keeping customers engaged is no easy feat. The average mobile app loses nearly 77% of its Daily Active Users (DAUs) within the first three days of installation. Ninety percent of users abandon the app after a month, and by three months 95% of users are gone. The single-use abandonment rate stands at  25%, according to Localytics {cite}`` AppUninstallStatistics <code class="docutils literal notranslate"><span class="pre">.</span>&#160; <span class="pre">Based</span> <span class="pre">upon</span> <span class="pre">anonymized</span> <span class="pre">data</span> <span class="pre">points</span> <span class="pre">from</span> <span class="pre">over</span> <span class="pre">135</span> <span class="pre">million</span> <span class="pre">mobilephones,</span> <span class="pre">losing</span> <span class="pre">80%</span> <span class="pre">of</span> <span class="pre">your</span> <span class="pre">customer</span> <span class="pre">base</span> <span class="pre">in</span> <span class="pre">three</span> <span class="pre">days</span> <span class="pre">is</span> <span class="pre">status</span> <span class="pre">quo</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">mobile</span> <span class="pre">app</span> <span class="pre">industry</span> <span class="pre">{cite}</span></code>NewDataShows`.</p>
-<blockquote>
-<div><p>‘Users try out a lot of apps but decide which ones they want to ‘stop using’ within the first 3-7 days. Data show that the majority of users at day 7, tend to stick around much longer.</p>
-</div></blockquote>
-<p>Capturing users during that initial nascent period and retaining them over the long haul crucially requires an in-depth and nuanced understanding of the customer, her motivations, and needs at onboarding and as they evolve.</p>
-<p>This Voice of Customer (VoC) Analysis aims to explore the nature, and quality of the Apple mobile app customer experience, to characterize the degree of satisfaction  in the mobile user base.</p>
-<blockquote>
-<div><p>“Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question,
-which can always be made precise.” — John Tukey</p>
-</div></blockquote>
-<p>The following guiding questions were designed to elicit the unknown, latent, yet high-impact/high-value, customer experience in a process of exploration and discovery.</p>
-<ol class="arabic simple">
-<li><p>What best characterizes the nature of customer opinion within the mobile app market today?</p></li>
-<li><p>How can the intensity of customer opinion be understood?</p></li>
-<li><p>How do opinion and customer satisfaction vary within and across mobile app categories?</p></li>
-<li><p>What clusters of customer experience are revealed through the ratings and reviews.?</p></li>
-<li><p>What do the reviews, ratings and rating volume reveal about app creators/developers?</p></li>
-<li><p>To what degree do these data suggest unmet customer needs, and promising areas for opportunity discovery?</p></li>
-</ol>
-<p>To this end, app, rating, and review data for 26 app categories were sampled from the Apple App Store during the period from July 15th, 2023 through August 15th 2023. Exploratory techniques and text analysis methods were employed throughout the study to harvest insight into the customer experience.  The rest of this work is organized as follows: Section 2 covers the <strong>data quality analysis</strong>. The purpose of this profiling exercise was to assess the quality, correctness, structure, consistency, and suitability of the data for analysis.  Section 3 describes the <strong>exploratory data analysis,</strong> an depth analysis to discover trends, patterns, variable importance, and  the underlying structure of the data to verify assumptions and to gain  maximum insight from the data. Section 4 is a <strong>sentiment analysis</strong>, using natural language processing, text analysis, and computational  linguistics to identify, extract, and quantify customer sentiment. Section 5, <strong>cluster analysis</strong>, characterizes groups of customers, developers, and apps based on ratings, reviews, and common themes. Section 6 is a <strong>collocation analysis</strong> that reveals latent needs and topics from a quantitative analysis of the co-occurrence of words that happen more often than would be expected by chance.  Section 7 evaluates through thematic analysis, common themes, topics, ideas, and patterns of meaning that come up repeatedly in reviews. Finally, section 8, <strong>automatic summarization</strong> will employ AI methods for shortening a set of data computationally, to create a subset that represents the most important or relevant information within the original content.</p>
-<p>elaborates on concepts and themes in the reviews with a <strong>content analysis.</strong></p>
-<p>for analysisprofiling exercise the Voice of Customer have been employed Through quantitative methods and text analysis,</p>
-<p>This VoC Analysis comprises several exploratory and text analysis methods outlined as follows:</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>#</p></th>
-<th class="head"><p>Analysis</p></th>
-<th class="head"><p>Purpose</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1</p></td>
-<td><p>Data Quality Analysis</p></td>
-<td><p>Assess the quality, correctness, structure, consistency, and suitability   for analysis</p></td>
-</tr>
-<tr class="row-odd"><td><p>2</p></td>
-<td><p>Exploratory Data Analysis</p></td>
-<td><p>In-depth analysis to discover trends, patterns, variable importance, and   the underlying structure of the data to verify assumptions and to gain   maximum insight into the dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>Sentiment Analysis</p></td>
-<td><p>Use natural language processing, text analysis, and computational   linguistics to identify, extract, and quantify customer sentiment.</p></td>
-</tr>
-<tr class="row-odd"><td><p>4</p></td>
-<td><p>Automatic Summarizaation</p></td>
-<td><p>AI methods for shortening a set of data computationally, to create a   subset that represents the most important or relevant information within the   original content.</p></td>
-</tr>
-<tr class="row-even"><td><p>5</p></td>
-<td><p>Cluster Analysis</p></td>
-<td><p>Creating groups of customers, developers, and apps based on rating and   review feedback.</p></td>
-</tr>
-<tr class="row-odd"><td><p>6</p></td>
-<td><p>Content Analysis</p></td>
-<td><p>Quantitative and qualitative analysis of themes and concepts within   reviews.</p></td>
-</tr>
-<tr class="row-even"><td><p>7</p></td>
-<td><p>Thematic Analysis</p></td>
-<td><p>Identify common themes, topics, ideas, and patterns of meaning that come   up repeatedly in reviews.</p></td>
-</tr>
-<tr class="row-odd"><td><p>8</p></td>
-<td><p>Collocation Analysis</p></td>
-<td><p>Discover words in reviews that co-occur more often than would be expected   by chance.</p></td>
-</tr>
-</tbody>
-</table>
-<section id="dataset-overview">
-<h2><span class="section-number">1.1. </span>Dataset Overview<a class="headerlink" href="#dataset-overview" title="Permalink to this heading">#</a></h2>
-<p>This effort centers around three datasets comprising data obtained from the Apple App Store during May of 2023.</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Name</p></th>
-<th class="head"><p>Filename</p></th>
-<th class="head"><p>Description</p></th>
-<th class="head"><p>Examples</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>App Overview</p></td>
-<td><p>appdata.csv.gz</p></td>
-<td><p>Descriptive data, price, category, rating information</p></td>
-<td><p>475,132</p></td>
-</tr>
-<tr class="row-odd"><td><p>App Rating</p></td>
-<td><p>ratings.csv.gz</p></td>
-<td><p>Rating histogram and review counts</p></td>
-<td><p>9,999</p></td>
-</tr>
-<tr class="row-even"><td><p>App Reviews</p></td>
-<td><p>reviews.csv.gz</p></td>
-<td><p>Customer reviews</p></td>
-<td><p>999,999</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="data-collection-methodology">
-<h2><span class="section-number">1.2. </span>Data Collection Methodology<a class="headerlink" href="#data-collection-methodology" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="structure-and-organization">
-<h2><span class="section-number">1.3. </span>Structure and Organization<a class="headerlink" href="#structure-and-organization" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="data-processing-and-manipulation">
-<h2><span class="section-number">1.4. </span>Data Processing and Manipulation<a class="headerlink" href="#data-processing-and-manipulation" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="sharing-and-access">
-<h2><span class="section-number">1.5. </span>Sharing and Access<a class="headerlink" href="#sharing-and-access" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="data-specifics">
-<h2><span class="section-number">1.6. </span>Data Specifics<a class="headerlink" href="#data-specifics" title="Permalink to this heading">#</a></h2>
-</section>
-</section>
 
-    <script type="text/x-thebe-config">
+
+            <div id="jb-print-docs-body" class="onlyprint">
+              <h1>Introduction</h1>
+              <!-- Table of contents -->
+              <div id="print-main-content">
+                <div id="jb-print-toc">
+
+                  <div>
+                    <h2> Contents </h2>
+                  </div>
+                  <nav aria-label="Page">
+                    <ul class="visible nav section-nav flex-column">
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#dataset-overview">1.1. Dataset Overview</a></li>
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#data-collection-methodology">1.2. Data Collection Methodology</a></li>
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#structure-and-organization">1.3. Structure and Organization</a></li>
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#data-processing-and-manipulation">1.4. Data Processing and Manipulation</a></li>
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#sharing-and-access">1.5. Sharing and Access</a></li>
+                      <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                          href="#data-specifics">1.6. Data Specifics</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div id="searchbox"></div>
+            <article class="bd-article" role="main">
+
+              <section class="tex2jax_ignore mathjax_ignore" id="introduction">
+                <h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction"
+                    title="Permalink to this heading">#</a></h1>
+                <p>The global mobile application market, valued at <span class="math notranslate nohighlight">\( 475.9
+                    billion in 2022, is expected to reach \)</span>755.50 $billion in revenue by 2027, growing at 8.58%
+                  compound annual growth rate (CAGR) <span id="id1">[<a class="reference internal"
+                      href="../99_references.html#id1320"
+                      title="App - Worldwide \textbar  Statista Market Forecast. URL: https://www.statista.com/outlook/dmo/app/worldwide (visited on 2023-08-29).">1</a>]</span>.
+                </p>
+                <p>[[enter revenue by segment]]</p>
+                <p>Increased internet penetration, low-cost mobile data plans, and the availability and range of
+                  smartphones, tablets, and wearable mobile devices have bolstered demand for, and availability of,
+                  gaming, entertainment, e-commerce, healthcare, and education applications. In the wake of the
+                  coronavirus (COVID-19) outbreak, social-media, gaming and entertainment-based applications led the
+                  market in downloads.</p>
+                <p>[[enter line plot downloads by segment.]]</p>
+                <p>The ubiquity of the iPhone propelled Apple to one of the most valuable companies in the world, with
+                  revenue increasing from <span class="math notranslate nohighlight">\(37.4 billion in 2008, the year
+                    the iPhone and App Store were launched, to over \)</span>394.3 billion in 2022 <span id="id2">[<a
+                      class="reference internal" href="../99_references.html#id1305"
+                      title="App Data Report 2023. URL: https://www.businessofapps.com/data/report-app-data/ (visited on 2023-08-22).">2</a>]</span>.
+                </p>
+                <p>[[apple revenue]]</p>
+                <p>Apple’s App Store ecosystem, host to nearly 1.8 million apps <span id="id3">[<a
+                      class="reference internal" href="../99_references.html#id1305"
+                      title="App Data Report 2023. URL: https://www.businessofapps.com/data/report-app-data/ (visited on 2023-08-22).">2</a>]</span>
+                  across 70 categories, were downloaded or re-downloaded on average 1.5 billion times each week in 2022.
+                  In all, Apple facilitated some $1.1 trillion in developer billings and sales last year <span
+                    id="id4">[<a class="reference internal" href="../99_references.html#id1303"
+                      title="Developers generated \$1.1 trillion in the App Store ecosystem in 2022. URL: https://www.apple.com/newsroom/2023/05/developers-generated-one-point-one-trillion-in-the-app-store-ecosystem-in-2022/ (visited on 2023-08-22).">3</a>]</span>,
+                  accounting for over 62% of the global revenue share in 2022.</p>
+                <p>“Companies need to prove their worth — day after day, month after month, year after year.”– Kaiser
+                  Mulla-Feroze.</p>
+                <p>Yet, failure, to put it delicately, is a fact of life for app developers. Keeping customers engaged
+                  is no easy feat. The average mobile app loses nearly 77% of its Daily Active Users (DAUs) within the
+                  first three days of installation. Ninety percent of users abandon the app after a month, and by three
+                  months 95% of users are gone. The single-use abandonment rate stands at 25%, according to Localytics
+                  {cite}`` AppUninstallStatistics <code
+                    class="docutils literal notranslate"><span class="pre">.</span>&#160; <span class="pre">Based</span> <span class="pre">upon</span> <span class="pre">anonymized</span> <span class="pre">data</span> <span class="pre">points</span> <span class="pre">from</span> <span class="pre">over</span> <span class="pre">135</span> <span class="pre">million</span> <span class="pre">mobilephones,</span> <span class="pre">losing</span> <span class="pre">80%</span> <span class="pre">of</span> <span class="pre">your</span> <span class="pre">customer</span> <span class="pre">base</span> <span class="pre">in</span> <span class="pre">three</span> <span class="pre">days</span> <span class="pre">is</span> <span class="pre">status</span> <span class="pre">quo</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">mobile</span> <span class="pre">app</span> <span class="pre">industry</span> <span class="pre">{cite}</span></code>NewDataShows`.
+                </p>
+                <blockquote>
+                  <div>
+                    <p>‘Users try out a lot of apps but decide which ones they want to ‘stop using’ within the first 3-7
+                      days. Data show that the majority of users at day 7, tend to stick around much longer.</p>
+                  </div>
+                </blockquote>
+                <p>Capturing users during that initial nascent period and retaining them over the long haul crucially
+                  requires an in-depth and nuanced understanding of the customer, her motivations, and needs at
+                  onboarding and as they evolve.</p>
+                <p>This Voice of Customer (VoC) Analysis aims to explore the nature, and quality of the Apple mobile app
+                  customer experience, to characterize the degree of satisfaction in the mobile user base.</p>
+                <blockquote>
+                  <div>
+                    <p>“Far better an approximate answer to the right question, which is often vague, than an exact
+                      answer to the wrong question,
+                      which can always be made precise.” — John Tukey</p>
+                  </div>
+                </blockquote>
+                <p>The following guiding questions were designed to elicit the unknown, latent, yet
+                  high-impact/high-value, customer experience in a process of exploration and discovery.</p>
+                <ol class="arabic simple">
+                  <li>
+                    <p>What best characterizes the nature of customer opinion within the mobile app market today?</p>
+                  </li>
+                  <li>
+                    <p>How can the intensity of customer opinion be understood?</p>
+                  </li>
+                  <li>
+                    <p>How do opinion and customer satisfaction vary within and across mobile app categories?</p>
+                  </li>
+                  <li>
+                    <p>What clusters of customer experience are revealed through the ratings and reviews.?</p>
+                  </li>
+                  <li>
+                    <p>What do the reviews, ratings and rating volume reveal about app creators/developers?</p>
+                  </li>
+                  <li>
+                    <p>To what degree do these data suggest unmet customer needs, and promising areas for opportunity
+                      discovery?</p>
+                  </li>
+                </ol>
+                <p>To this end, app, rating, and review data for 26 app categories were sampled from the Apple App Store
+                  during the period from July 15th, 2023 through August 15th 2023. Exploratory techniques and text
+                  analysis methods were employed throughout the study to harvest insight into the customer experience.
+                  The rest of this work is organized as follows: Section 2 covers the <strong>data quality
+                    analysis</strong>. The purpose of this profiling exercise was to assess the quality, correctness,
+                  structure, consistency, and suitability of the data for analysis. Section 3 describes the
+                  <strong>exploratory data analysis,</strong> an depth analysis to discover trends, patterns, variable
+                  importance, and the underlying structure of the data to verify assumptions and to gain maximum insight
+                  from the data. Section 4 is a <strong>sentiment analysis</strong>, using natural language processing,
+                  text analysis, and computational linguistics to identify, extract, and quantify customer sentiment.
+                  Section 5, <strong>cluster analysis</strong>, characterizes groups of customers, developers, and apps
+                  based on ratings, reviews, and common themes. Section 6 is a <strong>collocation analysis</strong>
+                  that reveals latent needs and topics from a quantitative analysis of the co-occurrence of words that
+                  happen more often than would be expected by chance. Section 7 evaluates through thematic analysis,
+                  common themes, topics, ideas, and patterns of meaning that come up repeatedly in reviews. Finally,
+                  section 8, <strong>automatic summarization</strong> will employ AI methods for shortening a set of
+                  data computationally, to create a subset that represents the most important or relevant information
+                  within the original content.</p>
+                <p>elaborates on concepts and themes in the reviews with a <strong>content analysis.</strong></p>
+                <p>for analysisprofiling exercise the Voice of Customer have been employed Through quantitative methods
+                  and text analysis,</p>
+                <p>This VoC Analysis comprises several exploratory and text analysis methods outlined as follows:</p>
+                <table class="table">
+                  <thead>
+                    <tr class="row-odd">
+                      <th class="head">
+                        <p>#</p>
+                      </th>
+                      <th class="head">
+                        <p>Analysis</p>
+                      </th>
+                      <th class="head">
+                        <p>Purpose</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row-even">
+                      <td>
+                        <p>1</p>
+                      </td>
+                      <td>
+                        <p>Data Quality Analysis</p>
+                      </td>
+                      <td>
+                        <p>Assess the quality, correctness, structure, consistency, and suitability for analysis</p>
+                      </td>
+                    </tr>
+                    <tr class="row-odd">
+                      <td>
+                        <p>2</p>
+                      </td>
+                      <td>
+                        <p>Exploratory Data Analysis</p>
+                      </td>
+                      <td>
+                        <p>In-depth analysis to discover trends, patterns, variable importance, and the underlying
+                          structure of the data to verify assumptions and to gain maximum insight into the dataset.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-even">
+                      <td>
+                        <p>3</p>
+                      </td>
+                      <td>
+                        <p>Sentiment Analysis</p>
+                      </td>
+                      <td>
+                        <p>Use natural language processing, text analysis, and computational linguistics to identify,
+                          extract, and quantify customer sentiment.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-odd">
+                      <td>
+                        <p>4</p>
+                      </td>
+                      <td>
+                        <p>Automatic Summarizaation</p>
+                      </td>
+                      <td>
+                        <p>AI methods for shortening a set of data computationally, to create a subset that represents
+                          the most important or relevant information within the original content.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-even">
+                      <td>
+                        <p>5</p>
+                      </td>
+                      <td>
+                        <p>Cluster Analysis</p>
+                      </td>
+                      <td>
+                        <p>Creating groups of customers, developers, and apps based on rating and review feedback.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-odd">
+                      <td>
+                        <p>6</p>
+                      </td>
+                      <td>
+                        <p>Content Analysis</p>
+                      </td>
+                      <td>
+                        <p>Quantitative and qualitative analysis of themes and concepts within reviews.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-even">
+                      <td>
+                        <p>7</p>
+                      </td>
+                      <td>
+                        <p>Thematic Analysis</p>
+                      </td>
+                      <td>
+                        <p>Identify common themes, topics, ideas, and patterns of meaning that come up repeatedly in
+                          reviews.</p>
+                      </td>
+                    </tr>
+                    <tr class="row-odd">
+                      <td>
+                        <p>8</p>
+                      </td>
+                      <td>
+                        <p>Collocation Analysis</p>
+                      </td>
+                      <td>
+                        <p>Discover words in reviews that co-occur more often than would be expected by chance.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <section id="dataset-overview">
+                  <h2><span class="section-number">1.1. </span>Dataset Overview<a class="headerlink"
+                      href="#dataset-overview" title="Permalink to this heading">#</a></h2>
+                  <p>This effort centers around three datasets comprising data obtained from the Apple App Store during
+                    May of 2023.</p>
+                  <table class="table">
+                    <thead>
+                      <tr class="row-odd">
+                        <th class="head">
+                          <p>Name</p>
+                        </th>
+                        <th class="head">
+                          <p>Filename</p>
+                        </th>
+                        <th class="head">
+                          <p>Description</p>
+                        </th>
+                        <th class="head">
+                          <p>Examples</p>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="row-even">
+                        <td>
+                          <p>App Overview</p>
+                        </td>
+                        <td>
+                          <p>appdata.csv.gz</p>
+                        </td>
+                        <td>
+                          <p>Descriptive data, price, category, rating information</p>
+                        </td>
+                        <td>
+                          <p>475,132</p>
+                        </td>
+                      </tr>
+                      <tr class="row-odd">
+                        <td>
+                          <p>App Rating</p>
+                        </td>
+                        <td>
+                          <p>ratings.csv.gz</p>
+                        </td>
+                        <td>
+                          <p>Rating histogram and review counts</p>
+                        </td>
+                        <td>
+                          <p>9,999</p>
+                        </td>
+                      </tr>
+                      <tr class="row-even">
+                        <td>
+                          <p>App Reviews</p>
+                        </td>
+                        <td>
+                          <p>reviews.csv.gz</p>
+                        </td>
+                        <td>
+                          <p>Customer reviews</p>
+                        </td>
+                        <td>
+                          <p>999,999</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+                <section id="data-collection-methodology">
+                  <h2><span class="section-number">1.2. </span>Data Collection Methodology<a class="headerlink"
+                      href="#data-collection-methodology" title="Permalink to this heading">#</a></h2>
+                </section>
+                <section id="structure-and-organization">
+                  <h2><span class="section-number">1.3. </span>Structure and Organization<a class="headerlink"
+                      href="#structure-and-organization" title="Permalink to this heading">#</a></h2>
+                </section>
+                <section id="data-processing-and-manipulation">
+                  <h2><span class="section-number">1.4. </span>Data Processing and Manipulation<a class="headerlink"
+                      href="#data-processing-and-manipulation" title="Permalink to this heading">#</a></h2>
+                </section>
+                <section id="sharing-and-access">
+                  <h2><span class="section-number">1.5. </span>Sharing and Access<a class="headerlink"
+                      href="#sharing-and-access" title="Permalink to this heading">#</a></h2>
+                </section>
+                <section id="data-specifics">
+                  <h2><span class="section-number">1.6. </span>Data Specifics<a class="headerlink"
+                      href="#data-specifics" title="Permalink to this heading">#</a></h2>
+                </section>
+              </section>
+
+              <script type="text/x-thebe-config">
     {
         requestKernel: true,
         binderOptions: {
@@ -600,112 +776,119 @@ which can always be made precise.” — John Tukey</p>
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+              <script>kernelName = 'python3'</script>
 
-                </article>
-              
+            </article>
 
-              
-              
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
-<div class="prev-next-area">
-    <a class="left-prev"
-       href="../forward.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">VoCAI: Voice of the Customer via Artificial Intelligence</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../99_references.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">References</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
-</div>
 
-                </footer>
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-overview">1.1. Dataset Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection-methodology">1.2. Data Collection Methodology</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-and-organization">1.3. Structure and Organization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-processing-and-manipulation">1.4. Data Processing and Manipulation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sharing-and-access">1.5. Sharing and Access</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-specifics">1.6. Data Specifics</a></li>
-</ul>
-  </nav></div>
 
-</div></div>
-              
-            
+            <footer class="bd-footer-article">
+
+              <div class="footer-article-items footer-article__inner">
+
+                <div class="footer-article-item"><!-- Previous / next buttons -->
+                  <div class="prev-next-area">
+                    <a class="left-prev" href="../forward.html" title="previous page">
+                      <i class="fa-solid fa-angle-left"></i>
+                      <div class="prev-next-info">
+                        <p class="prev-next-subtitle">previous</p>
+                        <p class="prev-next-title">VoCAI: Voice of the Customer via Artificial Intelligence</p>
+                      </div>
+                    </a>
+                    <a class="right-next" href="../99_references.html" title="next page">
+                      <div class="prev-next-info">
+                        <p class="prev-next-subtitle">next</p>
+                        <p class="prev-next-title">References</p>
+                      </div>
+                      <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+            </footer>
+
           </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By John James
-</p>
 
-  </div>
-  
-  <div class="footer-item">
-    
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-</div>
-          </footer>
-        
+
+          <div class="bd-sidebar-secondary bd-toc">
+            <div class="sidebar-secondary-items sidebar-secondary__inner">
+
+              <div class="sidebar-secondary-item">
+                <div class="page-toc tocsection onthispage">
+                  <i class="fa-solid fa-list"></i> Contents
+                </div>
+                <nav class="bd-toc-nav page-toc">
+                  <ul class="visible nav section-nav flex-column">
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#dataset-overview">1.1. Dataset Overview</a></li>
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#data-collection-methodology">1.2. Data Collection Methodology</a></li>
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#structure-and-organization">1.3. Structure and Organization</a></li>
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#data-processing-and-manipulation">1.4. Data Processing and Manipulation</a></li>
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#sharing-and-access">1.5. Sharing and Access</a></li>
+                    <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link"
+                        href="#data-specifics">1.6. Data Specifics</a></li>
+                  </ul>
+                </nav>
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+        <footer class="bd-footer-content">
+
+          <div class="bd-footer-content__inner container">
+
+            <div class="footer-item">
+
+              <p class="component-author">
+                By John James
+              </p>
+
+            </div>
+
+            <div class="footer-item">
+
+              <p class="copyright">
+
+                © Copyright 2023.
+                <br />
+
+              </p>
+
+            </div>
+
+            <div class="footer-item">
+
+            </div>
+
+            <div class="footer-item">
+
+            </div>
+
+          </div>
+        </footer>
+
 
       </main>
     </div>
   </div>
-  
+
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
   <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
   <footer class="bd-footer">
   </footer>
-  </body>
+</body>
+
 </html>

@@ -1,16 +1,16 @@
 [tool.poetry]
-name = "appstore"
+name = "appvoc"
 version = "0.1.1"
-description = "Appstore Rating and Review Analysis"
+description = "AppVoC Reviews Dataset: Apple Voice of the Customer...at Scale"
 authors = [
-    "John James <john.james.ai.studio@gmail.com>",
+    "John James <john@variancexplained.com>",
 ]
 license = "MIT"
 readme = "README.md"
 
-documentation = "https://john-james-ai.github.io/appstore"
-homepage = "https://john-james-ai.github.io/appstore"
-repository = "https://github.com/john-james-ai/appstore"
+documentation = "https://variancexplained.github.io/appvoc"
+homepage = "https://variancexplained.github.io/appvoc"
+repository = "https://github.com/variancexplained/appvoc"
 
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 packages = [
-    { include = "appstore" }
+    { include = "appvoc" }
 ]
 
 [tool.poetry.dependencies]
@@ -62,7 +62,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 profile = "black"
-src_paths = ["appstore", "tests"]
+src_paths = ["appvoc", "tests"]
 
 [tool.black]
 target-version = ["py37", "py38", "py39"]
@@ -70,7 +70,7 @@ include = '\.pyi?$'
 
 [tool.pytest.ini_options]
 addopts = """\
-    --cov appstore \
+    --cov appvoc \
     --cov tests \
     --cov-report term-missing \
     --no-cov-on-fail \

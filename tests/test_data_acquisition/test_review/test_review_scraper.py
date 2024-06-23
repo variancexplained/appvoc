@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_review/test_review_scraper.py                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 2nd 2023 01:27:54 am                                               #
 # Modified   : Wednesday August 9th 2023 07:56:28 pm                                               #
@@ -23,8 +23,8 @@ import logging
 
 import pandas as pd
 
-from appstore.data.acquisition.review.scraper import ReviewScraper
-from appstore.data.acquisition.review.result import ReviewResult
+from appvoc.data.acquisition.review.scraper import ReviewScraper
+from appvoc.data.acquisition.review.result import ReviewResult
 
 KEYS = [
     "id",

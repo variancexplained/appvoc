@@ -4,10 +4,10 @@
 # Project    : Enter Project Name in Workspace Settings                                            #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.8                                                                              #
-# Filename   : /appstore/infrastructure/dal/__init__.py                                            #
+# Filename   : /appvoc/infrastructure/dal/__init__.py                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
+# Email      : john@variancexplained.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 12:37:58 pm                                                  #

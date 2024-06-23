@@ -6,7 +6,7 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.15.0
 kernelspec:
-  display_name: appstore
+  display_name: appvoc
   language: python
   name: python3
 ---

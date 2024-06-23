@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_rating/test_rating_scraper.py                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday July 31st 2023 02:04:35 am                                                   #
 # Modified   : Wednesday August 2nd 2023 03:24:01 am                                               #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.acquisition.rating.scraper import RatingScraper
+from appvoc.data.acquisition.rating.scraper import RatingScraper
 
 
 # ------------------------------------------------------------------------------------------------ #

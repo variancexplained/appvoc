@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_director.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 08:26:33 pm                                                   #
 # Modified   : Wednesday August 2nd 2023 05:53:22 am                                               #
@@ -21,8 +21,8 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.acquisition.rating.job import RatingJobRun
-from appstore.data.acquisition.review.job import ReviewJobRun
+from appvoc.data.acquisition.rating.job import RatingJobRun
+from appvoc.data.acquisition.review.job import ReviewJobRun
 
 
 # ------------------------------------------------------------------------------------------------ #

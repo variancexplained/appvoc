@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_management/test_storage_management.py                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday August 26th 2023 10:20:27 pm                                               #
 # Modified   : Sunday August 27th 2023 06:32:17 am                                                 #
@@ -22,7 +22,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.storage.manager import DataStorageManager
+from appvoc.data.storage.manager import DataStorageManager
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -114,7 +114,7 @@ class TestDataStorageManager:  # pragma: no cover
         ds.purge()
 
         # Recovery the data from an archive
-        filepath = "tests/data/backup/archive/appstore_2023-08-27_T063129.tar.gz"
+        filepath = "tests/data/backup/archive/appvoc_2023-08-27_T063129.tar.gz"
         ds.recover(filepath=filepath)
 
         #  Validate data appdata

@@ -7,7 +7,7 @@
 # Filename   : /tests/test_infrastructure/test_web/test_delay.py                                   #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
+# Email      : john@variancexplained.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday May 7th 2023 01:21:31 am                                                     #
@@ -23,7 +23,7 @@ import logging
 from time import sleep
 import numpy as np
 
-from appstore.infrastructure.web.throttle import AThrottle
+from appvoc.infrastructure.web.throttle import AThrottle
 
 
 # ------------------------------------------------------------------------------------------------ #

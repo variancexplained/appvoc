@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_config/test_cloud_config.py                                             #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday August 27th 2023 01:35:41 am                                                 #
 # Modified   : Sunday August 27th 2023 01:53:38 am                                                 #
@@ -21,7 +21,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.infrastructure.cloud.config import CloudConfig
+from appvoc.infrastructure.cloud.config import CloudConfig
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -49,7 +49,7 @@ class TestCloudConfig:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         cloud = CloudConfig()
         config = cloud.get_config("aws_bucket")
-        assert config == "appstore-tests"
+        assert config == "appvoc-tests"
         config = cloud.get_config("xyz")
         assert config is None
 
@@ -82,7 +82,7 @@ class TestCloudConfig:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         cloud = CloudConfig()
-        assert cloud.aws_bucket == "appstore-tests"
+        assert cloud.aws_bucket == "appvoc-tests"
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

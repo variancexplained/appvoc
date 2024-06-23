@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_dataset/test_rating_dataset.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday August 11th 2023 02:08:32 am                                                 #
 # Modified   : Friday August 11th 2023 02:41:37 am                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import pandas as pd
 
-from appstore.data.entity.rating import Rating
+from appvoc.data.entity.rating import Rating
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_rating/test_rating_controller.py                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 8th 2023 07:30:54 am                                                 #
 # Modified   : Sunday August 27th 2023 12:35:57 am                                                 #
@@ -23,8 +23,8 @@ import logging
 
 import pandas as pd
 
-from appstore.infrastructure.file.io import IOService
-from appstore.data.acquisition.rating.controller import RatingController
+from appvoc.infrastructure.file.io import IOService
+from appvoc.data.acquisition.rating.controller import RatingController
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -94,7 +94,14 @@ class TestRatingCtrl:  # pragma: no cover
         repo = container.data.rating_jobrun_repo()
         repo.reset(force=True)
         # Reset ratings repo
-        ids = ["779656557", "353763955", "952516687", "1456472751", "1071223674", "1097859459"]
+        ids = [
+            "779656557",
+            "353763955",
+            "952516687",
+            "1456472751",
+            "1071223674",
+            "1097859459",
+        ]
         repo = container.data.rating_repo()
         ratings = pd.DataFrame()
         for id in ids:  # noqa

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_persistence/test_mysql.py                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
 # Modified   : Sunday August 27th 2023 02:52:56 am                                                 #
@@ -153,7 +153,7 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         db = container.data.db()
-        assert db.name == "appstore_test"
+        assert db.name == "appvoc_test"
         assert db.is_connected is True
         db.close()
         assert db.is_connected is False
@@ -550,7 +550,12 @@ class TestMySQLDatabase:  # pragma: no cover
 
     # ============================================================================================ #
     def test_backup_restore(
-        self, container, appdata_repo_loaded, rating_repo_loaded, review_repo_loaded, caplog
+        self,
+        container,
+        appdata_repo_loaded,
+        rating_repo_loaded,
+        review_repo_loaded,
+        caplog,
     ):
         start = datetime.now()
         logger.info(
@@ -565,7 +570,7 @@ class TestMySQLDatabase:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         directory = "tests/data/database/backup"
         os.makedirs(name=directory, exist_ok=True)
-        filename = "appstore_" + datetime.now().strftime("%Y-%m-%dT%H%M%S") + ".sql"
+        filename = "appvoc_" + datetime.now().strftime("%Y-%m-%dT%H%M%S") + ".sql"
         filepath = os.path.join(directory, filename)
         filepath = os.path.abspath(filepath)
         db = container.data.db()

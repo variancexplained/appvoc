@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /config/persistence.yml                                                             #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 12:01:04 pm                                                #
 # Modified   : Thursday August 31st 2023 09:15:53 am                                               #
@@ -23,9 +23,9 @@
 # ------------------------------------------------------------------------------------------------ #
 database:
   name:
-    prod: appstore
-    raw:  appstore_raw
-    test: appstore_test
+    prod: appvoc
+    raw:  appvoc_raw
+    test: appvoc_test
   backup:
     prod: data/prod/database
     raw: data/raw/database
@@ -47,6 +47,6 @@ file:
 
 cloud:
   aws_bucket:
-    prod: appstore-final
-    raw: appstore-raw
-    test: appstore-tests
+    prod: appvoc-final
+    raw: appvoc-raw
+    test: appvoc-tests

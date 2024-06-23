@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_uow.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 21st 2023 04:25:43 pm                                                  #
 # Modified   : Thursday August 10th 2023 11:33:00 pm                                               #
@@ -21,8 +21,8 @@ from datetime import datetime
 import pytest
 import logging
 
-from appstore.data.repo.base import Repo
-from appstore.infrastructure.database.base import Database
+from appvoc.data.repo.base import Repo
+from appvoc.infrastructure.database.base import Database
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

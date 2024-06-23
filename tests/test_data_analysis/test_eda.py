@@ -7,7 +7,7 @@
 # Filename   : /tests/test_data_analysis/test_eda.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
+# Email      : john@variancexplained.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday May 16th 2023 10:29:09 pm                                                   #

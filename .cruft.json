@@ -5,11 +5,11 @@
   "context": {
     "cookiecutter": {
       "author_name": "John James",
-      "author_email": "john.james.ai.studio@gmail.com",
-      "github_username": "john-james-ai",
+      "author_email": "john@variancexplained.com",
+      "github_username": "variancexplained",
       "project_name": "AI-Based Mobile Technology Opportunity Discovery",
-      "project_slug": "appstore",
-      "package_name": "appstore",
+      "project_slug": "appvoc",
+      "package_name": "appvoc",
       "project_short_description": "Voice of the Customer",
       "_template": "https://github.com/woltapp/wolt-python-package-cookiecutter"
     }

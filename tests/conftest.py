@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/conftest.py                                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
 # Modified   : Sunday August 27th 2023 04:21:04 am                                                 #
@@ -25,30 +25,45 @@ from datetime import datetime
 
 import pandas as pd
 
-from appstore.data.acquisition.base import App
-from appstore.infrastructure.file.io import IOService
-from appstore.infrastructure.cloud.amazon import AWS
-from appstore.infrastructure.web.headers import STOREFRONT
-from appstore.data.acquisition.appdata.project import AppDataProject
-from appstore.data.acquisition.review.request import ReviewRequest
+from appvoc.data.acquisition.base import App
+from appvoc.infrastructure.file.io import IOService
+from appvoc.infrastructure.cloud.amazon import AWS
+from appvoc.infrastructure.web.headers import STOREFRONT
+from appvoc.data.acquisition.appdata.project import AppDataProject
+from appvoc.data.acquisition.review.request import ReviewRequest
 from tests.data.rating.response import batch
-from appstore.data.dataset.appdata import AppDataDataset
-from appstore.data.dataset.rating import RatingDataset
-from appstore.data.dataset.review import ReviewDataset
-from appstore.utils.jbook import DocConverter
-from appstore.container import AppstoreContainer
+from appvoc.data.dataset.appdata import AppDataDataset
+from appvoc.data.dataset.rating import RatingDataset
+from appvoc.data.dataset.review import ReviewDataset
+from appvoc.utils.jbook import DocConverter
+from appvoc.container import AppVoCContainer
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
 
 # ------------------------------------------------------------------------------------------------ #
-RATINGS_FILEPATH = "tests/data/appstore_ratings.csv"
+RATINGS_FILEPATH = "tests/data/appvoc_ratings.csv"
 APP_IDS = ["297606951", "544007664", "951937596", "310633997", "422689480"]
 
 APPS = [
-    {"id": "297606951", "name": "amazon", "category_id": "6024", "category": "SHOPPING"},
-    {"id": "544007664", "name": "youtube", "category_id": "6005", "category": "SOCIAL_NETWORKING"},
-    {"id": "951937596", "name": "outlook", "category_id": "6000", "category": "BUSINESS"},
+    {
+        "id": "297606951",
+        "name": "amazon",
+        "category_id": "6024",
+        "category": "SHOPPING",
+    },
+    {
+        "id": "544007664",
+        "name": "youtube",
+        "category_id": "6005",
+        "category": "SOCIAL_NETWORKING",
+    },
+    {
+        "id": "951937596",
+        "name": "outlook",
+        "category_id": "6000",
+        "category": "BUSINESS",
+    },
     {
         "id": "1288723196",
         "name": "Microsoft Edge: Web Browser",
@@ -81,7 +96,10 @@ def apps():
     apps = []
     for app in APPS:
         a = App(
-            id=app["id"], name=app["name"], category_id=app["category_id"], category=app["category"]
+            id=app["id"],
+            name=app["name"],
+            category_id=app["category_id"],
+            category=app["category"],
         )
         apps.append(a)
     return apps
@@ -129,10 +147,14 @@ def mode():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="function", autouse=True)
 def container():
-    container = AppstoreContainer()
+    container = AppVoCContainer()
     container.init_resources()
     container.wire(
-        packages=["appstore.data.acquisition", "appstore.data.dataset", "appstore.data.storage"]
+        packages=[
+            "appvoc.data.acquisition",
+            "appvoc.data.dataset",
+            "appvoc.data.storage",
+        ]
     )
 
     return container
@@ -153,7 +175,7 @@ def dataframe():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def appdata():
-    APPDATA_HEALTH_FILEPATH = "tests/data/appstore_health.csv"  # noqa
+    APPDATA_HEALTH_FILEPATH = "tests/data/appvoc_health.csv"  # noqa
     df = IOService.read(APPDATA_HEALTH_FILEPATH)
     return df
 

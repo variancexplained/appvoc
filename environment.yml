@@ -1,4 +1,4 @@
-name: appstore
+name: appvoc
 channels:
   - conda-forge
   - defaults
@@ -285,4 +285,4 @@ dependencies:
       - urllib3==2.0.3
       - virtualenv==20.23.1
       - watchdog==3.0.0
-prefix: /home/john/anaconda3/envs/appstore
+prefix: /home/john/anaconda3/envs/appvoc

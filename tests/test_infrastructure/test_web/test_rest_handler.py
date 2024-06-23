@@ -7,7 +7,7 @@
 # Filename   : /tests/test_infrastructure/test_web/test_rest_handler.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
+# Email      : john@variancexplained.com                                                      #
 # URL        : Enter URL in Workspace Settings                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 02:52:16 pm                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import requests
 
-from appstore.infrastructure.web.session import SessionHandler
+from appvoc.infrastructure.web.session import SessionHandler
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Appstore Ratings & Reviews Analysis                                                 #
+# Project    : AppVoC Ratings & Reviews Analysis                                                 #
 # Version    : 0.1.19                                                                              #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_job.py                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/appstore                                           #
+# Email      : john@variancexplained.com                                                      #
+# URL        : https://github.com/variancexplained/appvoc                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 09:19:19 pm                                                 #
 # Modified   : Tuesday August 8th 2023 08:49:45 am                                                 #
@@ -24,7 +24,7 @@ import logging
 import pandas as pd
 from uuid import uuid4
 
-from appstore.data.acquisition.base import Job
+from appvoc.data.acquisition.base import Job
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -53,7 +53,10 @@ class TestJob:  # pragma: no cover
             job = Job.from_df(df=row)
             assert isinstance(job, Job)
             assert isinstance(job.id, uuid4)
-            assert job.controller == "ReviewController" or job.controller == "RatingController"
+            assert (
+                job.controller == "ReviewController"
+                or job.controller == "RatingController"
+            )
             assert isinstance(job.category, str)
             assert isinstance(job.category_id, str)
             assert isinstance(job.completed, datetime)

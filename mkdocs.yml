@@ -1,5 +1,5 @@
 site_name: AI-Based Mobile Technology Opportunity Discovery
-repo_url: https://github.com/john-james-ai/appstore
+repo_url: https://github.com/variancexplained/appvoc
 
 theme:
   name: material
@@ -33,4 +33,4 @@ plugins:
             show_source: true
             show_submodules: true
       watch:
-        - src/appstore
+        - src/appvoc
