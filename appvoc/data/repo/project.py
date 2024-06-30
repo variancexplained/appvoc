@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/repo/project.py                                                      #
+# Filename   : /appvoc/data/repo/project.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 01:48:48 pm                                                  #
-# Modified   : Tuesday August 29th 2023 05:52:40 pm                                                #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Project Repository Module"""
 from __future__ import annotations
+
 import logging
 from typing import Union
 
 import pandas as pd
 
-from appvoc.data.acquisition.appdata.project import AppDataProject
+from appvoc.data.acquisition.app.project import AppDataProject
 from appvoc.data.repo.base import Repo
 from appvoc.infrastructure.database.base import Database
 from appvoc.infrastructure.file.config import FileConfig
@@ -37,7 +38,7 @@ class AppDataProjectRepo(Repo):
         database(Database): Database containing data to access.
     """
 
-    __name = "appdata_project"
+    __name = "app_project"
 
     def __init__(self, database: Database, config=FileConfig) -> None:
         super().__init__(name=self.__name, database=database, config=config)

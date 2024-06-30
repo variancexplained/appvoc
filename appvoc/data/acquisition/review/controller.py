@@ -2,35 +2,35 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Controller    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.19                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/review/controller.py                                     #
+# Filename   : /appvoc/data/acquisition/review/controller.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday April 20th 2023 05:33:57 am                                                #
-# Modified   : Thursday August 24th 2023 08:19:25 pm                                               #
+# Modified   : Sunday June 30th 2024 02:01:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppVoC Scraper Controller Module"""
-import sys
 import logging
+import sys
 
 import pandas as pd
-from dependency_injector.wiring import inject, Provide
+from dependency_injector.wiring import Provide, inject
 
-from appvoc.data.acquisition.review.scraper import ReviewScraper
+from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.base import App, Controller
 from appvoc.data.acquisition.review.director import ReviewDirector
 from appvoc.data.acquisition.review.job import ReviewJobRun
-from appvoc.data.acquisition.review.result import ReviewResult
-from appvoc.data.acquisition.review.request import ReviewRequest
+from appvoc.data.acquisition.review.result import ReviewResponse
+from appvoc.data.acquisition.review.scraper import ReviewScraper
 from appvoc.data.repo.uow import UoW
-from appvoc.data.acquisition.base import Controller, App
-from appvoc.container import AppVoCContainer
+from appvoc.domain.review.request import ReviewRequest
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -136,7 +136,7 @@ class ReviewController(Controller):
 
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         # Obtain all apps for the category from the repository.
-        apps = self._uow.appdata_repo.get_by_category(category_id=category_id)
+        apps = self._uow.app_repo.get_by_category(category_id=category_id)
         msg = f"\n\nA total of {len(apps)} apps in category {category_id}."
 
         # Filter the apps that have greater than 'min_ratings'
@@ -170,11 +170,11 @@ class ReviewController(Controller):
         self._uow.review_request_repo.add(request=request)
         return request
 
-    def persist(self, result: ReviewResult) -> None:
+    def persist(self, result: ReviewResponse) -> None:
         """Persists results to Database
 
         Args:
-            result (ReviewResult) -> Parsed result object
+            result (ReviewResponse) -> Parsed result object
         """
         self._uow.review_repo.load(data=result.get_result())
         self._uow.save()
@@ -190,15 +190,17 @@ class ReviewController(Controller):
         self._director.add_jobrun(jobrun=jobrun)
         return jobrun
 
-    def update_jobrun(self, jobrun: ReviewJobRun, result: ReviewResult) -> ReviewJobRun:
+    def update_jobrun(
+        self, jobrun: ReviewJobRun, result: ReviewResponse
+    ) -> ReviewJobRun:
         """Adds results to jobrun, and persists.
 
         Args:
             jobrun (ReviewJobRun): The current job run.
-            result (ReviewResult): The result from the scraping operation
+            result (ReviewResponse): The result from the scraping operation
 
         """
-        jobrun.add_result(result=result)
+        jobrun.add_response(result=result)
         self._director.update_jobrun(jobrun=jobrun)
         return jobrun
 
@@ -206,7 +208,7 @@ class ReviewController(Controller):
         """Persists job to the Database
 
         Args:
-            result (ReviewResult) -> Parsed result object
+            result (ReviewResponse) -> Parsed result object
         """
         jobrun.end()
         # Get the associated job and end it.

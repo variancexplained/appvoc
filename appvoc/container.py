@@ -1,50 +1,50 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/container.py                                                              #
+# Filename   : /appvoc/container.py                                                                #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:02:56 pm                                                  #
-# Modified   : Tuesday August 29th 2023 05:47:58 pm                                                #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Framework Dependency Container"""
-import os
 import logging
 import logging.config  # pragma: no cover
+import os
 
 from dependency_injector import containers, providers
 from urllib3.util import Retry
 
-from appvoc.infrastructure.file.io import IOService
-from appvoc.infrastructure.web.adapter import TimeoutHTTPAdapter
-from appvoc.infrastructure.web.throttle import LatencyThrottle, AThrottle
-from appvoc.infrastructure.database.mysql import MySQLDatabase
+from appvoc.config import ConfigFileDefault, ConfigFileJBook
+from appvoc.data.repo.app import AppDataRepo
+from appvoc.data.repo.job import JobRepo, RatingJobRunRepo, ReviewJobRunRepo
 from appvoc.data.repo.project import AppDataProjectRepo
-from appvoc.data.repo.appdata import AppDataRepo
-from appvoc.data.repo.review import ReviewRepo
 from appvoc.data.repo.rating import RatingRepo
 from appvoc.data.repo.request import ReviewRequestRepo
-from appvoc.data.repo.job import RatingJobRunRepo, ReviewJobRunRepo, JobRepo
-from appvoc.infrastructure.web.base import PROXY_SERVERS
+from appvoc.data.repo.review import ReviewRepo
 from appvoc.data.repo.uow import UoW
-from appvoc.infrastructure.file.config import FileConfig
-from appvoc.infrastructure.file.archive import FileArchiver
 from appvoc.infrastructure.cloud.amazon import AWS
 from appvoc.infrastructure.cloud.config import CloudConfig
 from appvoc.infrastructure.database.config import DatabaseConfig
-from appvoc.infrastructure.web.headers import BrowserHeader, AppleStoreFrontHeader
-from appvoc.infrastructure.web.session import SessionHandler
+from appvoc.infrastructure.database.mysql import MySQLDatabase
+from appvoc.infrastructure.file.archive import FileArchiver
+from appvoc.infrastructure.file.config import FileConfig
+from appvoc.infrastructure.file.io import IOService
+from appvoc.infrastructure.web.adapter import TimeoutHTTPAdapter
 from appvoc.infrastructure.web.asession import ASessionHandler
-from appvoc.config import ConfigFileDefault, ConfigFileJBook
+from appvoc.infrastructure.web.base import PROXY_SERVERS
+from appvoc.infrastructure.web.headers import AppleStoreFrontHeader, BrowserHeader
+from appvoc.infrastructure.web.session import SessionHandler
+from appvoc.infrastructure.web.throttle import AThrottle, LatencyThrottle
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -73,7 +73,7 @@ class FileContainer(containers.DeclarativeContainer):
 class PersistenceContainer(containers.DeclarativeContainer):
     db = providers.Singleton(MySQLDatabase, config=DatabaseConfig)
 
-    appdata_repo = providers.Singleton(AppDataRepo, database=db, config=FileConfig)
+    app_repo = providers.Singleton(AppDataRepo, database=db, config=FileConfig)
     review_repo = providers.Singleton(ReviewRepo, database=db, config=FileConfig)
     rating_repo = providers.Singleton(RatingRepo, database=db, config=FileConfig)
     job_repo = providers.Singleton(JobRepo, database=db, config=FileConfig)
@@ -93,10 +93,10 @@ class PersistenceContainer(containers.DeclarativeContainer):
     uow = providers.Singleton(
         UoW,
         database=db,
-        appdata_repo=AppDataRepo,
+        app_repo=AppDataRepo,
         review_repo=ReviewRepo,
         rating_repo=RatingRepo,
-        appdata_project_repo=AppDataProjectRepo,
+        app_project_repo=AppDataProjectRepo,
         job_repo=JobRepo,
         rating_jobrun_repo=RatingJobRunRepo,
         review_jobrun_repo=ReviewJobRunRepo,

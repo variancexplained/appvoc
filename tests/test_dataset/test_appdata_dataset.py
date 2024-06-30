@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_dataset/test_appdata_dataset.py                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday August 11th 2023 02:08:32 am                                                 #
-# Modified   : Friday August 11th 2023 02:39:18 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 
 import pandas as pd
 
-from appvoc.data.entity.appdata import AppData
+from appvoc.data.entity.app import AppData
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -32,11 +32,11 @@ double_line = f"\n{100 * '='}"
 single_line = f"\n{100 * '-'}"
 
 
-@pytest.mark.appdata_dataset
+@pytest.mark.app_dataset
 @pytest.mark.dataset
 class TestAppDataSet:  # pragma: no cover
     # ============================================================================================ #
-    def test_getitem(self, appdata_dataset, caplog):
+    def test_getitem(self, app_dataset, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -48,9 +48,9 @@ class TestAppDataSet:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        appdata = appdata_dataset[10]
-        assert isinstance(appdata, AppData)
-        logger.debug(appdata.__str__())
+        app = app_dataset[10]
+        assert isinstance(app, AppData)
+        logger.debug(app.__str__())
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
@@ -68,7 +68,7 @@ class TestAppDataSet:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_summary(self, appdata_dataset, caplog):
+    def test_summary(self, app_dataset, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -80,8 +80,8 @@ class TestAppDataSet:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        assert isinstance(appdata_dataset.summary(), pd.DataFrame)
-        logger.debug(appdata_dataset.summary())
+        assert isinstance(app_dataset.summary(), pd.DataFrame)
+        logger.debug(app_dataset.summary())
 
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()

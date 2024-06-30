@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/acquisition/base.py                                                  #
+# Filename   : /appvoc/data/acquisition/base.py                                                    #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 06:49:10 pm                                                  #
-# Modified   : Thursday August 31st 2023 10:49:14 am                                               #
+# Modified   : Saturday June 29th 2024 10:52:39 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
-import os
-from uuid import uuid4
+
 import logging
-from datetime import datetime
-from dotenv import load_dotenv
-from abc import ABC, abstractmethod, abstractclassmethod
+import os
+from abc import ABC, abstractclassmethod, abstractmethod
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
+from uuid import uuid4
 
 import pandas as pd
+from dotenv import load_dotenv
 
-from appvoc.base import Entity
 from appvoc.data.repo.uow import UoW
+from appvoc.domain.entity import Entity
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -60,11 +61,11 @@ class Controller(ABC):
         return os.getenv(self.__class__.__name__, False) in (True, "true", "True")
 
     @abstractmethod
-    def persist(self, result: Result) -> None:
+    def persist(self, result: Response) -> None:
         """Starts a job run"""
 
     @abstractmethod
-    def update_jobrun(self, jobrun: JobRun, result: Result) -> None:
+    def update_jobrun(self, jobrun: JobRun, result: Response) -> None:
         """Updates teh jobrun with the result"""
 
     @abstractmethod
@@ -81,8 +82,8 @@ class Scraper(ABC):
         """Returns a RequestGenerator object"""
 
     @abstractmethod
-    def __next__(self) -> Result:
-        """Generates and submits the next request and returns a Result object."""
+    def __next__(self) -> Response:
+        """Generates and submits the next request and returns a Response object."""
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -157,7 +158,7 @@ class JobRun(Entity):
         msg = f"\nJobRun for job {self.jobid} Started"
         self._logger.info(msg)
 
-    def add_result(self, result: Result) -> None:
+    def add_response(self, response: Response) -> None:
         """Updates the JobRun statistics."""
         now = datetime.now()
         self.ended = now
@@ -243,7 +244,7 @@ class App(Entity):
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class Result(Entity):
+class Response(Entity):
     content: Any = None
     size: int = 0
     data_errors: int = 0

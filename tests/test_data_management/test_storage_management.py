@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_management/test_storage_management.py                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday August 26th 2023 10:20:27 pm                                               #
-# Modified   : Sunday August 27th 2023 06:32:17 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:38 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-import os
 import inspect
-from datetime import datetime
-import pytest
 import logging
+import os
+from datetime import datetime
+
+import pytest
 
 from appvoc.data.storage.manager import DataStorageManager
-
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -58,8 +58,8 @@ class TestDataStorageManager:  # pragma: no cover
         ds.purge()
         # Restore
         ds.restore(filepath=filepath)
-        #  Validate data appdata
-        repo = container.data.appdata_repo()
+        #  Validate data app
+        repo = container.data.app_repo()
         df = repo.getall()
         assert df.shape[0] == 100
 
@@ -117,8 +117,8 @@ class TestDataStorageManager:  # pragma: no cover
         filepath = "tests/data/backup/archive/appvoc_2023-08-27_T063129.tar.gz"
         ds.recover(filepath=filepath)
 
-        #  Validate data appdata
-        repo = container.data.appdata_repo()
+        #  Validate data app
+        repo = container.data.app_repo()
         df = repo.getall()
         assert df.shape[0] == 100
 

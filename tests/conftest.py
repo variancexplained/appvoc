@@ -1,42 +1,41 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/conftest.py                                                                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday March 27th 2023 07:01:48 pm                                                  #
-# Modified   : Sunday August 27th 2023 04:21:04 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:40 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import os
-import pytest
 import random
-import dotenv
 import subprocess
 from datetime import datetime
 
+import dotenv
 import pandas as pd
+import pytest
 
+from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.app.project import AppDataProject
 from appvoc.data.acquisition.base import App
-from appvoc.infrastructure.file.io import IOService
-from appvoc.infrastructure.cloud.amazon import AWS
-from appvoc.infrastructure.web.headers import STOREFRONT
-from appvoc.data.acquisition.appdata.project import AppDataProject
-from appvoc.data.acquisition.review.request import ReviewRequest
-from tests.data.rating.response import batch
-from appvoc.data.dataset.appdata import AppDataDataset
+from appvoc.data.dataset.app import AppDataDataset
 from appvoc.data.dataset.rating import RatingDataset
 from appvoc.data.dataset.review import ReviewDataset
+from appvoc.domain.review.request import ReviewRequest
+from appvoc.infrastructure.cloud.amazon import AWS
+from appvoc.infrastructure.file.io import IOService
+from appvoc.infrastructure.web.headers import STOREFRONT
 from appvoc.utils.jbook import DocConverter
-from appvoc.container import AppVoCContainer
 
 # ------------------------------------------------------------------------------------------------ #
 collect_ignore = [""]
@@ -174,7 +173,7 @@ def dataframe():
 #                                        APPDATA                                                   #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata():
+def app():
     APPDATA_HEALTH_FILEPATH = "tests/data/appvoc_health.csv"  # noqa
     df = IOService.read(APPDATA_HEALTH_FILEPATH)
     return df
@@ -187,8 +186,8 @@ def appdata():
 #                                    APPDATA DATASET                                               #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata_dataset():
-    APPDATA_DATASET = "tests/data/dataset/appdata.pkl"
+def app_dataset():
+    APPDATA_DATASET = "tests/data/dataset/app.pkl"
     df = IOService.read(APPDATA_DATASET)
     ds = AppDataDataset(df=df)
     return ds
@@ -223,8 +222,8 @@ def review_dataset():
 #                                    APPDATA REPO                                                  #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata_repo(container):
-    repo = container.data.appdata_repo()
+def app_repo(container):
+    repo = container.data.app_repo()
     df = pd.DataFrame()
     try:
         df = repo.getall()
@@ -237,10 +236,10 @@ def appdata_repo(container):
 
 
 @pytest.fixture(scope="function", autouse=False)
-def appdata_repo_loaded(container):
-    fp = "tests/data/repo/testdata/appdata.pkl"
+def app_repo_loaded(container):
+    fp = "tests/data/repo/testdata/app.pkl"
     df = IOService.read(filepath=fp)
-    repo = container.data.appdata_repo()
+    repo = container.data.app_repo()
     repo.replace(data=df)
     return repo
 
@@ -359,9 +358,9 @@ def rating_jobrun_repo(container):
 # ------------------------------------------------------------------------------------------------ #
 #                                      RATING BATCH                                                #
 # ------------------------------------------------------------------------------------------------ #
-@pytest.fixture(scope="module", autouse=False)
-def rating_batch():
-    return batch
+# @pytest.fixture(scope="module", autouse=False)
+# def rating_batch():
+#     return batch
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -429,11 +428,11 @@ def review_responses():
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
 def uow(container):
-    APPDATA_RATINGS_FILEPATH = "tests/data/appdata/rating/appdata.pkl"  # noqa
+    APPDATA_RATINGS_FILEPATH = "tests/data/app/rating/app.pkl"  # noqa
     df = IOService.read(APPDATA_RATINGS_FILEPATH)
     uow = container.data.uow()
     uow.rollback()
-    uow.appdata_repo.replace(data=df)
+    uow.app_repo.replace(data=df)
     uow.save()
     return uow
 
@@ -442,7 +441,7 @@ def uow(container):
 #                                        APPDATA PROJECT                                           #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata_project():
+def app_project():
     return AppDataProject(
         controller="AppDataController",
         term="weather",
@@ -460,9 +459,9 @@ def appdata_project():
 #                                      APPDATA PROJECT REPO                                        #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def appdata_project_repo(container, appdata_project):
+def app_project_repo(container, app_project):
     uow = container.data.uow()
-    return uow.appdata_project_repo
+    return uow.app_project_repo
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -488,7 +487,7 @@ def rating():
 #                                      WEB FIXTURES                                                #
 # ------------------------------------------------------------------------------------------------ #
 @pytest.fixture(scope="module", autouse=False)
-def request_appdata():
+def request_app():
     d = {
         "url": "https://itunes.apple.com/search",
         "params": {

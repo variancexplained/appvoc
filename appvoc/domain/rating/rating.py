@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/entity/rating.py                                                     #
+# Filename   : /appvoc/domain/rating/rating.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 10th 2023 11:46:15 pm                                               #
-# Modified   : Friday August 11th 2023 01:12:14 am                                                 #
+# Modified   : Saturday June 29th 2024 10:42:57 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
+
 from dataclasses import dataclass
 
-import pandas as pd
-
-from appvoc.base import Entity
+from appvoc.domain.entity import Entity
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class Rating(Entity):
+    """Encapsulates rating data for an app"""
+
     id: str
     name: str
     category_id: str
@@ -41,19 +42,18 @@ class Rating(Entity):
     fivestar: int
 
     @classmethod
-    def from_df(cls, df: pd.DataFrame) -> Rating:
-        df = df.iloc[0]
+    def from_dict(cls, rating: dict) -> Rating:
         return cls(
-            id=df["id"],
-            name=df["name"],
-            category_id=df["category_id"],
-            category=df["category"],
-            rating=df["rating"],
-            reviews=df["reviews"],
-            ratings=df["ratings"],
-            onestar=df["onestar"],
-            twostar=df["twostar"],
-            threestar=df["threestar"],
-            fourstar=df["fourstar"],
-            fivestar=df["fivestar"],
+            id=rating["id"],
+            name=rating["name"],
+            category_id=rating["category_id"],
+            category=rating["category"],
+            rating=rating["rating"],
+            reviews=rating["reviews"],
+            ratings=rating["ratings"],
+            onestar=rating["onestar"],
+            twostar=rating["twostar"],
+            threestar=rating["threestar"],
+            fourstar=rating["fourstar"],
+            fivestar=rating["fivestar"],
         )

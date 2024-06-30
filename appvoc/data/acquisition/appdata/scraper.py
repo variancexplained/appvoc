@@ -1,33 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/appdata/scraper.py                                       #
+# Filename   : /appvoc/data/acquisition/appdata/scraper.py                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 8th 2023 04:38:40 am                                                 #
-# Modified   : Tuesday August 29th 2023 09:10:46 pm                                                #
+# Modified   : Sunday June 30th 2024 02:01:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """Module containing command objects which encapsulate requests and response processing."""
 from __future__ import annotations
+
 import logging
 import sys
 
 from dependency_injector.wiring import Provide, inject
 
-from appvoc.data.acquisition.base import Scraper
-from appvoc.data.acquisition.appdata.result import AppDataResult
-from appvoc.data.acquisition.appdata.validator import AppDataValidator
-from appvoc.infrastructure.web.session import SessionHandler
 from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.app.result import AppDataResponse
+from appvoc.data.acquisition.app.validator import AppDataValidator
+from appvoc.data.acquisition.base import Scraper
+from appvoc.infrastructure.web.session import SessionHandler
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -78,13 +79,13 @@ class AppDataScraper(Scraper):
         self._setup()
         return self
 
-    def __next__(self) -> AppDataResult:
+    def __next__(self) -> AppDataResponse:
         """Formats an itunes request for the next page"""
         if self._pages < self._max_pages:
             self._set_next_url()
 
             validator = AppDataValidator()
-            result = AppDataResult()
+            result = AppDataResponse()
 
             response = self._session.get(url=self._url, params=self._params)
 

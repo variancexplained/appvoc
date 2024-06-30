@@ -2,33 +2,33 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # AppDataProject    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.19                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/appdata/controller.py                                    #
+# Filename   : /appvoc/data/acquisition/appdata/controller.py                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 05:23:40 pm                                                  #
-# Modified   : Thursday August 31st 2023 05:36:34 am                                               #
+# Modified   : Sunday June 30th 2024 02:01:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppVoC Scraper AppDataProject Module"""
-import sys
-import logging
 import datetime
+import logging
+import sys
 from typing import Union
 
 from dependency_injector.wiring import Provide, inject
 
-from appvoc.data.acquisition.appdata.scraper import AppDataScraper
-from appvoc.data.acquisition.appdata.project import AppDataProject
-from appvoc.data.acquisition.appdata.result import AppDataResult
-from appvoc.data.repo.uow import UoW
 from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.app.project import AppDataProject
+from appvoc.data.acquisition.app.result import AppDataResponse
+from appvoc.data.acquisition.app.scraper import AppDataScraper
+from appvoc.data.repo.uow import UoW
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -80,7 +80,7 @@ class AppDataController:
 
     def archive(self) -> None:
         """Saves the repository to an archive"""
-        self.uow.appdata_repo.export()
+        self.uow.app_repo.export()
 
     def scrape(self, terms: Union[str, list]) -> None:
         """Implementation of the Scrape AppDataProject"""
@@ -127,7 +127,7 @@ class AppDataController:
         """
         self._started = datetime.datetime.now()
         try:
-            project = self._uow.appdata_project_repo.get_project(
+            project = self._uow.app_project_repo.get_project(
                 controller=self.__class__.__name__,
                 term=term,
             )
@@ -143,7 +143,7 @@ class AppDataController:
                 term=term,
                 page_size=self._max_results_per_page,
             )
-            self._uow.appdata_project_repo.load(project)
+            self._uow.app_project_repo.load(project)
             self._uow.save()
 
             msg = f"\n\nStarted project for {term.capitalize()} apps."
@@ -158,10 +158,10 @@ class AppDataController:
 
         return project
 
-    def _persist(self, result: AppDataResult, project: AppDataProject) -> None:
+    def _persist(self, result: AppDataResponse, project: AppDataProject) -> None:
         """Persists the results in the repository, and updates the project."""
-        self._uow.appdata_repo.load(result.content)
-        self._uow.appdata_project_repo.update(data=project)
+        self._uow.app_repo.load(result.content)
+        self._uow.app_project_repo.update(data=project)
         self._uow.save()
 
     def _update_report_stats(self, project: AppDataProject) -> None:
@@ -175,14 +175,14 @@ class AppDataController:
 
     def _complete_project(self, project: AppDataProject) -> None:
         project.complete()
-        self._uow.appdata_project_repo.update(data=project)
+        self._uow.app_project_repo.update(data=project)
         self._uow.save()
 
         # Run dedup
-        self._uow.appdata_repo.dedup()
+        self._uow.app_repo.dedup()
 
         # If backing up,  save the repo to archive.
         if self._backup_to_file:
-            self._uow.appdata_repo.export()
+            self._uow.app_repo.export()
         msg = f"Completed AppDataProject: \n{project}\n"
         self._logger.info(msg)

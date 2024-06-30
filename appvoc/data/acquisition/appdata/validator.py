@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/acquisition/appdata/validator.py                                     #
+# Filename   : /appvoc/data/acquisition/appdata/validator.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 1st 2023 10:52:26 pm                                                 #
-# Modified   : Wednesday August 30th 2023 11:31:38 am                                              #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from dataclasses import dataclass
+
 import requests
 
 from appvoc.data.acquisition.base import Validator

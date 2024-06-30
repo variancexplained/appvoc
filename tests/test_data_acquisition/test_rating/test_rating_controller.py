@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_rating/test_rating_controller.py                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 8th 2023 07:30:54 am                                                 #
-# Modified   : Sunday August 27th 2023 12:35:57 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
+from datetime import datetime
 
 import pandas as pd
+import pytest
 
-from appvoc.infrastructure.file.io import IOService
 from appvoc.data.acquisition.rating.controller import RatingController
+from appvoc.infrastructure.file.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -69,9 +69,9 @@ class TestRatingCtrl:  # pragma: no cover
         ratings = pd.concat([s1, s2, s3], axis=0)
         ids = list(ratings["id"].values)
         # get app data
-        FP = "tests/data/archive/appdata/appdata_07-29-2023_17-16-45.pkl"  # noqa
+        FP = "tests/data/archive/app/app_07-29-2023_17-16-45.pkl"  # noqa
         df = IOService.read(FP)
-        appdata = pd.DataFrame()
+        app = pd.DataFrame()
 
         # Add ids for whicch no ratings exist
         s1 = df.loc[(df["category_id"] == "6017")].sample(n=5, random_state=5)
@@ -80,11 +80,11 @@ class TestRatingCtrl:  # pragma: no cover
             ids.append(newid)
         for id in ids:  # noqa
             data = df[df["id"] == id]
-            appdata = pd.concat([appdata, data], axis=0)
+            app = pd.concat([app, data], axis=0)
 
         # Store app data for recovery and replace with selected data
-        repo = container.data.appdata_repo()
-        repo.replace(data=appdata)
+        repo = container.data.app_repo()
+        repo.replace(data=app)
         # Reset jobs repo
         FP = "tests/data/rating/jobs.csv"  # noqa
         df = IOService.read(FP)

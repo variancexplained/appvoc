@@ -1,33 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
 # Fileapp_name   : /appvoc/scraper/appvoc/http/review.py                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday April 10th 2023 05:01:05 am                                                  #
-# Modified   : Wednesday August 9th 2023 04:35:34 am                                               #
+# Modified   : Saturday June 29th 2024 10:25:52 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 """AppVoC Review Request Module"""
 from __future__ import annotations
+
 import logging
 
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-from appvoc.data.acquisition.rating.result import RatingResult
-from appvoc.data.acquisition.rating.validator import RatingValidator
-from appvoc.infrastructure.web.headers import STOREFRONT
 from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.rating.result import RatingResponse
+from appvoc.data.acquisition.rating.validator import RatingValidator
 from appvoc.infrastructure.web.asession import ASessionHandler
+from appvoc.infrastructure.web.headers import STOREFRONT
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -71,14 +72,14 @@ class RatingScraper:
         self._batches = self._create_batches()
         self._num_batches = len(self._batches)
 
-    async def scrape(self) -> RatingResult:
+    async def scrape(self) -> RatingResponse:
         """Sends the next batch of urls to the session handler and parses the response.
 
-        Return: RatingResult object, containing projects and results in DataFrame format.
+        Return: RatingResponse object, containing projects and results in DataFrame format.
         """
         for batch_idx in range(self._num_batches):
             validator = RatingValidator()
-            result = RatingResult()
+            result = RatingResponse()
 
             responses = await self._session_handler.get(
                 urls=self._batches[batch_idx]["urls"], headers=self._header

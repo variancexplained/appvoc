@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_review/test_review_controller.py                  #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 8th 2023 07:30:54 am                                                 #
-# Modified   : Sunday August 27th 2023 12:36:06 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
+from datetime import datetime
 
 import pandas as pd
+import pytest
 
-from appvoc.infrastructure.file.io import IOService
 from appvoc.data.acquisition.review.controller import ReviewController
+from appvoc.infrastructure.file.io import IOService
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -55,16 +55,16 @@ class TestReviewCtrl:  # pragma: no cover
             if app.category_id == "6002":
                 ids.append(app.id)
 
-        # Extract target appdata from archive
-        filepath = "tests/data/archive/appdata/appdata_07-29-2023_17-16-45.pkl"
+        # Extract target app from archive
+        filepath = "tests/data/archive/app/app_07-29-2023_17-16-45.pkl"
         df = IOService.read(filepath=filepath)
         df = df[df["category_id"] == "6002"]
         logger.debug(df.sample(n=5))
 
-        appdata = df.loc[df["id"].isin(ids)]
-        # Load appdata into repository
-        repo = container.data.appdata_repo()
-        repo.replace(data=appdata)
+        app = df.loc[df["id"].isin(ids)]
+        # Load app into repository
+        repo = container.data.app_repo()
+        repo.replace(data=app)
         df = repo.getall()
         assert df.shape[0] == 2
 

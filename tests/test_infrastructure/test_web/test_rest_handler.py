@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Enter Project Name in Workspace Settings                                            #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_web/test_rest_handler.py                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday April 18th 2023 02:52:16 pm                                                 #
-# Modified   : Tuesday July 25th 2023 01:04:36 pm                                                  #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
+from datetime import datetime
 
+import pytest
 import requests
 
 from appvoc.infrastructure.web.session import SessionHandler
@@ -35,7 +35,7 @@ single_line = f"\n{100 * '-'}"
 @pytest.mark.rest
 class TestSessionHandler:  # pragma: no cover
     # ============================================================================================ #
-    def test_get_w_params(self, container, request_appdata, caplog):
+    def test_get_w_params(self, container, request_app, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -48,7 +48,7 @@ class TestSessionHandler:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         handler = container.web.handler()
-        handler.get(url=request_appdata["url"], params=request_appdata["params"])
+        handler.get(url=request_app["url"], params=request_app["params"])
         proxy = handler.proxy
         header = handler.header
 
@@ -59,7 +59,7 @@ class TestSessionHandler:  # pragma: no cover
         assert handler.sessions < 4
 
         # --------------------------
-        handler.get(url=request_appdata["url"], params=request_appdata["params"])
+        handler.get(url=request_app["url"], params=request_app["params"])
         assert handler.proxy != proxy
         assert handler.header != header
 
@@ -115,7 +115,7 @@ class TestSessionHandler:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get_exception(self, container, request_appdata, caplog):
+    def test_get_exception(self, container, request_app, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -129,9 +129,9 @@ class TestSessionHandler:  # pragma: no cover
         # ---------------------------------------------------------------------------------------- #
         handler = container.web.handler()
 
-        request_appdata["params"]["lang"] = "xx-12"
-        request_appdata["params"]["media"] = "video"
-        h = handler.get(url=request_appdata["url"], params=request_appdata["params"])
+        request_app["params"]["lang"] = "xx-12"
+        request_app["params"]["media"] = "video"
+        h = handler.get(url=request_app["url"], params=request_app["params"])
         assert isinstance(h, SessionHandler)
 
         assert isinstance(handler.response, requests.Response)

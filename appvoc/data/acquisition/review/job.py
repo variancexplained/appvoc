@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/acquisition/review/job.py                                            #
+# Filename   : /appvoc/data/acquisition/review/job.py                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday July 30th 2023 02:36:49 am                                                   #
-# Modified   : Wednesday August 9th 2023 08:33:27 pm                                               #
+# Modified   : Saturday June 29th 2024 10:52:39 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
 
 import pandas as pd
 
-from appvoc.data.acquisition.review.result import ReviewResult
-from appvoc.data.acquisition.base import JobRun, Job
+from appvoc.data.acquisition.base import Job, JobRun
+from appvoc.data.acquisition.review.result import ReviewResponse
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -57,9 +58,9 @@ class ReviewJobRun(JobRun):
     reviews_per_second: float = 0
     size_ave: float = 0
 
-    def add_result(self, result: ReviewResult) -> None:
-        """Adds Iterate through responses to update metrics. Result will have a list of response objects."""
-        super().add_result(result=result)
+    def add_response(self, response: ReviewResponse) -> None:
+        """Adds Iterate through responses to update metrics. Response will have a list of response objects."""
+        super().add_response(result=result)
         self.reviews += result.reviews
         self.apps_per_second = round(self.apps / self.elapsed, 2)
         self.bytes_per_second = round(self.size / self.elapsed, 2)

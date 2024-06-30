@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/repo/appdata.py                                                      #
+# Filename   : /appvoc/data/repo/appdata.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 05:52:50 am                                                #
-# Modified   : Wednesday August 30th 2023 08:23:10 pm                                              #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -21,13 +21,13 @@ import logging
 
 import numpy as np
 import pandas as pd
+from sqlalchemy.dialects.mysql import BIGINT, FLOAT, LONGTEXT, VARCHAR  # , TINYINT
 
+from appvoc.data.dataset.app import AppDataDataset
+from appvoc.data.entity.app import AppData
 from appvoc.data.repo.base import Repo
-from appvoc.data.entity.appdata import AppData
-from appvoc.data.dataset.appdata import AppDataDataset
 from appvoc.infrastructure.database.base import Database
 from appvoc.infrastructure.file.config import FileConfig
-from sqlalchemy.dialects.mysql import LONGTEXT, BIGINT, VARCHAR, FLOAT  # , TINYINT
 
 # ------------------------------------------------------------------------------------------------ #
 #                                    DATAFRAME DATA TYPES                                          #
@@ -83,7 +83,7 @@ class AppDataRepo(Repo):
         database(Database): Database containing data to access.
     """
 
-    __name = "appdata"
+    __name = "app"
 
     def __init__(self, database: Database, config=FileConfig) -> None:
         super().__init__(name=self.__name, database=database, config=config)

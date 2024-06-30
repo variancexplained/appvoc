@@ -2,27 +2,28 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # AppDataProject    : AI-Enabled Voice of the Mobile Technology Customer                                  #
-# Version    : 0.1.19                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_repo/test_project_repo.py                                               #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : Enter URL in Workspace Settings                                                     #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday April 28th 2023 04:40:41 pm                                                  #
-# Modified   : Tuesday July 25th 2023 01:04:35 pm                                                  #
+# Modified   : Sunday June 30th 2024 02:01:38 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
-import pandas as pd
+from datetime import datetime
 
-from appvoc.data.acquisition.appdata.project import AppDataProject
+import pandas as pd
+import pytest
+
+from appvoc.data.acquisition.app.project import AppDataProject
 
 # ------------------------------------------------------------------------------------------------ #
 PROJECT = AppDataProject(
@@ -124,7 +125,7 @@ class TestAppDataProject:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_update(self, appdata_project_repo, caplog):
+    def test_update(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -231,7 +232,7 @@ class TestAppDataProject:  # pragma: no cover
 @pytest.mark.proj_repo
 class TestAppDataProjectRepo:  # pragma: no cover
     # ============================================================================================ #
-    def test_setup(self, appdata_project_repo, caplog):
+    def test_setup(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -244,7 +245,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         try:
-            repo = appdata_project_repo
+            repo = app_project_repo
             repo.delete_all()
         except Exception:
             pass
@@ -264,7 +265,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_add(self, appdata_project_repo, caplog):
+    def test_add(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -276,7 +277,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
         repo.add(data=PROJECT)
         repo.save()
         assert repo.count() == 1
@@ -299,7 +300,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_replace(self, appdata_project_repo, caplog):
+    def test_replace(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -311,7 +312,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
         PROJECT.controller = "ReplacedController"
         repo.replace(data=PROJECT)
         repo.save()
@@ -335,7 +336,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get(self, appdata_project_repo, caplog):
+    def test_get(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -347,7 +348,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
         PROJECT_COPY = PROJECT
         project = repo.get(id=PROJECT.id)
         logger.debug(project)
@@ -369,7 +370,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_get_project(self, appdata_project_repo, caplog):
+    def test_get_project(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -381,7 +382,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
         project = repo.get_project(controller="ReplacedController", term="social")
         logger.debug(project)
         assert isinstance(project, AppDataProject)
@@ -408,7 +409,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_update(self, appdata_project_repo, caplog):
+    def test_update(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -420,7 +421,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
 
         for i in range(10):
             PROJECT.update(i)
@@ -446,7 +447,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_summary(self, appdata_project_repo, caplog):
+    def test_summary(self, app_project_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -458,7 +459,7 @@ class TestAppDataProjectRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_project_repo
+        repo = app_project_repo
         df = repo.summary
         assert isinstance(df, pd.DataFrame)
 

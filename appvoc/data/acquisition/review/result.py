@@ -1,37 +1,38 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/review/result.py                                         #
+# Filename   : /appvoc/data/acquisition/review/result.py                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday May 3rd 2023 01:59:31 pm                                                  #
-# Modified   : Thursday August 31st 2023 11:49:50 am                                               #
+# Modified   : Saturday June 29th 2024 10:25:52 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-"""Defines the Result Object for Rating Responses"""
+"""Defines the Response Object for Rating Responses"""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import List
 
-import requests
 import pandas as pd
+import requests
 
-from appvoc.data.acquisition.base import Result, App
+from appvoc.data.acquisition.base import App, Response
 from appvoc.infrastructure.web.utils import getsize
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
-class ReviewResult(Result):
-    """Encapsulates the review results. Inherits the following from Result base class:
+class ReviewResponse(Response):
+    """Encapsulates the review results. Inherits the following from Response base class:
     content (list): List of dictionaries containing the response content
     size: (int): Total size of response in bytes
     requests (int): Number of requests. This will be one for syncronous requests,

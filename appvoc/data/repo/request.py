@@ -1,34 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/repo/request.py                                                      #
+# Filename   : /appvoc/data/repo/request.py                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 9th 2023 04:55:46 pm                                               #
-# Modified   : Tuesday August 29th 2023 05:40:53 pm                                                #
+# Modified   : Saturday June 29th 2024 10:06:35 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import logging
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from sqlalchemy.dialects.mysql import INTEGER, VARCHAR
 
-from appvoc.data.acquisition.review.request import ReviewRequest
 from appvoc.data.repo.base import Repo
+from appvoc.domain.review.request import ReviewRequest
 from appvoc.infrastructure.database.base import Database
 from appvoc.infrastructure.file.config import FileConfig
-from sqlalchemy.dialects.mysql import (
-    VARCHAR,
-    INTEGER,
-)
 
 # ------------------------------------------------------------------------------------------------ #
 #                                    DATAFRAME DATA TYPES                                          #

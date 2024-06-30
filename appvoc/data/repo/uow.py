@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/repo/uow.py                                                          #
+# Filename   : /appvoc/data/repo/uow.py                                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday April 29th 2023 12:55:21 am                                                #
-# Modified   : Thursday August 10th 2023 11:32:39 pm                                               #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import logging
 
-from appvoc.infrastructure.database.base import Database
 from appvoc.data.repo.base import Repo
+from appvoc.infrastructure.database.base import Database
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -38,20 +38,20 @@ class UoW:
     def __init__(
         self,
         database: Database,
-        appdata_repo: Repo,
+        app_repo: Repo,
         rating_repo: Repo,
         review_repo: Repo,
-        appdata_project_repo: Repo,
+        app_project_repo: Repo,
         job_repo: Repo,
         rating_jobrun_repo: Repo,
         review_jobrun_repo: Repo,
         review_request_repo: Repo,
     ) -> None:
         self._database = database
-        self._appdata_repo = appdata_repo
+        self._app_repo = app_repo
         self._review_repo = review_repo
         self._rating_repo = rating_repo
-        self._appdata_project_repo = appdata_project_repo
+        self._app_project_repo = app_project_repo
         self._job_repo = job_repo
         self._rating_jobrun_repo = rating_jobrun_repo
         self._review_jobrun_repo = review_jobrun_repo
@@ -64,8 +64,8 @@ class UoW:
         return self._database
 
     @property
-    def appdata_repo(self) -> Repo:
-        return self._appdata_repo(database=self._database)
+    def app_repo(self) -> Repo:
+        return self._app_repo(database=self._database)
 
     @property
     def review_repo(self) -> Repo:
@@ -76,8 +76,8 @@ class UoW:
         return self._rating_repo(database=self._database)
 
     @property
-    def appdata_project_repo(self) -> Repo:
-        return self._appdata_project_repo(database=self._database)
+    def app_project_repo(self) -> Repo:
+        return self._app_project_repo(database=self._database)
 
     @property
     def job_repo(self) -> Repo:

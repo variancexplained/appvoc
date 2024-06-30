@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/appdata/project.py                                       #
+# Filename   : /appvoc/data/acquisition/appdata/project.py                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 03:47:36 pm                                                  #
-# Modified   : Tuesday August 29th 2023 07:17:14 pm                                                #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
-from dataclasses import dataclass, field
+
 import itertools
+from dataclasses import dataclass, field
 from datetime import datetime
 
 import pandas as pd
+
 from appvoc.data.acquisition.base import Project
 
 # ------------------------------------------------------------------------------------------------ #

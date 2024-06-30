@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.10                                                                             #
-# Filename   : /appvoc/data/repo/job.py                                                          #
+# Filename   : /appvoc/data/repo/job.py                                                            #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday July 29th 2023 02:06:11 pm                                                 #
-# Modified   : Tuesday August 29th 2023 05:54:34 pm                                                #
+# Modified   : Sunday June 30th 2024 12:21:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,15 +19,16 @@
 import logging
 from typing import Union
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from sqlalchemy.dialects.mysql import BIGINT, DATETIME, FLOAT, TINYINT, VARCHAR
+
 from appvoc.data.acquisition.base import Job
-from appvoc.data.acquisition.review.job import ReviewJobRun
 from appvoc.data.acquisition.rating.job import RatingJobRun
+from appvoc.data.acquisition.review.job import ReviewJobRun
 from appvoc.data.repo.base import Repo
 from appvoc.infrastructure.database.base import Database
 from appvoc.infrastructure.file.config import FileConfig
-from sqlalchemy.dialects.mysql import VARCHAR, DATETIME, BIGINT, FLOAT, TINYINT
 
 # ------------------------------------------------------------------------------------------------ #
 #                                 RATING DATAFRAME DATA TYPES                                      #
@@ -259,29 +260,6 @@ class RatingJobRunRepo(Repo):
         )
         msg = f"Added {data.shape[0]} rows to the {self._name} repository."
         self._logger.debug(msg)
-
-    def get(
-        self,
-        id: Union[str, int],
-        dtypes: dict = RATING_JOBRUN_DATAFRAME_DTYPES,
-        parse_dates: dict = RATING_JOBRUN_PARSE_DATES,
-    ) -> RatingJobRun:
-        """Returns data for the entity designated by the 'id' parameter.
-
-        Args:
-            id (Union[str,int]): The entity id.
-        """
-        query = f"SELECT * FROM {self._name} WHERE id = :id;"
-        params = {"id": id}
-        jobrun = self._database.query(
-            query=query, params=params, dtypes=dtypes, parse_dates=parse_dates
-        )
-        try:
-            return RatingJobRun.from_df(df=jobrun)
-        except Exception as e:
-            msg = f"Exception of type {type(e)} occurred.\n{e}"
-            self._logger.debug(msg)
-            return None
 
     def getall(
         self,

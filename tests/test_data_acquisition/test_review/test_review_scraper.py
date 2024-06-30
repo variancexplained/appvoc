@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_review/test_review_scraper.py                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday August 2nd 2023 01:27:54 am                                               #
-# Modified   : Wednesday August 9th 2023 07:56:28 pm                                               #
+# Modified   : Saturday June 29th 2024 10:25:52 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
+from datetime import datetime
 
 import pandas as pd
+import pytest
 
+from appvoc.data.acquisition.review.result import ReviewResponse
 from appvoc.data.acquisition.review.scraper import ReviewScraper
-from appvoc.data.acquisition.review.result import ReviewResult
 
 KEYS = [
     "id",
@@ -106,7 +106,7 @@ class TestReviewScraper:  # pragma: no cover
                     page_count += 1
                     msg = f"\n\tProcessing Page #: {page_count}"
                     logger.debug(msg)
-                    assert isinstance(result, ReviewResult)
+                    assert isinstance(result, ReviewResponse)
                     assert result.app == app
                     assert result.reviews > 0
                     assert isinstance(result.content, list)

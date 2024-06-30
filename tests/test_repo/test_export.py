@@ -1,27 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_repo/test_export.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday August 26th 2023 04:06:15 pm                                               #
-# Modified   : Saturday August 26th 2023 04:16:43 pm                                               #
+# Modified   : Sunday June 30th 2024 02:01:38 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-import os
 import inspect
-from datetime import datetime
-import pytest
 import logging
+import os
 import shutil
+from datetime import datetime
+
+import pytest
 
 # Import whatever your testing here
 
@@ -50,7 +51,7 @@ class TestExportRepo:  # pragma: no cover
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
         directories = [
-            "tests/data/repo/export/appdata/",
+            "tests/data/repo/export/app/",
             "tests/data/repo/export/ratings/",
             "tests/data/repo/export/reviews/",
         ]
@@ -73,7 +74,7 @@ class TestExportRepo:  # pragma: no cover
         logger.info(single_line)
 
     # ============================================================================================ #
-    def test_appdata(self, appdata_repo_loaded, caplog):
+    def test_app(self, app_repo_loaded, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -85,8 +86,8 @@ class TestExportRepo:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_repo_loaded
-        DIRECTORY = "tests/data/repo/export/appdata/"
+        repo = app_repo_loaded
+        DIRECTORY = "tests/data/repo/export/app/"
         # Export csv by category with datetime
         files = repo.export(
             directory=DIRECTORY, format="csv", by_category=True, with_datetime=True

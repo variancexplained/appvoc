@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
-# Filename   : /appvoc/data/acquisition/rating/controller.py                                     #
+# Filename   : /appvoc/data/acquisition/rating/controller.py                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday April 30th 2023 11:32:21 pm                                                  #
-# Modified   : Thursday August 24th 2023 08:19:25 pm                                               #
+# Modified   : Sunday June 30th 2024 02:01:39 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -22,14 +22,13 @@ import logging
 import pandas as pd
 from dependency_injector.wiring import Provide, inject
 
-
-from appvoc.data.acquisition.rating.scraper import RatingScraper
-from appvoc.data.repo.uow import UoW
-from appvoc.data.acquisition.rating.job import RatingJobRun
-from appvoc.data.acquisition.rating.result import RatingResult
+from appvoc.container import AppVoCContainer
 from appvoc.data.acquisition.base import Controller
 from appvoc.data.acquisition.rating.director import RatingDirector
-from appvoc.container import AppVoCContainer
+from appvoc.data.acquisition.rating.job import RatingJobRun
+from appvoc.data.acquisition.rating.result import RatingResponse
+from appvoc.data.acquisition.rating.scraper import RatingScraper
+from appvoc.data.repo.uow import UoW
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -40,7 +39,7 @@ class RatingController(Controller):
 
     Args:
         scraper (ReviewScraper): A scraper object that returns data from the target urls.
-        uow (UnitofWork): Unit of Work class containing the appdata repo
+        uow (UnitofWork): Unit of Work class containing the app repo
         io (IOService): A file IO object.
 
     """
@@ -102,8 +101,8 @@ class RatingController(Controller):
     def _get_apps(self, category_id: int) -> pd.DataFrame:
         """Obtains apps for the category, removing any apps for which ratings exist."""
 
-        # Obtain all apps for the category from the appdata repo.
-        apps = self._uow.appdata_repo.get_by_category(category_id=category_id)
+        # Obtain all apps for the category from the app repo.
+        apps = self._uow.app_repo.get_by_category(category_id=category_id)
         msg = f"\n\nA total of {len(apps)} apps in category {category_id}."
 
         # Obtain apps which we have already processed
@@ -127,11 +126,11 @@ class RatingController(Controller):
             self._logger.info(msg)
         return apps
 
-    def persist(self, result: RatingResult) -> None:
+    def persist(self, result: RatingResponse) -> None:
         """Persists the result from the scraping operation.
 
         Args:
-            result (RatingResult): The result from the scraping operation
+            result (RatingResponse): The result from the scraping operation
         """
         data = result.get_result()
         if len(data) > 0:
@@ -154,15 +153,17 @@ class RatingController(Controller):
         self._director.add_jobrun(jobrun=jobrun)
         return jobrun
 
-    def update_jobrun(self, jobrun: RatingJobRun, result: RatingResult) -> RatingJobRun:
+    def update_jobrun(
+        self, jobrun: RatingJobRun, result: RatingResponse
+    ) -> RatingJobRun:
         """Adds results to jobrun, and persists.
 
         Args:
             jobrun (RatingJobRun): The current job run.
-            result (RatingResult): The result from the scraping operation
+            result (RatingResponse): The result from the scraping operation
 
         """
-        jobrun.add_result(result=result)
+        jobrun.add_response(result=result)
         self._director.update_jobrun(jobrun=jobrun)
         return jobrun
 
@@ -170,7 +171,7 @@ class RatingController(Controller):
         """Persists job to the Database
 
         Args:
-            result (ReviewResult) -> Parsed result object
+            result (ReviewResponse) -> Parsed result object
         """
         jobrun.end()
         # Get the associated job and end it.

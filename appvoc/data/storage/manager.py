@@ -1,33 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/storage/manager.py                                                   #
+# Filename   : /appvoc/data/storage/manager.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Saturday August 26th 2023 04:52:34 pm                                               #
-# Modified   : Sunday August 27th 2023 06:36:05 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-import os
 import logging
+import os
 import shutil
 
-from dependency_injector.wiring import inject, Provide
+from dependency_injector.wiring import Provide, inject
 
 from appvoc.container import AppVoCContainer
 from appvoc.data.repo.uow import UoW
 from appvoc.data.storage.base import StorageManager
 from appvoc.infrastructure.cloud.amazon import AWS
-from appvoc.infrastructure.file.archive import FileArchiver
 from appvoc.infrastructure.database.base import Database
+from appvoc.infrastructure.file.archive import FileArchiver
 from appvoc.infrastructure.file.io import IOService
 
 
@@ -89,7 +89,7 @@ class DataStorageManager(StorageManager):
     def purge(self) -> None:
         """Purges the data in the database, but keeps the tables."""
         if self._database.mode == "test":
-            self._uow.appdata_repo.delete_all()
+            self._uow.app_repo.delete_all()
             self._uow.save()
             self._uow.rating_repo.delete_all()
             self._uow.save()
@@ -123,8 +123,8 @@ class DataStorageManager(StorageManager):
         for filename in os.listdir(self._archiver.staging_folder):
             filepath = os.path.join(self._archiver.staging_folder, filename)
             df = IOService.read(filepath)
-            if "appdata" in filename:
-                self._uow.appdata_repo.load(data=df)
+            if "app" in filename:
+                self._uow.app_repo.load(data=df)
                 self._uow.save()
             elif "rating" in filename:
                 self._uow.rating_repo.load(data=df)
@@ -163,7 +163,7 @@ class DataStorageManager(StorageManager):
 
     def _export(self) -> None:
         # Export appvoc data
-        self._uow.appdata_repo.export(
+        self._uow.app_repo.export(
             directory=self._archiver.staging_folder,
             format="csv",
             by_category=False,

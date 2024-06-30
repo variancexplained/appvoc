@@ -1,30 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.11                                                                             #
 # Filename   : /tests/test_infrastructure/test_persistence/test_mysql.py                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 31st 2023 09:09:07 am                                                  #
-# Modified   : Sunday August 27th 2023 02:52:56 am                                                 #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
-import os
 import inspect
-from datetime import datetime
-import pytest
 import logging
+import os
+from datetime import datetime
 
 import pandas as pd
+import pytest
 from sqlalchemy.exc import SQLAlchemyError
-
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -552,7 +551,7 @@ class TestMySQLDatabase:  # pragma: no cover
     def test_backup_restore(
         self,
         container,
-        appdata_repo_loaded,
+        app_repo_loaded,
         rating_repo_loaded,
         review_repo_loaded,
         caplog,
@@ -580,10 +579,10 @@ class TestMySQLDatabase:  # pragma: no cover
         assert os.path.exists(filepath)
 
         # Delete Appdata
-        query = "DELETE FROM appdata;"
+        query = "DELETE FROM app;"
         params = {}
         db.delete(query=query, params=params)
-        logger.debug("Deleted appdata")
+        logger.debug("Deleted app")
         db.commit()
 
         # Delete Rating
@@ -606,12 +605,12 @@ class TestMySQLDatabase:  # pragma: no cover
         logger.debug("Database restored")
         db.commit()
 
-        # Get appdata
-        query = "SELECT * FROM appdata;"
+        # Get app
+        query = "SELECT * FROM app;"
         params = None
-        appdata = db.query(query=query, params=params)
-        assert appdata.shape[0] == 100
-        logger.debug(appdata.head())
+        app = db.query(query=query, params=params)
+        assert app.shape[0] == 100
+        logger.debug(app.head())
 
         # Get rating
         query = "SELECT * FROM rating;"
@@ -620,7 +619,7 @@ class TestMySQLDatabase:  # pragma: no cover
         assert rating.shape[0] == 100
         logger.debug(rating.head())
 
-        # Get appdata
+        # Get app
         query = "SELECT * FROM review;"
         params = None
         review = db.query(query=query, params=params)

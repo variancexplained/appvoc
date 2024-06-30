@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
 # Filename   : /tests/test_data_acquisition/test_rating/test_rating_scraper.py                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday July 31st 2023 02:04:35 am                                                   #
-# Modified   : Wednesday August 2nd 2023 03:24:01 am                                               #
+# Modified   : Sunday June 30th 2024 02:01:37 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 import inspect
-from datetime import datetime
-import pytest
 import logging
+from datetime import datetime
+
+import pytest
 
 from appvoc.data.acquisition.rating.scraper import RatingScraper
-
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ KEYS = ["name", "reviews", "onestar", "fivestar"]
 @pytest.mark.asyncio
 class TestRatingScraper:  # pragma: no cover
     # ============================================================================================ #
-    async def test_setup(self, container, appdata_repo, caplog):
+    async def test_setup(self, container, app_repo, caplog):
         start = datetime.now()
         logger.info(
             "\n\nStarted {} {} at {} on {}".format(
@@ -50,7 +50,7 @@ class TestRatingScraper:  # pragma: no cover
         )
         logger.info(double_line)
         # ---------------------------------------------------------------------------------------- #
-        repo = appdata_repo
+        repo = app_repo
         df = repo.sample(10)
 
         async for result in RatingScraper(apps=df, batch_size=5):

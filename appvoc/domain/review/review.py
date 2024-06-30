@@ -1,33 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
 # Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/data/entity/review.py                                                     #
+# Filename   : /appvoc/domain/review/review.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 10th 2023 11:46:15 pm                                               #
-# Modified   : Friday August 11th 2023 01:04:49 am                                                 #
+# Modified   : Saturday June 29th 2024 11:51:21 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
 from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
 
 import pandas as pd
 
-from appvoc.base import Entity
+from appvoc.domain.entity import Entity
 
 
 # ------------------------------------------------------------------------------------------------ #
 @dataclass
 class Review(Entity):
+    """Encapsulates a review for an app."""
+
     id: str
     app_id: str
     app_name: str
@@ -42,19 +45,18 @@ class Review(Entity):
     date: datetime
 
     @classmethod
-    def from_df(cls, df: pd.DataFrame) -> Review:
-        df = df.iloc[0]
+    def from_dict(cls, review: dict) -> Review:
         return cls(
-            id=df["id"],
-            app_id=df["app_id"],
-            app_name=df["app_name"],
-            category_id=df["category_id"],
-            category=df["category"],
-            author=df["author"],
-            rating=df["rating"],
-            title=df["title"],
-            content=df["content"],
-            vote_sum=df["vote_sum"],
-            vote_count=df["vote_count"],
-            date=pd.to_datetime(df["date"]),
+            id=review["id"],
+            app_id=review["app_id"],
+            app_name=review["app_name"],
+            category_id=review["category_id"],
+            category=review["category"],
+            author=review["author"],
+            rating=review["rating"],
+            title=review["title"],
+            content=review["content"],
+            vote_sum=review["vote_sum"],
+            vote_count=review["vote_count"],
+            date=pd.to_datetime(review["date"]),
         )
