@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : AppVoC Ratings & Reviews Analysis                                                 #
-# Version    : 0.1.19                                                                              #
-# Python     : 3.10.12                                                                             #
-# Filename   : /appvoc/visual/seaborn.py                                                         #
+# Project    : AppVoC                                                                              #
+# Version    : 0.1.0                                                                               #
+# Python     : 3.10.14                                                                             #
+# Filename   : /appvoc/visual/seaborn.py                                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
-# Email      : john@variancexplained.com                                                      #
-# URL        : https://github.com/variancexplained/appvoc                                           #
+# Email      : john@variancexplained.com                                                           #
+# URL        : https://github.com/variancexplained/appvoc                                          #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Monday August 28th 2023 06:42:00 am                                                 #
-# Modified   : Monday August 28th 2023 09:11:31 am                                                 #
+# Created    : Saturday June 29th 2024 06:43:31 pm                                                 #
+# Modified   : Saturday June 29th 2024 07:16:20 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
-# Copyright  : (c) 2023 John James                                                                 #
+# Copyright  : (c) 2024 John James                                                                 #
 # ================================================================================================ #
 from dataclasses import dataclass
 
@@ -23,8 +23,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from studioai.visual.seaborn import Visualizer as VisualizerBase
-from studioai.visual.seaborn import SeabornCanvas
+from studioai.analysis.visualize.visualizer import (
+    Visualizer as VisualizerBase,
+    SeabornCanvas,
+)
 
 
 # ------------------------------------------------------------------------------------------------ #
